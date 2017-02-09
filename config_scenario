@@ -1,0 +1,11 @@
+/* Enmascaramos la red interna */
+	sudo iptables -t nat -A POSTROUTING -s (IP_addr_masq) -j SNAT --to (IP_addr_gw)
+		IP_addr_masq: Dirección IP que queremos enmascarar 
+		IP_addr_gw: Dirección IP que queremos poner como origen para la salida al exterior
+
+/*-----------------------------*/
+
+/* Activamos el reenvío en el "router" */
+	sudo nano /proc/sys/net/ipv4/ip_forward 
+		--> Cambiamos el 0 por un 1 para activar el reenvío.
+/*-------------------------------------*/

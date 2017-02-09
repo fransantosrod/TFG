@@ -1,0 +1,69 @@
+/* Instalación de las herramientas necesarias para el funcionamiento de Snort */
+	
+	-- Instalamos dependencias
+		sudo apt-get install bison flex zlib1g-dev
+		sudo apt-get install libpcre3 libpcre3-dev
+		sudo apt-get install libpcap0.8 libpcap0.8-dev
+		sudo apt-get install libnfnetlink-dev
+		sudo apt-get install libnetfilter-queue-dev
+	
+	-- Instalamos libdnet
+		*** ENLACE LIBDNET
+		tar xvfz libdnet-1.11.tar.gz
+		cd libdnet-*
+		./configure --prefix=/usr
+		make
+		sudo make install
+	
+	-- Instalamos DAQ
+		cd /usr/src
+		*** ENLACE DAQ
+		tar xvfz daq-2.0.6.tar.gz
+		cd daq-*
+		./configure
+		make
+		sudo make install
+	
+	-- Instalamos Snort
+		cd /usr/src
+		*** ENLACE SNORT
+		tar xvfz snort-2.9.9.0.tar.gz
+		cd snort-*
+		./configure --enable-sourcefire --enable-active-response --enable-reload
+				/*Parameters*/
+				--enable-active-response: support for session interuption when rule is matched
+				--enable-reload: load/upload rules without restarting snort
+				/*---------*/
+		make
+		sudo make install
+
+/*----------------------------------------------------------------------------*/
+
+/* Cambios en el fichero de configuración de Snort */
+
+1- Comentamos en el paso 7, a paritr de la línea 575 donde se comienza a incluir las reglas por defecto
+	de esta forma conseguimos que solo se carguen las reglas que a nosotro nos interese
+	en el fichero local.rules y tenemos controladas todas las reglas para evitar reglas duplicadas
+	Comentamos todas excepto $RULE_PATH/local.rules
+
+2- 	Nos aseguramos que en el paso 5, a partir de línea 279, está descomentado:
+	-- prepocessor normalize_ip4
+	-- prepocessor normalize_tcp:ips ecn stream
+	-- prepocessor normalize_icmp4
+	-- prepocessor normalize_ip6
+	-- prepocessor normalize_icmp6
+
+3- En la última línea del paso 2 (línea 202), añadimos lo siguiente:
+	-- config policy_mode:inline
+	De esta forma indicamos que Snort se puede ejecutar como IPS
+
+4- Configuramos en el paso 2, a partir de la línea 169, el modo de daq, que servirá también para que
+	se ejecute en modo IPS
+
+		-- config daq:dump
+		-- config daq_dir:/usr/local/lib/daq
+		-- config daq_mode:inline
+		-- config daq_var:buffer_size_mb=1024
+
+Una vez hecho esto guardamos los cambios realizados en snort.conf
+/*-------------------------------------------------*/
