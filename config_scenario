@@ -16,6 +16,6 @@ sudo iptables -t nat -A PREROUTING -j NFQUEUE --queue-num 0 --queue-bypass
 	   de otra forma si cae snort por cualquier motivo, las reglas seguirían actuando ya que se almacenan en iptables
 /*-----------------------------------------------------------*/
 
-/* Reinicio de Snort cuando se cambia una regla */
+/* Reinicio de Snort cuando se cambia una regla sin pararlo y volverlo a arrancar*/
 	sudo kill -SIGHUP (pid_snort)
-/*----------------------------------------------*/
+/*-------------------------------------------------------------------------------*/
