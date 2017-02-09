@@ -36,7 +36,7 @@
 				/*---------*/
 		make
 		sudo make install
-
+		sudo ldconfig
 /*----------------------------------------------------------------------------*/
 
 /* Cambios en el fichero de configuración de Snort */
