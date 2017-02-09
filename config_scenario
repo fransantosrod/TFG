@@ -9,3 +9,7 @@
 	sudo nano /proc/sys/net/ipv4/ip_forward 
 		--> Cambiamos el 0 por un 1 para activar el reenvío.
 /*-------------------------------------*/
+
+/* Creamos la regla con la que integraremos SNORT e IPTABLES */
+sudo snort -Q -c /etc/snort/snort.conf -A console --daq-var queue=0
+/*-----------------------------------------------------------*/
