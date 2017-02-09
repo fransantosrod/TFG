@@ -38,6 +38,25 @@
 		sudo make
 		sudo make install
 		sudo ldconfig
+		
+	-- Creamos los directorios
+		sudo mkdir /etc/snort
+		sudo mkdir /etc/snort/rules
+		sudo mkdir /etc/snort/preproc_rules
+		sudo mkdir /etc/snort/so_rules
+		sudo mkdir /usr/local/lib/snort_dynamicrules
+		sudo mkdir /var/log/snort
+		
+	-- Copiamos los ficheros de configuracion en dichos directorios
+		cd /usr/src/snort-*
+		sudo cp etc/* /etc/snort/
+		cd /usr/src/snort-*/etc
+		sudo cp attribute_table.dtd /etc/snort/
+		cd /usr/src/snort-*
+		sudo cp preproc_rules/* /etc/snort/preproc_rules/
+		
+		 cd /etc/snort/rules/
+		 touch local.rules
 /*----------------------------------------------------------------------------*/
 
 /* Cambios en el fichero de configuración de Snort */
