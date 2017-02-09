@@ -15,3 +15,7 @@ sudo iptables -t nat -A PREROUTING -j NFQUEUE --queue-num 0 --queue-bypass
 	// Con la opción --queue-bypass nos aseguramos que si snort se para, se acepte todo el tráfico
 	   de otra forma si cae snort por cualquier motivo, las reglas seguirían actuando ya que se almacenan en iptables
 /*-----------------------------------------------------------*/
+
+/* Reinicio de Snort cuando se cambia una regla */
+	sudo kill -SIGHUP (pid_snort)
+/*----------------------------------------------*/
