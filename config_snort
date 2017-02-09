@@ -9,33 +9,33 @@
 	
 	-- Instalamos libdnet
 		cd /usr/src
-		wget http://downloads.sourceforge.net/project/libdnet/libdnet/libdnet-1.11/libdnet-1.11.tar.gz
-		tar xvfz libdnet-1.11.tar.gz
+		sudo wget http://downloads.sourceforge.net/project/libdnet/libdnet/libdnet-1.11/libdnet-1.11.tar.gz
+		sudo tar xvfz libdnet-1.11.tar.gz
 		cd libdnet-*
-		./configure --prefix=/usr
-		make
+		sudo ./configure --prefix=/usr
+		sudo make
 		sudo make install
 	
 	-- Instalamos DAQ
 		cd /usr/src
-		wget https://www.snort.org/downloads/snort/daq-2.0.6.tar.gz
-		tar xvfz daq-2.0.6.tar.gz
+		sudo wget https://www.snort.org/downloads/snort/daq-2.0.6.tar.gz
+		sudo tar xvfz daq-2.0.6.tar.gz
 		cd daq-*
-		./configure
-		make
+		sudo ./configure
+		sudo make
 		sudo make install
 	
 	-- Instalamos Snort
 		cd /usr/src
-		wget https://www.snort.org/downloads/snort/snort-2.9.9.0.tar.gz
-		tar xvfz snort-2.9.9.0.tar.gz
+		sudo wget https://www.snort.org/downloads/snort/snort-2.9.9.0.tar.gz
+		sudo tar xvfz snort-2.9.9.0.tar.gz
 		cd snort-*
-		./configure --enable-sourcefire --enable-active-response --enable-reload
+		sudo ./configure --enable-sourcefire --enable-active-response --enable-reload
 				/*Parameters*/
 				--enable-active-response: support for session interuption when rule is matched
 				--enable-reload: load/upload rules without restarting snort
 				/*---------*/
-		make
+		sudo make
 		sudo make install
 		sudo ldconfig
 /*----------------------------------------------------------------------------*/
