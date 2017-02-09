@@ -55,8 +55,10 @@
 		cd /usr/src/snort-*
 		sudo cp preproc_rules/* /etc/snort/preproc_rules/
 		
-		 cd /etc/snort/rules/
-		 touch local.rules
+		cd /etc/snort/rules/
+		sudo touch local.rules
+		sudo touch /etc/snort/rules/white_list.rules
+		sudo touch /etc/snort/rules/black_list.rules
 /*----------------------------------------------------------------------------*/
 
 /* Cambios en el fichero de configuración de Snort */
@@ -65,19 +67,26 @@
 	de esta forma conseguimos que solo se carguen las reglas que a nosotro nos interese
 	en el fichero local.rules y tenemos controladas todas las reglas para evitar reglas duplicadas
 	Comentamos todas excepto $RULE_PATH/local.rules
+	
+2- Cambiamos las rutas de las reglas a:
+	-- var RULE_PATH /etc/snort/rules
+	-- var SO_RULE_PATH /etc/snort  
+	-- var PREPROC_RULE_PATH /etc/snort/preproc_rules     
+	-- var WHITE_LIST_PATH /etc/snort/rules
+	-- var BLACK_LIST_PATH /etc/snort/rules     
 
-2- 	Nos aseguramos que en el paso 5, a partir de línea 279, está descomentado:
+3- 	Nos aseguramos que en el paso 5, a partir de línea 279, está descomentado:
 	-- prepocessor normalize_ip4
 	-- prepocessor normalize_tcp:ips ecn stream
 	-- prepocessor normalize_icmp4
 	-- prepocessor normalize_ip6
 	-- prepocessor normalize_icmp6
 
-3- En la última línea del paso 2 (línea 202), añadimos lo siguiente:
+4- En la última línea del paso 2 (línea 202), añadimos lo siguiente:
 	-- config policy_mode:inline
 	De esta forma indicamos que Snort se puede ejecutar como IPS
 
-4- Configuramos en el paso 2, a partir de la línea 169, el modo de daq, que servirá también para que
+5- Configuramos en el paso 2, a partir de la línea 169, el modo de daq, que servirá también para que
 	se ejecute en modo IPS
 
 		-- config daq:dump
