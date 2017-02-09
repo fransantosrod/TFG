@@ -89,10 +89,10 @@
 5- Configuramos en el paso 2, a partir de la línea 169, el modo de daq, que servirá también para que
 	se ejecute en modo IPS
 
-		-- config daq:dump
+		-- config daq:nfq
 		-- config daq_dir:/usr/local/lib/daq
 		-- config daq_mode:inline
-		-- config daq_var:buffer_size_mb=1024
 
 Una vez hecho esto guardamos los cambios realizados en snort.conf
+Si queremos ejecutarlo basta con el comando: sudo snort -Q -c /etc/snort/snort.conf -A console
 /*-------------------------------------------------*/
