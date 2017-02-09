@@ -8,7 +8,7 @@
 		sudo apt-get install libnetfilter-queue-dev
 	
 	-- Instalamos libdnet
-		*** ENLACE LIBDNET
+		wget http://downloads.sourceforge.net/project/libdnet/libdnet/libdnet-1.11/libdnet-1.11.tar.gz
 		tar xvfz libdnet-1.11.tar.gz
 		cd libdnet-*
 		./configure --prefix=/usr
@@ -17,7 +17,7 @@
 	
 	-- Instalamos DAQ
 		cd /usr/src
-		*** ENLACE DAQ
+		wget https://www.snort.org/downloads/snort/daq-2.0.6.tar.gz
 		tar xvfz daq-2.0.6.tar.gz
 		cd daq-*
 		./configure
@@ -26,7 +26,7 @@
 	
 	-- Instalamos Snort
 		cd /usr/src
-		*** ENLACE SNORT
+		wget https://www.snort.org/downloads/snort/snort-2.9.9.0.tar.gz
 		tar xvfz snort-2.9.9.0.tar.gz
 		cd snort-*
 		./configure --enable-sourcefire --enable-active-response --enable-reload
