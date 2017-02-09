@@ -8,6 +8,7 @@
 		sudo apt-get install libnetfilter-queue-dev
 	
 	-- Instalamos libdnet
+		cd /usr/src
 		wget http://downloads.sourceforge.net/project/libdnet/libdnet/libdnet-1.11/libdnet-1.11.tar.gz
 		tar xvfz libdnet-1.11.tar.gz
 		cd libdnet-*
