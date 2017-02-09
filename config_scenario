@@ -19,3 +19,12 @@ sudo iptables -t nat -A PREROUTING -j NFQUEUE --queue-num 0 --queue-bypass
 /* Reinicio de Snort cuando se cambia una regla sin pararlo y volverlo a arrancar*/
 	sudo kill -SIGHUP (pid_snort)
 /*-------------------------------------------------------------------------------*/
+
+
+/* Inicio de snort para guardar las alertas y paquetes en un fichero */
+ 	sudo snort -Q -c /etc/snort/snort.conf -A full -D
+		//Con -D indicamos que queremos que se ejecute en segundo plano
+	//Si queremos ver los paquetes que han hecho saltar alguna regla basta con ver el fichero
+		cat /var/log/snort/alert
+		tail -f /var/log/snort/alert
+/*-------------------------------------------------------------------*/
