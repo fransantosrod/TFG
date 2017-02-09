@@ -11,5 +11,5 @@
 /*-------------------------------------*/
 
 /* Creamos la regla con la que integraremos SNORT e IPTABLES */
-sudo snort -Q -c /etc/snort/snort.conf -A console --daq-var queue=0
+sudo iptables -t nat -A PREROUTING -j NFQUEUE --queue-num 0
 /*-----------------------------------------------------------*/
