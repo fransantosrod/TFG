@@ -65,9 +65,8 @@ int main (){
 			
 			//Almacenamos la frase deseada en nuestra tabla
 			palabras_frase[letra++] = '\0';
-			printf("%d %d\n", frase, palabra);
-			contenido[frase][palabra] = palabras_frase;
-			printf("%s\n", contenido[frase][palabra]);
+			contenido[frase][palabra] = strdup(palabras_frase);
+			//printf("%s\n", contenido[frase][palabra]);
 			
 			//Volvemos a iniciar el número de letras ya que estamos en una nueva frase y palabra
 			letra = 0;
@@ -84,9 +83,8 @@ int main (){
 			
 			//Almacenamos la frase deseada en nuestra tabla
 			palabras_frase[letra++] = '\0';
-			printf("%d %d\n", frase, palabra);
-			contenido[frase][palabra] = palabras_frase;
-			printf("%s\n", contenido[frase][palabra]);
+			contenido[frase][palabra] = strdup(palabras_frase);
+			//printf("%s\n", contenido[frase][palabra]);
 			
 			//Aumentamos el número de palabras leidas
 			palabra++;
@@ -98,19 +96,15 @@ int main (){
 		flag=false;
 		
 	}
-
-	printf("\n");
-
-	printf("\n");
 	int i = 0;
 	int j = 0;
 
 	for (i=0;i<frase;i++){
 		for (j=0; j<=cont_aux_pal[i];j++){
-			printf("%d %d\n", i, j);
-			printf("%s\n", contenido[i][j]);
+			printf("%s ", contenido[i][j]);
 		}
-	}
+		printf("\n");
+	}	
 	fclose(fichero);
 	//Liberamos la memoria
 	free(palabras_frase);
