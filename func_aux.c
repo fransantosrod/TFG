@@ -215,6 +215,7 @@ bool comprueba_IP(char *direccion_IP){
 
 
 /*---------------------------------------------------------
+	!!!!!!!!!!!!!********FALTA VER PUERTO**********!!!!!!!!!!!!!!!!
 	Función que para un string dado comprueba si dicho
 	string está en el contenido leido de un fichero
 	
