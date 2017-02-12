@@ -40,6 +40,21 @@ necesarias para que estas funcionen
 #define VALOR_FRAG_3 "10"
 //El número máximo de digitos que puede tener un fragmento de IP
 #define MAX_DIG_FRAGMENTO_IP 3
+//Constante para definir la línea de fin de una coincidencia
+#define FIN_REGLA_ALERTA 3
+#define SIGUIENTE_LINEA 1
+//Constante para definir la posición relativa del protocolo
+#define LINEA_PROTOCOLO 2
+//Constante para definir la posición de la IP origen dentro de una línea
+#define POSICION_IP_ORIGEN 3
+//Igual que el anterior pero relativa a la IP destino
+#define POSICION_IP_DESTINO 5
+//Número máximo de reglas que almacenarán las tablas
+#define NUM_REGLAS 100
+//Constante para definir los protocolos
+#define UDP "UDP"
+#define TCP "TCP"
+#define ICMP "ICMP"
 
 
 typedef struct CONTENIDO_FICHERO{
@@ -58,6 +73,26 @@ typedef struct CONTENIDO_FICHERO{
 } contenido_fichero;
 
 
+typedef struct COINCIDENCIA_REGLA {
+	
+	//Array para almacenar la dirección IP
+	char *dir_IP[NUM_REGLAS];
+	//Array de string para almacenar el protocolo
+	char *protocolo[NUM_REGLAS];
+	/*--------------------------------------
+		Bandera para conocer si la dirección
+		IP se encontraba en el campo de origen
+		o en el de destino
+			-- true: se encontraba en origen
+			-- false: se encontraba en destino
+	--------------------------------------*/
+	bool dir_en_origen[NUM_REGLAS];
+	//Variable para almacenar el número total de coincidencias
+	int numero_coincidencias;
+
+}coincidencia_regla;
+
+
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
 	Recibe: Un fichero abierto para su lectura
@@ -74,5 +109,15 @@ struct CONTENIDO_FICHERO lee_fichero (FILE *fichero_lectura);
 	Devuelve: Un booleano indicando si pertenece a la red local
 ----------------------------------------------------------*/
 bool comprueba_IP(char *direccion_IP);
+
+
+/* -------------------------------------------------------
+	Función que para un string dado comprueba si dicho
+	string está en el contenido leido de un fichero
+	
+	Recibe: Una estructura del tipo CONTENIDO_FICHERO
+	Devuelve: Estructura del tipo COINCIDENCIA_REGLA
+----------------------------------------------------------*/
+struct COINCIDENCIA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia);
 
 #endif
