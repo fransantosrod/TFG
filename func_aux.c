@@ -125,3 +125,89 @@ struct CONTENIDO_FICHERO lee_fichero (FILE *fichero_lectura){
 	
 	return contenido_del_fichero;
 }
+
+
+
+
+/*-------------------------------------
+Función que se encarga de comprobar si una
+dirección IP pertenece a la red local o no
+
+Recibe: char* que contiene la dirección IP
+que se quiere comprobar
+Devuelve: Un booleano indicando si pertenece o no
+	-- true: Pertenece a la red local
+	-- false: No pertenece a la red local
+
+Caracteristicas: 
+	Lo primero que realiza es la fragmentación
+	de la dirección IP
+	Tras esto comprueba si los tres primeros
+	fragmentos coinciden con la red local
+		10.10.10.0/24 en este caso
+	Devuelve el si es cierto o no
+-------------------------------------*/
+bool comprueba_IP(char *direccion_IP){
+
+
+	//Varible auxiliar para recorrer caracter a caracter la direccion IP
+	int caracter_dir_IP;
+	//Variable auxiliar para almacenar los dígitos en la posición correcta de la tabla
+	int pos_digito;
+	//Variable auxiliar para almacenar la posicion donde se debe guardar el digito correspondiente
+	//a un fragmento de una direccion IP
+	int pos_aux;
+	//Bandera que nos indica si la red es local o no
+	bool red_local;
+
+	//Array para almacenar la dirección IP dividida
+		//4 que son los octetos que contiene una dirección IP
+	char *dir_IP_div[TAM_IP];
+	//Array auxiliar para almacenar el fragmento de la direccion IP
+	char *fragmento_dir_IP = (char *)malloc(sizeof (char)* MAX_DIG_FRAGMENTO_IP);
+
+	//Inicializamos las variables
+	caracter_dir_IP = INICIO;
+	pos_digito = INICIO;
+	pos_aux = INICIO;
+	red_local=false;
+
+	//Bucle para realizar la fragmentación de la dirección IP
+	//Recorremos caracter a caracter el string que le hemos pasado como parámetro
+	for(caracter_dir_IP = 0; caracter_dir_IP <= (int) strlen(direccion_IP); caracter_dir_IP++){
+			
+		//Comprobamos si el caracter que estamos leyendo es . o estramos en el último caracter del string	
+		if (direccion_IP[caracter_dir_IP] == PUNTO || direccion_IP[caracter_dir_IP] == TERMINADOR){
+			//Almacenamos el fragmento en la tabla
+			fragmento_dir_IP[pos_aux++] = TERMINADOR;
+			dir_IP_div[pos_digito] = strdup(fragmento_dir_IP);
+			
+			//Aumentamos la posición del fragmento
+			pos_digito++;
+			//Iniciamos el caracter auxilar
+			pos_aux=INICIO;
+		}
+
+		else {
+
+			//Almacenamos el caracter leido en la tabla auxiliar
+			fragmento_dir_IP[pos_aux] = direccion_IP[caracter_dir_IP];
+			pos_aux++;
+		}
+	} 
+	
+	//Una vez que tenemos fragmentada la dirección IP comprobamos si los tres primeros coinciden con la red local
+	/*-----------------------------------------------------------------
+		En este caso al tener definida la red local como un /24 sólo 
+		debemos mirar los tres primeros fragmentos ya que el último 
+		es el variable
+	-----------------------------------------------------------------*/
+	if ((strcmp(dir_IP_div[FRAG_1],VALOR_FRAG_1)==IGUAL)  && (strcmp(dir_IP_div[FRAG_2],VALOR_FRAG_2)==IGUAL) 
+		&& (strcmp(dir_IP_div[FRAG_3],VALOR_FRAG_3)==IGUAL))
+		red_local=true;
+	
+	else
+		red_local =false;
+	
+	return red_local;
+}
