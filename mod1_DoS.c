@@ -11,6 +11,8 @@ en los ataques DoS
 #include <stdbool.h>
 #include "func_aux.h"
 
+
+
 int main (){
 	
 	//Variable para el fichero que se desea leer
@@ -30,7 +32,7 @@ int main (){
 		fclose(fichero_lectura);
 	
 		contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS");
-	
+		
 		crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "drop");
 			
 	}
@@ -39,5 +41,3 @@ int main (){
 	return 0;
 
 } 	
-
-
