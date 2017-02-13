@@ -55,6 +55,17 @@ necesarias para que estas funcionen
 #define UDP "UDP"
 #define TCP "TCP"
 #define ICMP "ICMP"
+//Constante para definir el número máximo de caracteres para una regla
+#define NUM_CARACTERES_REGLAS 500
+//Constante para definir el número máximo de digitos que puede tener el SID
+#define NUM_DIG_SID 10
+//Constantes para definir la posición que ocupan los campos relevantes en una regla
+#define POS_ACCION 0
+#define POS_PROTOCOLO 1
+#define POS_DIR_IP_ORIG 2
+#define POS_PUERTO_ORIG 3
+#define POS_DIR_IP_DEST 5
+#define POS_PUERTO_DEST 6
 
 
 typedef struct CONTENIDO_FICHERO{
@@ -73,7 +84,7 @@ typedef struct CONTENIDO_FICHERO{
 } contenido_fichero;
 
 
-typedef struct COINCIDENCIA_REGLA {
+typedef struct CONTENIDO_ALERTA {
 	
 	//Array para almacenar la dirección IP
 	char *dir_IP[NUM_REGLAS];
@@ -90,7 +101,7 @@ typedef struct COINCIDENCIA_REGLA {
 	//Variable para almacenar el número total de coincidencias
 	int numero_coincidencias;
 
-}coincidencia_regla;
+}contenido_alerta;
 
 
 /* -------------------------------------------------------
@@ -116,8 +127,20 @@ bool comprueba_IP(char *direccion_IP);
 	string está en el contenido leido de un fichero
 	
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
-	Devuelve: Estructura del tipo COINCIDENCIA_REGLA
+	Devuelve: Estructura del tipo CONTENIDO_ALERTA
 ----------------------------------------------------------*/
-struct COINCIDENCIA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia);
+struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia);
 
+
+/* -------------------------------------------------------
+	Función que se encarga de crear las reglas a partir de la 
+	estructura y la acción a tomar,
+	
+	Recibe: El nombre del fichero donde estan  almacenadas las 
+		reglas , una estructura del tipo CONTENIDO_ALERTA y 
+		la acción
+	
+	Devuelve: Nada
+----------------------------------------------------------*/
+void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERTA contenido_fichero_alerta, char *accion);
 #endif
