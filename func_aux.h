@@ -66,7 +66,10 @@ necesarias para que estas funcionen
 #define POS_PUERTO_ORIG 3
 #define POS_DIR_IP_DEST 5
 #define POS_PUERTO_DEST 6
-
+//Constante para definir el caracter :
+#define DOS_PUNTOS ':'
+//Constante para definir el número máximo de digitos de un puerto
+#define TAM_PUERTO 6
 
 typedef struct CONTENIDO_FICHERO{
 
@@ -88,6 +91,16 @@ typedef struct CONTENIDO_ALERTA {
 	
 	//Array para almacenar la dirección IP
 	char *dir_IP[NUM_REGLAS];
+	/*--------------------------------------
+		Bandera para conocer si se la 
+		dirección IP lleva asociada un puerto
+		o no
+			--true: La dir_IP lleva un puerto
+			-- false: No lo lleva
+	--------------------------------------*/
+	bool dir_Con_Puerto[NUM_REGLAS];
+	//Array para almacenar el número de puerto
+	char *puerto[NUM_REGLAS];
 	//Array de string para almacenar el protocolo
 	char *protocolo[NUM_REGLAS];
 	/*--------------------------------------
@@ -99,9 +112,10 @@ typedef struct CONTENIDO_ALERTA {
 	--------------------------------------*/
 	bool dir_en_origen[NUM_REGLAS];
 	//Variable para almacenar el número total de coincidencias
-	int numero_coincidencias;
+	int numero_lineas;
 
 }contenido_alerta;
+
 
 
 /* -------------------------------------------------------
