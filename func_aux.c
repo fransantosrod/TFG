@@ -712,6 +712,7 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 			//Leemos el fichero de reglas ya creadas y almacenamos la info en la estructura
 			contenido_del_fichero_reglas = lee_fichero(nombre_fichero_escritura);
 			fclose(fichero_escritura);
+
 		}
 		
 		//Comprobamos si la regla que queremos crear está ya en el fichero o no
@@ -867,3 +868,77 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 	//Liberamos memoria
 	free(reglas_aux);
 }	
+
+
+
+
+/*---------------------------------------------
+	Función para que Snort vuelva a leer
+	las reglas nuevas que se han introducido
+
+	Recibe: Nada
+	Devuelve: Nada
+
+	Caracteristicas:
+		Obtiene el PID del proceso que almacena
+		en un fichero, posteriormente ese 
+		fichero se lee y se ejecuta la orden
+		de recarga para ese PID
+---------------------------------------------*/
+void recarga_Snort () {
+
+	//Variable auxiliar para almacenar el PID
+	char *pid = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para almacenar el nombre del fichero
+	char *nombre_fichero_pid = (char * )malloc(sizeof(char *)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para almacenar el comando que vamos a ejecutar
+	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//Variable auxiliar para saber en la línea en la que nos encontramos
+	int cont_aux_linea;
+	//Variable auxiliar para saber en que palabra nos encontramos
+	int cont_aux_palara;
+
+	//Inicializamos las variables
+	strcpy(nombre_fichero_pid, "pid.txt");
+	cont_aux_linea = INICIO;
+	cont_aux_palara = INICIO;
+
+	//¡¡¡¡¡CAMBIAR SUBLIME_TEXT POR EL COMANDO PARA EJECUTAR SNORT!!!!
+	//Creamos el comando para obtener el PID y redireccionarlo al fichero
+	strcpy(comando, "pidof sublime_text > ");
+	strcat(comando, nombre_fichero_pid);
+	//Ejecutamos dicho comando
+	system(comando);
+
+	//Leemos el fichero
+	contenido_del_fichero = lee_fichero(nombre_fichero_pid);
+
+	//Recorremos el array devuelto para obtener el PID
+	for (cont_aux_linea=0;
+			cont_aux_linea < contenido_del_fichero.num_frases_fichero; 
+			cont_aux_linea++){
+		
+		for (cont_aux_palara=0;
+			cont_aux_palara<=contenido_del_fichero.palabras_por_frase[cont_aux_linea];
+			cont_aux_palara++) {
+
+			//Almacenamos el PID en nuestra variable específica
+			strcpy(pid,
+				contenido_del_fichero.contenido_leido_del_fichero[cont_aux_linea][cont_aux_palara]);
+
+		}
+	}
+
+	//Creamos el comando para recargar Snort
+	strcpy(comando, "kill -SIGHUP ");
+	strcat(comando, pid);
+	//Ejecutamos dicho comando
+	system(comando);
+
+	//Liberamos la memoria
+	free(nombre_fichero_pid);
+	free(comando);
+	free(pid);
+}

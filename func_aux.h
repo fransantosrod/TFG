@@ -70,7 +70,10 @@ necesarias para que estas funcionen
 #define DOS_PUNTOS ':'
 //Constante para definir el número máximo de digitos de un puerto
 #define TAM_PUERTO 6
-
+//Constante para definir el número máximo de digitos que puede tener la fecha
+#define TAM_FECHA 100
+//Constante para definir el límite a partir del cuál crearemos un nuevo fichero (en mod1_DoS.c)
+#define LIMITE_LINEAS_LEIDAS NUM_FRASES-30
 typedef struct CONTENIDO_FICHERO{
 
 	//Variable auxiliar para almacenar cuantas palabras tiene cada frase
@@ -178,5 +181,15 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 ----------------------------------------------------------*/
 bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct CONTENIDO_ALERTA contenido_fichero_alerta, 
 	char *accion, int pos_dentro_cont_alerta);
+
+
+/* -------------------------------------------------------
+	Función para que Snort vuelva a leer las reglas 
+	nuevas que se han introducido
+
+	Recibe: Nada
+	Devuelve: Nada
+----------------------------------------------------------*/
+void recarga_Snort ();
 
 #endif
