@@ -170,7 +170,7 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	int numero_de_coincidencia;
 
 	//Variable auxiliar para almacenar la dirección del caracter : y el puerto
-	char *puerto = (char *)malloc(sizeof(char *) * TAM_PUERTO);
+	char *puerto;
 	//Variable auxiliar para almacenar la dirección IP cuando
 	char *dir_IP_aux = (char *)malloc(sizeof (char *) * TAM_IP*MAX_DIG_FRAGMENTO_IP);
 
@@ -243,13 +243,16 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 					puerto =
 						strchr(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero], DOS_PUNTOS);
 					
+					
 					//Si hemos encontrado dicho caracter
 					if (puerto != NULL) {
-						printf("%s\n", puerto);	
+						
 						//Copiamos la dirección IP
-						strncpy (dir_IP_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero],
+						snprintf(dir_IP_aux, 
 							(int)strlen(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]) - 
-							(int)strlen(puerto));
+							(int)strlen(puerto)+1 , 
+							"%s",contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+
 						
 						//Bucle para elminar el caracter : del primer campo de la cadena
 						int i=0;
@@ -265,6 +268,7 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 					//En el caso en el que no hayamos encontrado el caracter
 					else {
 						
+
 						//Almacenamos la dirección IP en la variable auxiliar
 						dir_IP_aux = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
 					}
@@ -276,7 +280,13 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 					//En caso que sea de la red externa
 					if (red_local == false){
 
+						//Indicamos que hemos detectado una red externa
 						detectada_red_externa=true;
+
+						//Almacenamos dicha dirección IP en la estructura
+						contenido_fichero_alerta.dir_IP[numero_de_coincidencia] = 
+							strdup(dir_IP_aux);
+						
 
 						//Comprobamos si dicha dirección IP estaba en el campo correspondiente a destino u origen
 						if (cont_aux_palabras_fichero == POSICION_IP_ORIGEN){
@@ -303,11 +313,8 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 							//En este caso, en la estructura almacenamos un terminador para que no quede vacio
 							contenido_fichero_alerta.puerto[numero_de_coincidencia] = strdup("\0");
 						}
-						printf("%s\n", dir_IP_aux);
-						//Almacenamos dicha dirección IP en la estructura
-						contenido_fichero_alerta.dir_IP[numero_de_coincidencia] = 
-							strdup(dir_IP_aux);
 						
+
 					}
 				}
 			}
@@ -346,7 +353,11 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 
 		}
 	}	
+	
 	contenido_fichero_alerta.numero_lineas = numero_de_coincidencia;
+
+	//Liberamos la memoria
+	free(dir_IP_aux);
 
 	return contenido_fichero_alerta;
 }
@@ -432,6 +443,194 @@ bool comprueba_IP(char *direccion_IP){
 	
 	else
 		red_local =false;
-	
+
+	//Liberamos memoria
+	free(fragmento_dir_IP);
 	return red_local;
+}
+
+
+/*-----------------------------------------------------
+	Función que se encarga de buscar en el fichero 
+	de reglas donde se quiera insertar si existe 
+	una igual para evitar introducir reglas duplicadas
+
+	Recibe: Estructura del tipo CONTENIDO_FICHERO,
+	estructura del tipo CONTENIDO_ALERTA, una acción
+	y la posición dentro de la estructura CONTENIDO_ALERTA
+	donde se encuentra leyendo la info relativa a la nueva
+	regla
+
+	Devuelve: Un booleano
+		--true: Ya hay una regla igual
+		-- false: No la hay
+
+	Caracteristicas:
+		Mediante un bucle, recorre el fichero de las
+		reglas y va comprobando una a una si la 
+		info que tiene almacenada para crear la nueva
+		regla coincide con alguna ya creada para ello,
+		va avanzando campo a campo de cada regla hasta
+		llegar al puerto destino, la info opcional
+		no se evalua ya que esta puede ser muy 
+		cambiante
+-----------------------------------------------------*/
+
+bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct CONTENIDO_ALERTA contenido_fichero_alerta, 
+	char *accion, int pos_dentro_cont_alerta) {
+
+	
+	//Bandera para detectar la coincidencia en una regla
+	bool coincide;
+	//Variable auxiliar para recorrer la tabla devuelta al leer el fichero
+	int cont_aux_linea;
+	
+	//Inicializamos las variables
+	cont_aux_linea = INICIO;
+	coincide = false;
+	
+
+	//Recorremos la estructura leida del fichero de reglas para buscar coincidencias con la que vamos a introducir
+	//Estaremos aquí mientras que no se haya encontrado ninguna coincidencia
+	for (cont_aux_linea=0; 
+			cont_aux_linea<contenido_del_fichero_reglas.num_frases_fichero && coincide == false; 
+			cont_aux_linea++){
+
+		//Comprobamos si los valores a introducir coinciden con los que ya están
+		/*-----------------------------------------------------------------
+			Aprovechando la estructura de las reglas que es la siguiente:
+			accion protocolo dir_IP_orig puerto_orig ->
+				dir_IP_dest puerto_dest
+			Estos valores serán los que comprobaremos
+		-----------------------------------------------------------------*/
+
+		//Comprobamos conjuntamente si la pareja acción protocolo son iguales
+		if ((strcmp(accion, contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_ACCION]) == IGUAL) &&
+		 	(strcmp(contenido_fichero_alerta.protocolo[pos_dentro_cont_alerta], 
+				contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PROTOCOLO]) == IGUAL )){
+				
+				//Comprobamos si la dirección IP estaba en el campo origen	
+				if (contenido_fichero_alerta.dir_en_origen[pos_dentro_cont_alerta] == true){
+
+					//En ese caso, comprobamos que coincida la dir_IP con la origen de la regla y la destino con "any"
+					if (strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
+							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL ||
+						strcmp("any", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST] )== IGUAL){
+
+						//Comprobamos si la dir_IP tenía asociada un puerto
+						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_cont_alerta] == true){
+
+							//Si es así comprobamos si el puerto coincide
+							if (strcmp (contenido_fichero_alerta.puerto[pos_dentro_cont_alerta],
+								contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_ORIG]) == IGUAL ){
+
+								//Si todo lo anterior coincide, la regla ya existía
+								coincide = true;
+							}
+
+							else {
+								//En caso contrario, estamos ante una nueva regla
+								coincide = false;
+							}
+						}
+
+						else {
+								
+							//Si no tenía asociada ningún puerto, comprobamos que es "any"
+							if (strcmp("any", 
+								contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_ORIG]) == IGUAL) {
+								
+								//Si coincide, estamos ante una regla ya existente
+								coincide =true;
+	
+							}
+								
+							else {
+
+								//En caso de que no coincida, es una nueva regla
+								coincide = false;
+	
+							}
+						}
+					}
+
+					else {
+						
+						//En caso contrario, estamos ante una nueva regla
+						coincide = false;
+	
+					}
+	
+				}
+				
+				//Si la dirección IP no estaba en el campo origen
+				else { 
+					
+					//Comprobamos que el campo origen sea "any" y el destno la dir_IP de la regla que queremos crear
+					if (strcmp("any", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
+						strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
+							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST]) == IGUAL ){
+
+						//Comprobamos si esa dirección llevaba asociada un puerto
+						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_cont_alerta] == true){
+
+							//Si lo llevaba asociado, comprobamos si el puerto coincide
+							if (strcmp (contenido_fichero_alerta.puerto[pos_dentro_cont_alerta],
+								contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_DEST]) == IGUAL ){
+
+								//En ese caso estamos ante una regla creada anteriormente
+								coincide = true;	
+	
+							}
+
+							//En otro caso, estamos ante una nueva regla
+							else {
+								
+								coincide = false;
+								
+							}
+						}
+
+						//Si no llevaba puerto asociado seguimos comprobando
+						else {
+							
+							//Comprobamos que el puerto destino es "any"
+							if (strcmp("any",  	
+									contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_DEST]) == IGUAL){
+								
+								//Estamos ante una regla ya creada si todo lo anterior es igual		
+								coincide = true;
+								
+							}
+								
+							else {
+
+								//Estamos ante una nueva regla
+								coincide = false;
+		
+							}
+		
+						}
+		
+					}
+		
+					else {
+						//En otro caso, es una nueva regla
+						coincide = false;
+		
+					}		
+				}
+	
+		}
+
+		else {
+				
+			//En caso contrario estamos ante una nueva regla
+			coincide = false;
+	
+		}
+	
+	}
+
+	return coincide;
 }

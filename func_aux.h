@@ -157,4 +157,26 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	Devuelve: Nada
 ----------------------------------------------------------*/
 void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERTA contenido_fichero_alerta, char *accion);
+
+
+
+
+/* -------------------------------------------------------
+	Función que se encarga de buscar en el fichero 
+	de reglas donde se quiera insertar si existe 
+	una igual para evitar introducir reglas duplicadas
+
+	Recibe: Estructura del tipo CONTENIDO_FICHERO,
+	estructura del tipo CONTENIDO_ALERTA, una acción
+	y la posición dentro de la estructura CONTENIDO_ALERTA
+	donde se encuentra leyendo la info relativa a la nueva
+	regla
+
+	Devuelve: Un booleano
+		--true: Ya hay una regla igual
+		-- false: No la hay
+----------------------------------------------------------*/
+bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct CONTENIDO_ALERTA contenido_fichero_alerta, 
+	char *accion, int pos_dentro_cont_alerta);
+
 #endif
