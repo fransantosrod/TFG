@@ -120,10 +120,10 @@ typedef struct CONTENIDO_ALERTA {
 
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
-	Recibe: Un fichero abierto para su lectura
+	Recibe: El nombre del fichero que queremos leer
 	Devuelve: Una estructura del tipo CONTENIDO_FICHERO
 ----------------------------------------------------------*/
-struct CONTENIDO_FICHERO lee_fichero (FILE *fichero_lectura);
+struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero);
 
 
 /* -------------------------------------------------------

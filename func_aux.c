@@ -10,9 +10,10 @@ implementaciones de las funciones auxiliares
 #include <stdbool.h>
 #include "func_aux.h"
 
+
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
-	Recibe una fichero abierto para su lectura
+	Recibe: El nombre del fichero a leer
 	Devuelve: Una estructura con
 		-- Número de frases leidas
 		-- Número de palabras en cada frase
@@ -26,8 +27,10 @@ implementaciones de las funciones auxiliares
 		en la estructura
 --------------------------------------------------------*/
 
-struct CONTENIDO_FICHERO lee_fichero (FILE *fichero_lectura){
+struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 
+	//Variable donde almacenaremos el fichero que queremos leer
+	FILE *fichero_lectura;
 	//Variable para leer el fichero caracter a carater
 	char c;
 	//Variable para almacenar el valor del caracter anterior
@@ -41,7 +44,10 @@ struct CONTENIDO_FICHERO lee_fichero (FILE *fichero_lectura){
 	int letra;
 	//Bandera para bloquear el aumento de frases si estamos leyendo un salto de parrafo
 	bool flag;
+	//Bandera para evitar que se lean más líneas que el tamaño de la tabla
+	bool sobrepasa_tamanio;
 	
+
 	//Array auxiliar para almacenar cada palabra de la frase
 		//NUM_CARACTERES_PALABRA caracteres por palabras
 	char *palabras_frase = (char *)malloc (sizeof(char)*NUM_CARACTERES_PALABRA);
@@ -50,68 +56,78 @@ struct CONTENIDO_FICHERO lee_fichero (FILE *fichero_lectura){
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 
 	//Inicialización de variables
+	fichero_lectura = fopen(nombre_fichero, "r");
 	frase = INICIO;
 	c_ant = ESPACIO;
 	palabra = INICIO;
 	letra = INICIO;
 	flag = false;
-
+	sobrepasa_tamanio = false;
 
 	if (fichero_lectura != NULL){
 		//Comenzamos a leer el fichero
-		while ((c=fgetc(fichero_lectura))!=EOF){
-		
-			if (c!= ESPACIO && c!=SALTO_DE_LINEA){
-				//Almacenamos el caracter leido
-				palabras_frase[letra] = c;
-				//Aumentamos el número de letras leidas
-				letra++;
-			}
-		
-			//Comprobamos si el caracter leido anteriormente y el actual son un salto de linea
-			else if (c_ant == SALTO_DE_LINEA && c == SALTO_DE_LINEA){
+		while ((c=fgetc(fichero_lectura))!=EOF && sobrepasa_tamanio==false){
+			
+			if (frase < NUM_FRASES){
+				if (c!= ESPACIO && c!=SALTO_DE_LINEA){
+					//Almacenamos el caracter leido
+					palabras_frase[letra] = c;
+					//Aumentamos el número de letras leidas
+					letra++;
+				}
+			
+				//Comprobamos si el caracter leido anteriormente y el actual son un salto de linea
+				else if (c_ant == SALTO_DE_LINEA && c == SALTO_DE_LINEA){
 
-				//Si lo es, estamos en un nuevo parrafo
-				flag=true;
-				palabra=INICIO;
-			
-			}
-		
-			//Comprobamos si se ha leido alguna letra,si esta esta es un salto de línea y no estamos en el salto de parrafo 
-			else if (c == SALTO_DE_LINEA && letra>0 && flag!= true){
-			
-				//Almacenamos la palabra de la frase deseada en nuestra tabla
-				palabras_frase[letra++] = '\0';
-				contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
+					//Si lo es, estamos en un nuevo parrafo
+					flag=true;
+					palabra=INICIO;
 				
-				//Volvemos a iniciar el número de letras ya que estamos en una nueva frase y palabra
-				letra = INICIO;
-				//Almacenamos el número de palabras que tenía la frase que hemos terminado de leer
-				contenido_del_fichero.palabras_por_frase[frase] = palabra;
+				}
+			
+				//Comprobamos si se ha leido alguna letra,si esta esta es un salto de línea y no estamos en el salto de parrafo 
+				else if (c == SALTO_DE_LINEA && letra>0 && flag!= true){
 				
-				palabra=INICIO;	
-			
-				//En ese caso aumentamos el número de frases leidas
-				frase++;
-			
-			}
-		
-			//Comprobamos si el caracter es un espacio y si se ha leido alguno 
-			else if (c == ESPACIO && letra >0){
-			
-				//Almacenamos la palabra de la frase deseada en nuestra estructura
-				palabras_frase[letra++] = '\0';
-				contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
+					//Almacenamos la palabra de la frase deseada en nuestra tabla
+					palabras_frase[letra++] = '\0';
+					contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
+					
+					//Volvemos a iniciar el número de letras ya que estamos en una nueva frase y palabra
+					letra = INICIO;
+					//Almacenamos el número de palabras que tenía la frase que hemos terminado de leer
+					contenido_del_fichero.palabras_por_frase[frase] = palabra;
+					
+					palabra=INICIO;	
 				
-				//Aumentamos el número de palabras leidas
-				palabra++;
-				//Volvemos a iniciar el número de letras leidas ya que estamos en una nueva palabra
-				letra=INICIO;
+					//En ese caso aumentamos el número de frases leidas
+					frase++;
+				
+				}
+			
+				//Comprobamos si el caracter es un espacio y si se ha leido alguno 
+				else if (c == ESPACIO && letra >0){
+				
+					//Almacenamos la palabra de la frase deseada en nuestra estructura
+					palabras_frase[letra++] = '\0';
+					contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
+					
+					//Aumentamos el número de palabras leidas
+					palabra++;
+					//Volvemos a iniciar el número de letras leidas ya que estamos en una nueva palabra
+					letra=INICIO;
+				}
+
+				c_ant=c;;
+				flag=false;
 			}
 
-			c_ant=c;;
-			flag=false;
+			else {
+
+				sobrepasa_tamanio = true;
+				fprintf(stderr, "El fichero %s supera las %d líneas útiles máximas\n", nombre_fichero, NUM_FRASES);
+			}
 		}
+		fclose(fichero_lectura);
 	}
 
 	else 
@@ -190,7 +206,7 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 
 	//Mediante los siguientes bucles recorremos la tabla que nos ha devuelto la estructura
 	for (cont_aux_frases_fichero=0; 
-		cont_aux_frases_fichero< contenido_del_fichero.num_frases_fichero; 
+		cont_aux_frases_fichero< contenido_del_fichero.num_frases_fichero && numero_de_coincidencia < NUM_REGLAS; 
 		cont_aux_frases_fichero++){
 
 		//Si hemos encontrado alguna coincidencia
@@ -203,7 +219,7 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 		}
 
 		for (cont_aux_palabras_fichero=0; 
-			cont_aux_palabras_fichero<= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero]; 
+			cont_aux_palabras_fichero<= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero] && numero_de_coincidencia < NUM_REGLAS; 
 			cont_aux_palabras_fichero++){
 
 			//Comprobamos si hemos leido alguna regla de DoS
@@ -694,7 +710,7 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 		
 		if (fichero_escritura != NULL){
 			//Leemos el fichero de reglas ya creadas y almacenamos la info en la estructura
-			contenido_del_fichero_reglas = lee_fichero(fichero_escritura);
+			contenido_del_fichero_reglas = lee_fichero(nombre_fichero_escritura);
 			fclose(fichero_escritura);
 		}
 		
