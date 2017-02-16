@@ -89,7 +89,7 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 				else if (c == SALTO_DE_LINEA && letra>0 && flag!= true){
 				
 					//Almacenamos la palabra de la frase deseada en nuestra tabla
-					palabras_frase[letra++] = '\0';
+					palabras_frase[letra++] = TERMINADOR;
 					contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
 					
 					//Volvemos a iniciar el número de letras ya que estamos en una nueva frase y palabra
@@ -108,7 +108,7 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 				else if (c == ESPACIO && letra >0){
 				
 					//Almacenamos la palabra de la frase deseada en nuestra estructura
-					palabras_frase[letra++] = '\0';
+					palabras_frase[letra++] = TERMINADOR;
 					contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
 					
 					//Aumentamos el número de palabras leidas
@@ -287,6 +287,8 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 
 						//Almacenamos la dirección IP en la variable auxiliar
 						dir_IP_aux = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+						//Almacenamos en el puerto el caracter "\0" para indicar que estamos ante una dirección IP sin puerto
+						puerto = strdup ("\0");
 					}
 
 
@@ -311,8 +313,8 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 						else{
 							contenido_fichero_alerta.dir_en_origen[numero_de_coincidencia]=false;	
 						}
-
-						if (puerto != TERMINADOR){
+						//Comprobamos si la dirección IP tiene un puerto asociado	
+						if (strcmp(puerto, "\0") != IGUAL){
 							
 							//Indicamos a través de la bandera que esta regla si contiene puerto
 							contenido_fichero_alerta.dir_Con_Puerto[numero_de_coincidencia] = true;
@@ -530,7 +532,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 
 					//En ese caso, comprobamos que coincida la dir_IP con la origen de la regla y la destino con "any"
 					if (strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
-							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL ||
+							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
 						strcmp("any", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST] )== IGUAL){
 
 						//Comprobamos si la dir_IP tenía asociada un puerto
