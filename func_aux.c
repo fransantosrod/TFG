@@ -149,7 +149,9 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	Función que para un string dado comprueba si dicho
 	string está en el contenido leido de un fichero
 	
-	Recibe: Una estructura del tipo CONTENIDO_FICHERO
+	Recibe: Una estructura del tipo CONTENIDO_FICHERO y
+	el nombre que vamos a buscar
+
 	Devuelve: Estructura del tipo CONTENIDO_ALERTA
 
 	Caracteristicas:
