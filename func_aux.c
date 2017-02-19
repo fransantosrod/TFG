@@ -32,9 +32,9 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	//Variable donde almacenaremos el fichero que queremos leer
 	FILE *fichero_lectura;
 	//Variable para leer el fichero caracter a carater
-	char c;
+	signed char c;
 	//Variable para almacenar el valor del caracter anterior
-	char c_ant;
+	signed char c_ant;
 	
 	//Variable para contabilizar el número de frases del fichero
 	int frase;
@@ -65,9 +65,11 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	sobrepasa_tamanio = false;
 
 	if (fichero_lectura != NULL){
+		
+	
 		//Comenzamos a leer el fichero
 		while ((c=fgetc(fichero_lectura))!=EOF && sobrepasa_tamanio==false){
-			
+		
 			if (frase < NUM_FRASES){
 				if (c!= ESPACIO && c!=SALTO_DE_LINEA){
 					//Almacenamos el caracter leido
@@ -664,7 +666,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		reglas , una estructura del tipo CONTENIDO_ALERTA y 
 		la acción
 	
-	Devuelve: Nada
+	Devuelve: Booleano indicando si se ha escrito la regla
 
 	Caracteristicas:
 		Lo primero que realiza la función es comprobar que 
@@ -677,13 +679,14 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		distinto
 -----------------------------------------------------------*/
 
-void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERTA contenido_fichero_alerta, char *accion){
-
-
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERTA contenido_fichero_alerta, char *accion){
+	
+	//Variable a devolver que indica si se ha creado la regla
+	bool regla_creada;
 	//Variable para el fichero donde almacenaremos el sid por el que vamos
 	FILE *fichero_sid;
 	//Variable auxiliar para la lectura del fichero donde almacenaremos el sid
-	char c;
+	signed char c;
 	//Array donde almacenaremos el número de sid leido
 	char sid[NUM_DIG_SID];
 	//Variable auxiliar para indicar la posición de la tabla donde nos encontramos
@@ -705,6 +708,7 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 	//Inicializamos
 	cont_aux_regla = INICIO;
 	coincide = true;
+	regla_creada = false;
 
 	//Recorremos la estructura de coincidencias que le pasasmos como parámetro
 	for (cont_aux_regla=0; cont_aux_regla<contenido_fichero_alerta.numero_lineas; cont_aux_regla++) {
@@ -798,11 +802,11 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 				El mensaje de info tendrá la estructura de:
 					accion + protocolo
 			-----------------------------------------------*/
-			strcat(reglas_aux, "(msg: ");
+			strcat(reglas_aux, "(msg:\"");
 			strcat(reglas_aux,accion);
 			strcat(reglas_aux, " ");
 			strcat(reglas_aux, contenido_fichero_alerta.protocolo[cont_aux_regla]);
-			strcat(reglas_aux, "; sid:");
+			strcat(reglas_aux, "\"; sid:");
 
 			//Abrimos el fichero donde almacenamos el sid
 			/*-----------------------------------------------
@@ -863,6 +867,7 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 				fputc('\n', fichero_escritura);
 				fputs(reglas_aux, fichero_escritura);
 				fclose(fichero_escritura);
+				regla_creada = true;
 			}
 					
 		}		
@@ -871,6 +876,8 @@ void crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 
 	//Liberamos memoria
 	free(reglas_aux);
+	
+return regla_creada;
 }	
 
 
@@ -909,9 +916,8 @@ void recarga_Snort () {
 	cont_aux_linea = INICIO;
 	cont_aux_palara = INICIO;
 
-	//¡¡¡¡¡CAMBIAR SUBLIME_TEXT POR EL COMANDO PARA EJECUTAR SNORT!!!!
 	//Creamos el comando para obtener el PID y redireccionarlo al fichero
-	strcpy(comando, "pidof sublime_text > ");
+	strcpy(comando, "pidof snort > ");
 	strcat(comando, nombre_fichero_pid);
 	//Ejecutamos dicho comando
 	system(comando);
@@ -936,7 +942,7 @@ void recarga_Snort () {
 	}
 
 	//Creamos el comando para recargar Snort
-	strcpy(comando, "kill -SIGHUP ");
+	strcpy(comando, "sudo kill -SIGHUP ");
 	strcat(comando, pid);
 	//Ejecutamos dicho comando
 	system(comando);
