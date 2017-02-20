@@ -1,0 +1,30 @@
+
+/* Instalamos la herramienta ARPWATCH con ella
+estaremos analizando nuestra subred continuamente
+para así detectar posibles ataques MITM */
+
+sudo apt-get install arpwatch
+
+/* Configuramos rsyslog para que rediriga los 
+mensajes de log de ARPWATCH */
+
+//Entramos en el fichero de configuración
+sudo nano /etc/rsyslog.conf
+
+//Añadimos al final
+if $programname contains 'arpwatch' then /var/log/arpwatch.log
+
+//Reiniciamos el servicio
+sudo service rsyslog restart
+
+//A partir de ahora todo quedará registrado en
+tail -f /var/log/arpwatch.log
+
+/* Introducimos en el fichero de configuración los
+parámetros que nos interesa para ello */
+
+sudo nano /etc/arpwatch.conf
+
+//Al final de este fichero introducimos
+eth0 -a -n 10.10.10.0/24
+wlan0 -a -n 192.168.1.0/24
