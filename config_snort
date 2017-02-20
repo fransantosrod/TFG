@@ -66,7 +66,7 @@
 1- Comentamos en el paso 7, a paritr de la línea 575 donde se comienza a incluir las reglas por defecto
 	de esta forma conseguimos que solo se carguen las reglas que a nosotro nos interese
 	en el fichero local.rules y tenemos controladas todas las reglas para evitar reglas duplicadas
-	Comentamos todas excepto $RULE_PATH/local.rules
+	Comentamos todas excepto $RULE_PATH/local.rules y añadiendo $RULE_PATH/reglas_DoS.rules
 	
 2- Cambiamos las rutas de las reglas a:
 	-- var RULE_PATH /etc/snort/rules
