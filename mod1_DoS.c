@@ -94,7 +94,7 @@ int main (){
 					
 					//Creamos las reglas con las que hayamos encontrado
 					regla_creada = crea_y_escribe_regla("/etc/snort/rules/local.rules", contenido_fichero_alerta, "drop");
-					
+					//Comprobamos si hemos creado la regla
 					if (regla_creada == true){
 						regla_creada = false;
 						recarga_Snort();
