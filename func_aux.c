@@ -11,7 +11,7 @@ implementaciones de las funciones auxiliares
 #include <time.h>
 #include "func_aux.h"
 
-
+#define NO_COINCIDE -1
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
 	Recibe: El nombre del fichero a leer
@@ -487,9 +487,10 @@ bool comprueba_IP(char *direccion_IP){
 	donde se encuentra leyendo la info relativa a la nueva
 	regla
 
-	Devuelve: Un booleano
-		--true: Ya hay una regla igual
-		-- false: No la hay
+	Devuelve: Un entero
+		-->0: Ya hay una regla igual. Es la línea que
+		ocupa en el fichero donde están las reglas
+		-- -1: No la hay
 
 	Caracteristicas:
 		Mediante un bucle, recorre el fichero de las
@@ -502,24 +503,24 @@ bool comprueba_IP(char *direccion_IP){
 		cambiante
 -----------------------------------------------------*/
 
-bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
-	int pos_dentro_cont_alerta) {
+int busca_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
+	int pos_dentro_estruct_regla) {
 
 	
 	//Bandera para detectar la coincidencia en una regla
-	bool coincide;
+	int coincide;
 	//Variable auxiliar para recorrer la tabla devuelta al leer el fichero
 	int cont_aux_linea;
 	
 	//Inicializamos las variables
 	cont_aux_linea = INICIO;
-	coincide = false;
+	coincide = NO_COINCIDE;
 	
 
 	//Recorremos la estructura leida del fichero de reglas para buscar coincidencias con la que vamos a introducir
 	//Estaremos aquí mientras que no se haya encontrado ninguna coincidencia
 	for (cont_aux_linea=0; 
-			cont_aux_linea<contenido_del_fichero_reglas.num_frases_fichero && coincide == false; 
+			cont_aux_linea<contenido_del_fichero_reglas.num_frases_fichero && coincide == NO_COINCIDE; 
 			cont_aux_linea++){
 
 		//Comprobamos si los valores a introducir coinciden con los que ya están
@@ -531,32 +532,32 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		-----------------------------------------------------------------*/
 
 		//Comprobamos conjuntamente si la pareja acción protocolo son iguales
-		if ((strcmp(contenido_fichero_alerta.accion[pos_dentro_cont_alerta], contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_ACCION]) == IGUAL) &&
-		 	(strcmp(contenido_fichero_alerta.protocolo[pos_dentro_cont_alerta], 
+		if ((strcmp(contenido_fichero_alerta.accion[pos_dentro_estruct_regla], contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_ACCION]) == IGUAL) &&
+		 	(strcmp(contenido_fichero_alerta.protocolo[pos_dentro_estruct_regla], 
 				contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PROTOCOLO]) == IGUAL )){
 				
 				//Comprobamos si la dirección IP estaba en el campo origen	
-				if (contenido_fichero_alerta.dir_en_origen[pos_dentro_cont_alerta] == true){
+				if (contenido_fichero_alerta.dir_en_origen[pos_dentro_estruct_regla] == true){
 
 					//En ese caso, comprobamos que coincida la dir_IP con la origen de la regla y la destino con "$HOME_NET"
-					if (strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
+					if (strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_estruct_regla],
 							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
 						strcmp("$HOME_NET", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST] )== IGUAL){
 
 						//Comprobamos si la dir_IP tenía asociada un puerto
-						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_cont_alerta] == true){
+						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_estruct_regla] == true){
 
 							//Si es así comprobamos si el puerto coincide
-							if (strcmp (contenido_fichero_alerta.puerto[pos_dentro_cont_alerta],
+							if (strcmp (contenido_fichero_alerta.puerto[pos_dentro_estruct_regla],
 								contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_ORIG]) == IGUAL ){
 
 								//Si todo lo anterior coincide, la regla ya existía
-								coincide = true;
+								coincide = cont_aux_linea;
 							}
 
 							else {
 								//En caso contrario, estamos ante una nueva regla
-								coincide = false;
+								coincide = NO_COINCIDE;
 							}
 						}
 
@@ -567,14 +568,14 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 								contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_ORIG]) == IGUAL) {
 								
 								//Si coincide, estamos ante una regla ya existente
-								coincide =true;
+								coincide = cont_aux_linea;
 	
 							}
 								
 							else {
 
 								//En caso de que no coincida, es una nueva regla
-								coincide = false;
+								coincide = NO_COINCIDE;
 	
 							}
 						}
@@ -583,7 +584,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 					else {
 						
 						//En caso contrario, estamos ante una nueva regla
-						coincide = false;
+						coincide = NO_COINCIDE;
 	
 					}
 	
@@ -594,25 +595,25 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 					
 					//Comprobamos que el campo origen sea "$HOME_NET" y el destno la dir_IP de la regla que queremos crear
 					if (strcmp("$HOME_NET", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
-						strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
+						strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_estruct_regla],
 							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST]) == IGUAL ){
 
 						//Comprobamos si esa dirección llevaba asociada un puerto
-						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_cont_alerta] == true){
+						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_estruct_regla] == true){
 
 							//Si lo llevaba asociado, comprobamos si el puerto coincide
-							if (strcmp (contenido_fichero_alerta.puerto[pos_dentro_cont_alerta],
+							if (strcmp (contenido_fichero_alerta.puerto[pos_dentro_estruct_regla],
 								contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_DEST]) == IGUAL ){
 
 								//En ese caso estamos ante una regla creada anteriormente
-								coincide = true;	
+								coincide = cont_aux_linea;	
 	
 							}
 
 							//En otro caso, estamos ante una nueva regla
 							else {
 								
-								coincide = false;
+								coincide = NO_COINCIDE;
 								
 							}
 						}
@@ -625,14 +626,14 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 									contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PUERTO_DEST]) == IGUAL){
 								
 								//Estamos ante una regla ya creada si todo lo anterior es igual		
-								coincide = true;
+								coincide = cont_aux_linea;
 								
 							}
 								
 							else {
 
 								//Estamos ante una nueva regla
-								coincide = false;
+								coincide = NO_COINCIDE;
 		
 							}
 		
@@ -642,7 +643,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		
 					else {
 						//En otro caso, es una nueva regla
-						coincide = false;
+						coincide = NO_COINCIDE;
 		
 					}		
 				}
@@ -652,7 +653,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		else {
 				
 			//En caso contrario estamos ante una nueva regla
-			coincide = false;
+			coincide = NO_COINCIDE;
 	
 		}
 	
@@ -706,11 +707,11 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	//Variable auxiliar para recorre el bucle
 	int cont_aux_regla;
 	//Bandera para detectar la coincidencia en una regla
-	bool coincide;
+	int coincide;
 
 	//Inicializamos
 	cont_aux_regla = INICIO;
-	coincide = true;
+	coincide = INICIO;
 	regla_creada = false;
 
 	//Recorremos la estructura de coincidencias que le pasasmos como parámetro
@@ -727,10 +728,10 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 		}
 		
 		//Comprobamos si la regla que queremos crear está ya en el fichero o no
-		coincide = comprueba_Regla(contenido_del_fichero_reglas, contenido_fichero_alerta, cont_aux_regla);
+		coincide = busca_Regla(contenido_del_fichero_reglas, contenido_fichero_alerta, cont_aux_regla);
 		
 		//En el caso en el que no encontramos ninguna coincidencia en el fichero
-		if (coincide == false){
+		if (coincide <= INICIO){
 				
 			//Comenzamos añadiendo la acción que queremos ejecutar en esa regla
 			strcpy(reglas_aux,contenido_fichero_alerta.accion[cont_aux_regla]);

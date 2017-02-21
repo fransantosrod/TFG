@@ -177,12 +177,14 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	dentro de la estructura ESTRUCTURA_REGLA donde se 
 	encuentra leyendo la info relativa a la nueva regla
 
-	Devuelve: Un booleano
-		--true: Ya hay una regla igual
-		-- false: No la hay
+	Devuelve: Un entero
+		-->0: Ya hay una regla igual. Es la línea que
+		ocupa en el fichero donde están las reglas
+		-- -1: No la hay
+
 ----------------------------------------------------------*/
-bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
-	int pos_dentro_cont_alerta);
+int busca_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
+	int pos_dentro_estruct_regla);
 
 
 /* -------------------------------------------------------
