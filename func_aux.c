@@ -664,8 +664,9 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 	estructura y la acción a tomar,
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
-		reglas , una estructura del tipo ESTRUCTURA_REGLA y 
-		la acción
+		reglas , una estructura del tipo ESTRUCTURA_REGLA
+		la acción y un string para añadir informacion a la
+		regla
 	
 	Devuelve: Booleano indicando si se ha escrito la regla
 
@@ -680,7 +681,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		distinto
 -----------------------------------------------------------*/
 
-bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion){
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion, char *info_extra){
 	
 	//Variable a devolver que indica si se ha creado la regla
 	bool regla_creada;
@@ -698,8 +699,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	//Estructura que almacenará los datos relativos al fichero de las reglas
 	struct CONTENIDO_FICHERO contenido_del_fichero_reglas;
 	
-	//Array auxiliar para ir formando la regla
-		//CAMPOS_REGLAS número de palabras que contendrá como máximo una regla
+	//String auxiliar para ir formando la regla
 	char *reglas_aux= (char *) malloc (sizeof (char)*NUM_CARACTERES_REGLAS);
 	//Variable auxiliar para recorre el bucle
 	int cont_aux_regla;
@@ -804,6 +804,8 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 					accion + protocolo
 			-----------------------------------------------*/
 			strcat(reglas_aux, "(msg:\"");
+			strcat(reglas_aux, info_extra);
+			strcat(reglas_aux, ": ");
 			strcat(reglas_aux,accion);
 			strcat(reglas_aux, " ");
 			strcat(reglas_aux, contenido_fichero_alerta.protocolo[cont_aux_regla]);

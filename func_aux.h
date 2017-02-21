@@ -154,12 +154,13 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	estructura y la acción a tomar,
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
-		reglas , una estructura del tipo ESTRUCTURA_REGLA y 
-		la acción
+		reglas , una estructura del tipo ESTRUCTURA_REGLA
+		la acción y un string para añadir información
 	
-	Devuelve: Nada
+	Devuelve: Un booleano indicando si se ha escrito la 
+	regla o no
 ----------------------------------------------------------*/
-bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion);
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion,char *info_extra);
 
 
 
