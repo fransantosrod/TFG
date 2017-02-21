@@ -15,7 +15,7 @@ en los ataques MITM
 #define POS_DIR_IP 3
 #define POS_DIR_MAC_NUEVA 4
 #define POS_DIR_MAC_VIEJA 5
-
+#define TAM_MAC 17
 
 void busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero);
 
@@ -63,6 +63,8 @@ void busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero) {
 	int linea_coincidencia;
 	//Variable para almacenar el número dentro del array en el que detectamos la coincidencia
 	int palabra_coincidencia;
+	//Variable auxiliar para almacenar la dirección MAC antigua
+	char mac_antigua[TAM_MAC];
 	//Bandera para indicar si hemos detectado una coincidencia
 	bool flag;
 
@@ -113,14 +115,23 @@ void busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero) {
 			if ( flag == true && cont_aux_palabras == palabra_coincidencia + POS_DIR_IP){
 				printf("Dirección IP conflicto: %s\n", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
 			}
-
 			//Comprobamos si hemos detectado una coincidencia y la palabra en la que nos encontramos es la relativa a la dirección MAC nueva
 			else if (flag == true && cont_aux_palabras == palabra_coincidencia + POS_DIR_MAC_NUEVA){
 				printf("	Dirección MAC nueva: %s\n", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
 			}
 			//Comprobamos si hemos detectado una coincidencia y la palabra en la que nos encontramos es la relativa a la dirección MAC antigua
 			else if (flag == true && cont_aux_palabras == palabra_coincidencia + POS_DIR_MAC_VIEJA){
-				printf("	Dirección MAC vieja: %s\n", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
+				
+				//Eliminamos los paréntesis con los que ARPWATCH nos notifica en los logs sobre la antigua MAC
+				int i=0;
+				
+				for (i=1; i < (int)strlen(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras])-1;i++){
+					
+					mac_antigua[i-1] = contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras][i];
+					
+				}
+				mac_antigua[i-1] = TERMINADOR;
+				printf("	Dirección MAC vieja: %s\n", mac_antigua);
 			}
 			
 		}
