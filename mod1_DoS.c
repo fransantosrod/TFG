@@ -23,7 +23,7 @@ int main (){
 	//Estructura que almacenará los datos relativos al fichero
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 	//Estructura que almacenará los datos relativos a las coincidencias
-	struct CONTENIDO_ALERTA contenido_fichero_alerta;
+	struct ESTRUCTURA_REGLA contenido_fichero_alerta;
 	//Variable donde almacenamos el fichero que queremos leer
 	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para almacenar el nombre del fichero que se crea
