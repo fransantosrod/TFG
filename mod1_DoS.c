@@ -101,19 +101,19 @@ int main (){
 			//Almacecenamos el fichero actual en una copia para no perderlo
 			strcpy(comando, "cp -f ");
 			strcat(comando, nombre_fichero);
-			strcat(comando, " ./");
+			strcat(comando, " ");
 			//La copia estará formada por el nombre y la fecha anteriormente obtenida
 			strcat(comando, nombre_fichero);
 			strcat(comando, t_cambio_fichero);
 			system(comando);
 			
 			//Eliminamos el fichero que está apunto de sobrecargarse
-			strcpy(comando, "rm -f ./");
+			strcpy(comando, "rm -f ");
 			strcat(comando, nombre_fichero);
 			system(comando);
 			
 			//Creamos uno nuevo vacío
-			strcpy(comando, "touch -f ./");
+			strcpy(comando, "touch -f ");
 			strcat(comando, nombre_fichero);
 			system(comando);
 			
