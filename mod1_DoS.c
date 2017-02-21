@@ -26,14 +26,8 @@ int main (){
 	struct CONTENIDO_ALERTA contenido_fichero_alerta;
 	//Variable donde almacenamos el fichero que queremos leer
 	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Variable auxiliar para almacenar el instante en el que se cambia el fichero
-	time_t tiempo_cambio_fichero = time(NULL);
-	//Array para almacenar la fecha
-	char t_cambio_fichero[TAM_FECHA];
-	//Estructura para almacenar la fecha y hora en el momento deseado
-	struct tm *tm;
-	//Variable para almacenar el comando que vamos a ejecutar
-	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para almacenar el nombre del fichero que se crea
+	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para conocer el número de línea que leimos anteriormente
 	int num_lineas_anterior;
 	//Variable para conocer si hemos creado alguna regla o no
@@ -75,48 +69,9 @@ int main (){
 
 		//En el caso en el que estemos cerca del límite
 		else {
-
 			
-			/*---------------------------------------------------
-				Este fichero (mod1_DoS.c) se encarga de leer
-				continuamente un fichero que se va rellenando
-				dinámicamente, por lo tanto, una vez que detectamos
-				que laas líneas escritas están en el límite 
-				(NUM_FRASES-30), antes de que el fichero sobrepase
-				el límite y perdamos información, realizamos un
-				cambio y pasamos a almacenar el fichero bajo un
-				nuevo nombre y creamos uno nuevo para que Snort
-				pueda seguir notificando sus alertas.
-			---------------------------------------------------*/
-
-			//Obtenemos el instante en el que lo hemos detectado
-			tm = localtime(&tiempo_cambio_fichero);
-			/*-------------------------------------------------
-				La estructura con la que se almacena el nuevo
-				fichero es la siguiente:
-					nombre_fichero-dia-mes-año_hora:min:seg
-			-------------------------------------------------*/
-			strftime(t_cambio_fichero, sizeof(t_cambio_fichero), "-%d-%m-%Y_%H:%M:%S", tm);
-			
-			//Almacecenamos el fichero actual en una copia para no perderlo
-			strcpy(comando, "cp -f ");
-			strcat(comando, nombre_fichero);
-			strcat(comando, " ");
-			//La copia estará formada por el nombre y la fecha anteriormente obtenida
-			strcat(comando, nombre_fichero);
-			strcat(comando, t_cambio_fichero);
-			system(comando);
-			
-			//Eliminamos el fichero que está apunto de sobrecargarse
-			strcpy(comando, "rm -f ");
-			strcat(comando, nombre_fichero);
-			system(comando);
-			
-			//Creamos uno nuevo vacío
-			strcpy(comando, "touch -f ");
-			strcat(comando, nombre_fichero);
-			system(comando);
-			
+			//Llamamos a la función deseada para que nos vacie el fichero
+			nuevo_fichero = vacia_fichero(nombre_fichero);
 			/*--------------------------------------------------------
 				Para asegurarnos que no perdemos información
 				en ningún momento, volvemos a leer el fichero
@@ -128,10 +83,7 @@ int main (){
 				y haya información que se pueda perder
 
 			--------------------------------------------------------*/
-			strcpy(comando, nombre_fichero);
-			strcat(comando, t_cambio_fichero);
-
-			contenido_del_fichero = lee_fichero(comando);
+			contenido_del_fichero = lee_fichero(nuevo_fichero);
 
 			//Comprobamos que ese fichero no ha superado el límite
 			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
@@ -146,10 +98,10 @@ int main (){
 		num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
 		sleep(INTERVALO_LECTURA);
 	}	
+	
 	//Liberamos la memoria
 	free(nombre_fichero);
-	free(comando);
-
+	free(nuevo_fichero);
 	return 0;
 
 } 
