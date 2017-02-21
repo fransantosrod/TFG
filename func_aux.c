@@ -8,6 +8,7 @@ implementaciones de las funciones auxiliares
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "func_aux.h"
 
 
@@ -154,7 +155,7 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO y
 	el nombre que vamos a buscar
 
-	Devuelve: Estructura del tipo CONTENIDO_ALERTA
+	Devuelve: Estructura del tipo ESTRUCTURA_REGLA
 
 	Caracteristicas:
 		A través de esta función podremos detectar si 
@@ -174,7 +175,7 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 				** false: Estaba en el campo destino
 ---------------------------------------------------------*/
 
-struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia){
+struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia){
 	
 	//Variable para almacenar la línea en la que se ha detectado la coincidencia de DoS
 	int linea_coincidencia;
@@ -185,7 +186,7 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	//Bandera para almacenar cuando se detecta una red externa
 	bool detectada_red_externa;
 	//Estructura que alamcena los datos relativos a las coincidencias
-	struct CONTENIDO_ALERTA contenido_fichero_alerta;
+	struct ESTRUCTURA_REGLA contenido_fichero_alerta;
 	//Variable auxiliar para almacenar el número de coincidencias y recorrer la estructura
 	int numero_de_coincidencia;
 
@@ -478,8 +479,8 @@ bool comprueba_IP(char *direccion_IP){
 	una igual para evitar introducir reglas duplicadas
 
 	Recibe: Estructura del tipo CONTENIDO_FICHERO,
-	estructura del tipo CONTENIDO_ALERTA, una acción
-	y la posición dentro de la estructura CONTENIDO_ALERTA
+	estructura del tipo ESTRUCTURA_REGLA, una acción
+	y la posición dentro de la estructura ESTRUCTURA_REGLA
 	donde se encuentra leyendo la info relativa a la nueva
 	regla
 
@@ -498,7 +499,7 @@ bool comprueba_IP(char *direccion_IP){
 		cambiante
 -----------------------------------------------------*/
 
-bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct CONTENIDO_ALERTA contenido_fichero_alerta, 
+bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
 	char *accion, int pos_dentro_cont_alerta) {
 
 	
@@ -663,7 +664,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 	estructura y la acción a tomar,
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
-		reglas , una estructura del tipo CONTENIDO_ALERTA y 
+		reglas , una estructura del tipo ESTRUCTURA_REGLA y 
 		la acción
 	
 	Devuelve: Booleano indicando si se ha escrito la regla
@@ -679,7 +680,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		distinto
 -----------------------------------------------------------*/
 
-bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERTA contenido_fichero_alerta, char *accion){
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion){
 	
 	//Variable a devolver que indica si se ha creado la regla
 	bool regla_creada;
@@ -951,4 +952,74 @@ void recarga_Snort () {
 	free(nombre_fichero_pid);
 	free(comando);
 	free(pid);
+}
+
+
+
+/*---------------------------------------------------
+	Función que se encarga de vaciar un fichero
+	que está en el límite de líneas que puede
+	leer la función que se encarga de ello
+
+	Devuelve: string con el nombre del fichero creado
+
+	Recibe: El nombre del fichero
+
+	Caracteristicas:
+		Para vaciar el fichero, crea uno nuevo con
+		el contenido que se desea eliminar 
+		añadiendo al final del nombre la fecha en
+		la que se ha realizado para tenerlo siempre
+		almacenado
+---------------------------------------------------*/
+
+char *vacia_fichero(char *nombre_fichero){
+
+	//Variable auxiliar para almacenar el instante en el que se cambia el fichero
+	time_t tiempo_cambio_fichero = time(NULL);
+	//Array para almacenar la fecha
+	char t_cambio_fichero[TAM_FECHA];
+	//Estructura para almacenar la fecha y hora en el momento deseado
+	struct tm *tm;
+	//Variable para almacenar el comando que vamos a ejecutar
+	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+
+			
+
+
+	//Obtenemos el instante en el que lo hemos detectado
+	tm = localtime(&tiempo_cambio_fichero);
+	/*-------------------------------------------------
+		La estructura con la que se almacena el nuevo
+		fichero es la siguiente:
+			nombre_fichero-dia-mes-año_hora:min:seg
+	-------------------------------------------------*/
+	strftime(t_cambio_fichero, sizeof(t_cambio_fichero), "-%d-%m-%Y_%H:%M:%S", tm);
+			
+	//Almacecenamos el fichero actual en una copia para no perderlo
+	strcpy(comando, "cp -f ");
+	strcat(comando, nombre_fichero);
+	strcat(comando, " ");
+		
+	//La copia estará formada por el nombre y la fecha anteriormente obtenida
+	strcat(comando, nombre_fichero);
+	strcat(comando, t_cambio_fichero);
+	system(comando);
+		
+	//Eliminamos el fichero que está apunto de sobrecargarse
+	strcpy(comando, "rm -f ");
+	strcat(comando, nombre_fichero);
+	system(comando);
+		
+	//Creamos uno nuevo vacío
+	strcpy(comando, "touch -f ");
+	strcat(comando, nombre_fichero);
+	system(comando);
+	
+	strcpy(comando, nombre_fichero);
+	strcat(comando, t_cambio_fichero);
+
+	return comando;		
+	//Liberamos la memoria
+	free(comando);
 }

@@ -90,7 +90,7 @@ typedef struct CONTENIDO_FICHERO{
 } contenido_fichero;
 
 
-typedef struct CONTENIDO_ALERTA {
+typedef struct ESTRUCTURA_REGLA {
 	
 	//Array para almacenar la dirección IP
 	char *dir_IP[NUM_REGLAS];
@@ -117,7 +117,7 @@ typedef struct CONTENIDO_ALERTA {
 	//Variable para almacenar el número total de coincidencias
 	int numero_lineas;
 
-}contenido_alerta;
+}estructura_regla;
 
 
 
@@ -144,9 +144,9 @@ bool comprueba_IP(char *direccion_IP);
 	string está en el contenido leido de un fichero
 	
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
-	Devuelve: Estructura del tipo CONTENIDO_ALERTA
+	Devuelve: Estructura del tipo ESTRUCTURA_REGLA
 ----------------------------------------------------------*/
-struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia);
+struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia);
 
 
 /* -------------------------------------------------------
@@ -154,12 +154,12 @@ struct CONTENIDO_ALERTA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	estructura y la acción a tomar,
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
-		reglas , una estructura del tipo CONTENIDO_ALERTA y 
+		reglas , una estructura del tipo ESTRUCTURA_REGLA y 
 		la acción
 	
 	Devuelve: Nada
 ----------------------------------------------------------*/
-bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERTA contenido_fichero_alerta, char *accion);
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion);
 
 
 
@@ -170,8 +170,8 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 	una igual para evitar introducir reglas duplicadas
 
 	Recibe: Estructura del tipo CONTENIDO_FICHERO,
-	estructura del tipo CONTENIDO_ALERTA, una acción
-	y la posición dentro de la estructura CONTENIDO_ALERTA
+	estructura del tipo ESTRUCTURA_REGLA, una acción
+	y la posición dentro de la estructura ESTRUCTURA_REGLA
 	donde se encuentra leyendo la info relativa a la nueva
 	regla
 
@@ -179,7 +179,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct CONTENIDO_ALERT
 		--true: Ya hay una regla igual
 		-- false: No la hay
 ----------------------------------------------------------*/
-bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct CONTENIDO_ALERTA contenido_fichero_alerta, 
+bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
 	char *accion, int pos_dentro_cont_alerta);
 
 
@@ -192,4 +192,15 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 ----------------------------------------------------------*/
 void recarga_Snort ();
 
+
+/*---------------------------------------------------
+	Función que se encarga de vaciar un fichero
+	que está en el límite de líneas que puede
+	leer la función que se encarga de ello
+
+	Devuelve: string con el nombre del fichero creado
+
+	Recibe: El nombre del fichero
+---------------------------------------------------*/
+char *vacia_fichero(char *nombre_fichero);
 #endif
