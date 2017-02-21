@@ -13,7 +13,7 @@ en los ataques MITM
 #include "func_aux.h"
 #include "func_aux_mod2.h"
 
-
+//void elimina_Regla(char *nombre_fichero_borrar);
 
 int main () {
 
@@ -51,8 +51,8 @@ int main () {
 			if (informacion_regla.numero_lineas > INICIO){
 
 				//Creamos la regla
-				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop", "MITM");
-
+				//crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
+				//elimina_Regla("local.rules_prueba");
 				//Comprobamos si la hemos creado correctamente
 				if (crear_regla == true) {
 					//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
@@ -92,7 +92,7 @@ int main () {
 			if (informacion_regla.numero_lineas > INICIO){
 				
 				//Creamos la regla
-				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop", "MITM");
+				//crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
 
 				//Comprobamos que la hemos creado correctamente
 				if (crear_regla == true){
@@ -117,3 +117,10 @@ int main () {
 	return 0;
 }
 
+//void elimina_Regla(char *nombre_fichero_borrar){
+
+	//Estructura que almacenará los datos relativos al fichero
+	//struct CONTENIDO_FICHERO contenido_del_fichero;
+	
+	//contenido_del_fichero = lee_fichero(nombre_fichero_borrar);	
+//}

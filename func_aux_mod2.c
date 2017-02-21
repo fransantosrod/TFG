@@ -165,6 +165,8 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 				//Indicamos que el protocolo sea IP para que cubra a todos
 				informacion_regla.protocolo[num_reglas] = strdup(IP);
 
+				//Almacenamos la acción que queremos realizar
+				informacion_regla.accion[num_reglas] = strdup("drop");
 				//Aumentamos el número de reglas
 				num_reglas++;
 				
