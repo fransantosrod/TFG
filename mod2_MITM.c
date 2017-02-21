@@ -13,7 +13,8 @@ en los ataques MITM
 #include "func_aux.h"
 #include "func_aux_mod2.h"
 
-//void elimina_Regla(char *nombre_fichero_borrar);
+void elimina_Regla(char *nombre_fichero_borrar, struct ESTRUCTURA_REGLA informacion_regla, 
+	int pos_dentro_estruct_regla);
 
 int main () {
 
@@ -52,7 +53,6 @@ int main () {
 
 				//Creamos la regla
 				//crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
-				//elimina_Regla("local.rules_prueba");
 				//Comprobamos si la hemos creado correctamente
 				if (crear_regla == true) {
 					//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
@@ -117,10 +117,105 @@ int main () {
 	return 0;
 }
 
-//void elimina_Regla(char *nombre_fichero_borrar){
+/*---------------------------------------------------------
+|
+|	FUNCIONES QUE QUEDAN POR HACER;
+|
+|	1. REGISTRAR LAS REGLAS QUE SE CREAN CON SU TIEMPO PARA SABER CUANDO BORRARLAS
+|	2. DETECTAR CUAL DE LAS REGLAS CREADAS HA SOBREPASADO EL TIEMPO DE EXISTENCIA
+|	3. ELIMINAR ESA REGLA
+|
+--------------------------------------------------------*/
+/*--------------------------------------------------------
+	Función que se encarga de eliminar una regla
+	del fichero de reglas de Snort
 
+	Recibe: El fichero del que se quiere eliminar
+	las reglas, la estructura del tipo ESTRUCTURA_REGLA
+	que contiene la información de la regla que se
+	desea borrar y la posición dentro de la 
+	estructura
+
+	Devuelve: Nada
+
+	Caracteristicas:
+		En primer lugar lee el fichero del que se 
+		quieren borrar sus líneas para tener almacenada
+		una copia, tras esto se busca la línea donde
+		está la regla que queremos elminiar y tras esto
+		abre el fichero vacio y lo reescribe con los
+		datos que almacenó al principio saltandose la 
+		línea que deseamos eliminar
+-------------------------------------------------------*/
+
+void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informacion_regla, 
+	int pos_dentro_estruct_regla){
+
+	//Variable para almacenar el fichero de donde vamos a borrar
+	FILE *fichero_borrar;
 	//Estructura que almacenará los datos relativos al fichero
-	//struct CONTENIDO_FICHERO contenido_del_fichero;
-	
-	//contenido_del_fichero = lee_fichero(nombre_fichero_borrar);	
-//}
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//Variables para recorrer la tabla con el contenido del fichero
+	int cont_aux_frases_fichero;
+	int cont_aux_palabras_fichero;
+	//Variable auxiliar para almacenar la regla que vamos a sobreescribir
+	char *regla_aux = (char *)malloc(sizeof(char) *NUM_CARACTERES_REGLAS);
+	//Variable para almacenar la línea en la que hemos encontrado la regla
+	int linea_regla;
+
+	//Inicializamos las variables
+	cont_aux_frases_fichero = INICIO;
+	cont_aux_palabras_fichero = INICIO;
+	linea_regla = INICIO;
+
+	//Leemos el fichero del que queremos borrar la regla
+	contenido_del_fichero = lee_fichero(nombre_fichero_borrar);	
+
+	//Buscamo dicha regla en el fichero
+	linea_regla = busca_Regla(contenido_del_fichero, informacion_regla, pos_dentro_estruct_regla);
+
+
+	//Si hemos encontrado la regla
+	if (linea_regla >= INICIO){
+
+		//Abrimos el fichero vacio para volver a escribirlo
+		fichero_borrar = fopen(nombre_fichero_borrar, "w");
+		
+		//Recorremos el array que rellenamos cuando lo leimos por primera vez
+		for (cont_aux_frases_fichero=0;
+		cont_aux_frases_fichero < contenido_del_fichero.num_frases_fichero;
+		cont_aux_frases_fichero++){
+			
+			//Comprobamos que la línea que vamos a escribir no es la que queremos eliminar
+			if (cont_aux_frases_fichero != linea_regla) {
+
+				for(cont_aux_palabras_fichero =0;
+					cont_aux_palabras_fichero <= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero];
+					cont_aux_palabras_fichero++) {
+
+					//Si estamos ante la primera palabra de la frase
+					if (cont_aux_palabras_fichero == 0){
+						//Copiamos para iniciar una nueva regla
+						strcpy(regla_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+						strcat(regla_aux, " ");
+					}
+					//Si no encontramos ante otra palabra
+					else {
+						//Concatenamos las palabras para seguir creando la regla
+						strcat(regla_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+						strcat(regla_aux, " ");
+					}
+
+				}
+			//Añadimos un salto de línea
+			strcat(regla_aux, "\n");
+			//Escribimos la regla en el fichero
+			fputs(regla_aux, fichero_borrar);
+			}
+		}
+		//Cerramos el fichero
+		fclose(fichero_borrar);
+	}
+	//Liberamos memoria
+	free(regla_aux);
+}
