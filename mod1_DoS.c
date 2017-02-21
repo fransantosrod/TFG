@@ -90,8 +90,16 @@ int main (){
 				
 				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
 				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS");
-				//Creamos las reglas con las que hayamos encontrado
-				crea_y_escribe_regla("/etc/snort/rules/local.rules", contenido_fichero_alerta, "drop");
+				if (contenido_fichero_alerta.numero_lineas > INICIO){
+					
+					//Creamos las reglas con las que hayamos encontrado
+					regla_creada = crea_y_escribe_regla("/etc/snort/rules/local.rules", contenido_fichero_alerta, "drop");
+					
+					if (regla_creada == true){
+						regla_creada = false;
+						recarga_Snort();
+					}
+				}
 				contenido_del_fichero.num_frases_fichero = INICIO;
 			}
 		}
