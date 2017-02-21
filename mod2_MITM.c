@@ -51,7 +51,7 @@ int main () {
 			if (informacion_regla.numero_lineas > INICIO){
 
 				//Creamos la regla
-				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop");
+				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop", "MITM");
 
 				//Comprobamos si la hemos creado correctamente
 				if (crear_regla == true) {
@@ -92,7 +92,7 @@ int main () {
 			if (informacion_regla.numero_lineas > INICIO){
 				
 				//Creamos la regla
-				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop");
+				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop", "MITM");
 
 				//Comprobamos que la hemos creado correctamente
 				if (crear_regla == true){
