@@ -139,7 +139,7 @@ int main (){
 				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
 				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS");
 				//Creamos las reglas con las que hayamos encontrado
-				crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "drop");
+				crea_y_escribe_regla("/etc/snort/rules/local.rules", contenido_fichero_alerta, "drop");
 				contenido_del_fichero.num_frases_fichero = INICIO;
 			}
 		}
