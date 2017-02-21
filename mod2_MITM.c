@@ -16,6 +16,9 @@ en los ataques MITM
 void elimina_Regla(char *nombre_fichero_borrar, struct ESTRUCTURA_REGLA informacion_regla, 
 	int pos_dentro_estruct_regla);
 
+void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla);
+
+
 int main () {
 
 	//Estructura que almacenará los datos relativos al fichero
@@ -52,6 +55,7 @@ int main () {
 			if (informacion_regla.numero_lineas > INICIO){
 
 				//Creamos la regla
+				registra_Regla(informacion_regla);
 				//crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
 				//Comprobamos si la hemos creado correctamente
 				if (crear_regla == true) {
@@ -121,11 +125,133 @@ int main () {
 |
 |	FUNCIONES QUE QUEDAN POR HACER;
 |
-|	1. REGISTRAR LAS REGLAS QUE SE CREAN CON SU TIEMPO PARA SABER CUANDO BORRARLAS
+|	X1. REGISTRAR LAS REGLAS QUE SE CREAN CON SU TIEMPO PARA SABER CUANDO BORRARLAS
 |	2. DETECTAR CUAL DE LAS REGLAS CREADAS HA SOBREPASADO EL TIEMPO DE EXISTENCIA
-|	3. ELIMINAR ESA REGLA
+|	X3. ELIMINAR ESA REGLA
 |
 --------------------------------------------------------*/
+
+/*-------------------------------------------------------------
+	Función que se encarga de registrar las reglas ante los 
+	ataques MITM que se puedan producir para posteriormente
+	poder borrarlas ya que estas serán temporales
+
+	Recibe: Estructura del tipo ESTRUCTURA_REGLA con la info
+	de las relglas que queremos crear
+
+	Devuelve: Nada
+
+	Caracteristicas:
+		Esta función en primer lugar, abre el fichero de 
+		reglas de Snort y obtiene las que se han creado
+		tras esto, comprueba si la info que tenemos
+		de la nueva que vamos a registrar es la relativa a
+		una regla ya existente, si esto ocurre no 
+		registraremos nada ya que se sobre entiende que se
+		registro anteriormente
+-------------------------------------------------------------*/
+void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
+
+	//Fichero para almacenar la regla y la hora de creación
+	FILE *fichero_registro;
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//String auxiliar para almacenar la información que vamos a escribir
+	char *info_reglas = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
+	//Variable auxiliar para almacenar el instante en el que se cambia el fichero
+	time_t tiempo_creacion_regla = time(NULL);
+	//Array para almacenar la fecha
+	char t_creacion_regla[TAM_FECHA];
+	//Variable auxiliar para recorrer la estructura
+	int cont_aux_reglas;
+	//Variable para almacenar si ya hay una regla igual a la que queremos introducir
+	int coincidencia_regla;
+	//Estructura para almacenar la fecha y hora en el momento deseado
+	struct tm *tm;
+	
+	//Inicializamos las variables
+	fichero_registro = fopen("registro_reglas_MITM", "a+");
+	cont_aux_reglas = INICIO;
+	coincidencia_regla = INICIO;
+
+	//Recorremos la estructura donde tenemos la info de las reglas
+	for (cont_aux_reglas=0;
+		cont_aux_reglas< informacion_regla.numero_lineas;
+		cont_aux_reglas++){
+
+		//Leemos el fichero de las reglas que ya hemos creado
+		contenido_del_fichero = lee_fichero("local.rules_prueba");
+		
+		/*--------------------------------------------------------
+			El siguiente paso es necesario realizarlo ya que
+			esto se realiza ante de escribir las reglas luego
+			no sabemos si la info que vamos a registrar estaba
+			registrada anteriormente y de esta forma evitamos que
+			estén duplicados los registros
+		---------------------------------------------------------*/
+		//Miramos a ver si existe alguna igual a la que vamos a registrar
+		coincidencia_regla = busca_Regla(contenido_del_fichero, informacion_regla, cont_aux_reglas);
+		
+		//Si la regla no estaba creada anteriormente
+		if (coincidencia_regla == NO_COINCIDE){
+
+			//Obtenemos el instante en el que lo hemos detectado
+			tm = localtime(&tiempo_creacion_regla);
+			
+			//Nos interesa obtener la hora y los minutos de creación de la regla
+			strftime(t_creacion_regla, sizeof(t_creacion_regla), "%H-%M", tm);
+			strcpy(info_reglas, t_creacion_regla);
+			strcat(info_reglas, " ");
+
+			//Añadimos la información de la reglas
+
+			//Protocolo
+			strcat(info_reglas, informacion_regla.protocolo[cont_aux_reglas]);
+			strcat(info_reglas, " ");
+
+			//IP
+			strcat(info_reglas, informacion_regla.dir_IP[cont_aux_reglas]);
+			strcat(info_reglas, " ");
+
+			//Posición de la dirección IP
+			if (informacion_regla.dir_en_origen[cont_aux_reglas] == true){
+				strcat(info_reglas, "true");
+			}
+			else {
+				strcat(info_reglas, "false");
+			}
+			strcat(info_reglas, " ");
+
+
+			//IP con puerto asociado
+			if (informacion_regla.dir_Con_Puerto[cont_aux_reglas] == true){
+				strcat(info_reglas, "true");
+			}
+			else {
+				strcat(info_reglas, "false");
+			}
+			
+			strcat(info_reglas, " ");
+
+			//Acción a tomar
+			strcat(info_reglas, informacion_regla.accion[cont_aux_reglas]);
+			strcat(info_reglas, "\n");
+
+			//Escribimos en el fichero
+			fputs(info_reglas, fichero_registro);
+		}
+	}
+	
+	//Cerramos el fichero
+	fclose(fichero_registro);
+	//Liberamos memoria
+	free(info_reglas);
+}
+
+
+
+
+
 /*--------------------------------------------------------
 	Función que se encarga de eliminar una regla
 	del fichero de reglas de Snort
