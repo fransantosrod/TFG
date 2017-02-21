@@ -11,7 +11,7 @@ implementaciones de las funciones auxiliares
 #include <time.h>
 #include "func_aux.h"
 
-#define NO_COINCIDE -1
+
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
 	Recibe: El nombre del fichero a leer

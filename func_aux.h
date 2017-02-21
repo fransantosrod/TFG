@@ -74,6 +74,8 @@ necesarias para que estas funcionen
 #define TAM_FECHA 100
 //Constante para definir el límite a partir del cuál crearemos un nuevo fichero (en mod1_DoS.c)
 #define LIMITE_LINEAS_LEIDAS NUM_FRASES-30
+//Constante que devolverá la funcion busca_Regla cuando no encuentre una igual
+#define NO_COINCIDE -1
 typedef struct CONTENIDO_FICHERO{
 
 	//Variable auxiliar para almacenar cuantas palabras tiene cada frase
