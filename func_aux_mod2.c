@@ -81,13 +81,7 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 		for(cont_aux_palabras=0; 
 			cont_aux_palabras <= contenido_del_fichero.palabras_por_frase[cont_aux_frases];
 			cont_aux_palabras++) {
-/*-------------------------------------------
-	Si en un futuro queremos almacenar
-	la dirección MAC e IP de cada cambio
-	bastará con descomentar este apartado
--------------------------------------------*/
 
-/*
 	
 			//Comprobamos si la palabra actual es la que estamos buscando y que nos indica el cambio de MAC para una misma dir_IP 
 			if (flag_cambio_MAC == false && strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras],
@@ -101,17 +95,40 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 				flag_cambio_MAC = true;
 			}
 
-			----------------------------------------------------------------
+			/*----------------------------------------------------------------
 				Detectamos si ARPWATCH nos ha notificado de un cambio
 				en la dirección MAC para una IP que tenía almacenada 
 				anteriormente
-			----------------------------------------------------------------
+			----------------------------------------------------------------*/
 			//Comprobamos si hemos detectado una coincidencia y la palabra en la que nos encontramos es la relativa a la dirección IP
 			if ( flag_cambio_MAC == true && cont_aux_palabras == palabra_coincidencia + POS_DIR_IP){
-				printf("Dirección IP %s con el problema: %s\n", 
-					contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras], CAMBIO_EN_MAC);
-			}
+				
+				//Almacenamos la dirección IP
+				informacion_regla.dir_IP[num_reglas] = 
+					strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
+				
+				//Indicamos que la dirección IP no lleva asociado ningún puerto
+				informacion_regla.dir_Con_Puerto[num_reglas] = false;
 
+				//Indicamos que queremos que la dirección IP vaya en destino
+				informacion_regla.dir_en_origen[num_reglas] = false;
+
+				//Indicamos que el protocolo sea IP para que cubra a todos
+				informacion_regla.protocolo[num_reglas] = strdup(IP);
+
+				//Almacenamos la acción que queremos realizar
+				informacion_regla.accion[num_reglas] = strdup("alert");
+				//Aumentamos el número de reglas
+				num_reglas++;
+			
+			}
+/*-------------------------------------------
+	Si en un futuro queremos almacenar
+	la dirección MAC e IP de cada cambio
+	bastará con descomentar este apartado
+-------------------------------------------*/
+
+/*
 			//Comprobamos si hemos detectado una coincidencia y la palabra en la que nos encontramos es la relativa a la dirección MAC nueva
 			else if (flag_cambio_MAC == true && cont_aux_palabras == palabra_coincidencia + POS_DIR_MAC_NUEVA){
 				printf("	Dirección MAC nueva: %s\n", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
