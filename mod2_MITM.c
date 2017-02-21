@@ -19,15 +19,21 @@ int main () {
 
 	//Estructura que almacenará los datos relativos al fichero
 	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//Estructura que almacenará los datos relativos a las reglas que queremos crear
+	struct ESTRUCTURA_REGLA informacion_regla;
 	//Variable donde almacenamos el fichero que queremos leer
 	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para conocer el número de línea que leimos anteriormente
 	int num_lineas_anterior;
 	//Variable auxiliar para almacenar el nombre del fichero que se crea
 	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Bandera para indicar si se deben crear reglas
+	bool crear_regla;
+
 	//Inicalizamos las variables
 	strcpy(nombre_fichero, "arpwatch_prueba.log");
 	num_lineas_anterior = INICIO;
+	crear_regla = false;
 
 	//Leemos el fichero
 	contenido_del_fichero = lee_fichero(nombre_fichero);
@@ -37,8 +43,24 @@ int main () {
 		
 		//Comprobamos si hemos leido alguna línea nueva
 		if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
-		
-			busca_CAMBIO_EN_MAC(contenido_del_fichero);
+			
+			//Buscamos si hemos detectado un cambio en la MAC
+			informacion_regla=busca_CAMBIO_EN_MAC(contenido_del_fichero);
+			
+			//Comprobamos si tenemos que crear alguna regla
+			if (informacion_regla.numero_lineas > INICIO){
+
+				//Creamos la regla
+				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop");
+
+				//Comprobamos si la hemos creado correctamente
+				if (crear_regla == true) {
+					//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
+					crear_regla = false;
+					//Reiniciamos Snort
+					//recarga_Snort();
+				}
+			}
 		}
 	}
 	
@@ -64,10 +86,26 @@ int main () {
 		if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
 			
 			//Creamos las reglas con las que hayamos encontrado
-			busca_CAMBIO_EN_MAC(contenido_del_fichero);
-			//crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "drop");
-			contenido_del_fichero.num_frases_fichero = INICIO;
+			informacion_regla = busca_CAMBIO_EN_MAC(contenido_del_fichero);
+			
+			//Comprobamos si hemos detectado la necesidad de crear alguna regla
+			if (informacion_regla.numero_lineas > INICIO){
+				
+				//Creamos la regla
+				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "drop");
+
+				//Comprobamos que la hemos creado correctamente
+				if (crear_regla == true){
+
+					//Cambiamos el valor de la bandera
+					crear_regla = false;
+					//Recargamos Snort
+					//recarga_Snort();
+				}
+			}
+			
 		}
+		contenido_del_fichero.num_frases_fichero = INICIO;
 	}
 	
 	num_lineas_anterior = contenido_del_fichero.num_frases_fichero;

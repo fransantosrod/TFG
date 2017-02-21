@@ -28,7 +28,7 @@ segundo módulo
 #define POS_DIR_MAC_VIEJA_INM POS_DIR_MAC_VIEJA-1
 //Tamaño de la dirección MAC
 #define TAM_MAC 17
-
+#define IP "IP"
 
 /*----------------------------------------------------------
 	Función que se encarga de leer un fichero y buscar 
@@ -38,6 +38,6 @@ segundo módulo
 
 	Devuelve: Nada
 ----------------------------------------------------------*/
-void busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero);
+struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero);
 
 #endif
