@@ -56,3 +56,27 @@ Feb 20 16:31:36 raspberryFran arpwatch: bogon 0.0.0.0 b8:27:eb:63:5d:f1 eth0
 Feb 20 16:31:37 raspberryFran arpwatch: bogon 0.0.0.0 b8:27:eb:63:5d:f1 eth0
 Feb 20 16:31:39 raspberryFran arpwatch: bogon 169.254.240.113 b8:27:eb:63:5d:f1 eth0
 Feb 20 16:31:41 raspberryFran arpwatch: bogon 169.254.240.113 b8:27:eb:63:5d:f1 eth0
+Feb 20 16:42:15 raspberryFran arpwatch[421]: Starting Ethernet/FDDI station monitor daemon: (creating /var/lib/arpwatch/eth0.dat) (chown arpwatch /var/lib/arpwatch/eth0.dat) arpwatch-eth0.
+Feb 20 16:42:15 raspberryFran arpwatch: Running as uid=113 gid=120
+Feb 20 16:42:15 raspberryFran arpwatch: listening on eth0
+Feb 20 16:42:15 raspberryFran arpwatch: bad interface wlan0: SIOCGIFADDR: wlan0: No such device - assuming unconfigured interface
+Feb 20 16:42:15 raspberryFran arpwatch[421]: Starting Ethernet/FDDI station monitor daemon: (creating /var/lib/arpwatch/wlan0.dat) (chown arpwatch /var/lib/arpwatch/wlan0.dat) arpwatch-wlan0.
+Feb 20 16:42:15 raspberryFran arpwatch: pcap open wlan0: wlan0: No such device exists (SIOCGIFHWADDR: No such device)
+Feb 20 16:47:41 raspberryFran arpwatch: new station 10.10.10.1 50:7b:9d:0f:18:7b eth0
+Feb 20 16:47:41 raspberryFran arpwatch: execl: /usr/lib/sendmail: No such file or directory
+Feb 20 16:47:41 raspberryFran arpwatch: reaper: pid 856, exit status 1
+Feb 20 16:47:49 raspberryFran arpwatch: new station 169.254.240.113 b8:27:eb:63:5d:f1 eth0
+Feb 20 16:47:49 raspberryFran arpwatch: execl: /usr/lib/sendmail: No such file or directory
+Feb 20 16:47:49 raspberryFran arpwatch: reaper: pid 907, exit status 1
+Feb 21 10:29:46 raspberryFran arpwatch: new station 10.10.10.3 00:0c:29:3d:fa:00 eth0
+Feb 21 10:29:46 raspberryFran arpwatch: execl: /usr/lib/sendmail: No such file or directory
+Feb 21 10:29:46 raspberryFran arpwatch: reaper: pid 3162, exit status 1
+Feb 21 10:31:13 raspberryFran arpwatch: changed ethernet address 10.10.10.3 50:7b:9d:0f:18:7b (00:0c:29:3d:fa:00) eth0
+Feb 21 10:31:13 raspberryFran arpwatch: execl: /usr/lib/sendmail: No such file or directory
+Feb 21 10:31:13 raspberryFran arpwatch: reaper: pid 3379, exit status 1
+Feb 21 10:32:06 raspberryFran arpwatch: flip flop 10.10.10.3 00:0c:29:3d:fa:00 (50:7b:9d:0f:18:7b) eth0
+Feb 21 10:32:06 raspberryFran arpwatch: execl: /usr/lib/sendmail: No such file or directory
+Feb 21 10:32:06 raspberryFran arpwatch: reaper: pid 3510, exit status 1
+Feb 21 10:32:06 raspberryFran arpwatch: new station 10.10.10.2 b8:27:eb:63:5d:f1 eth0
+Feb 21 10:32:06 raspberryFran arpwatch: execl: /usr/lib/sendmail: No such file or directory
+Feb 21 10:32:06 raspberryFran arpwatch: reaper: pid 3511, exit status 1
