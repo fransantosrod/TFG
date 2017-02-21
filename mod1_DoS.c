@@ -100,8 +100,9 @@ int main (){
 						recarga_Snort();
 					}
 				}
-				contenido_del_fichero.num_frases_fichero = INICIO;
+				
 			}
+			contenido_del_fichero.num_frases_fichero = INICIO;
 		}
 		num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
 		sleep(INTERVALO_LECTURA);
