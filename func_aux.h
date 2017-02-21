@@ -114,6 +114,8 @@ typedef struct ESTRUCTURA_REGLA {
 			-- false: se encontraba en destino
 	--------------------------------------*/
 	bool dir_en_origen[NUM_REGLAS];
+	//Array para almacenar la acción que queremos ejecutar
+	char *accion[NUM_REGLAS];
 	//Variable para almacenar el número total de coincidencias
 	int numero_lineas;
 
@@ -155,12 +157,12 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
 		reglas , una estructura del tipo ESTRUCTURA_REGLA
-		la acción y un string para añadir información
+		y un string para añadir información
 	
 	Devuelve: Un booleano indicando si se ha escrito la 
 	regla o no
 ----------------------------------------------------------*/
-bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion,char *info_extra);
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta,char *info_extra);
 
 
 
@@ -171,17 +173,16 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	una igual para evitar introducir reglas duplicadas
 
 	Recibe: Estructura del tipo CONTENIDO_FICHERO,
-	estructura del tipo ESTRUCTURA_REGLA, una acción
-	y la posición dentro de la estructura ESTRUCTURA_REGLA
-	donde se encuentra leyendo la info relativa a la nueva
-	regla
+	estructura del tipo ESTRUCTURA_REGLA, y la posición 
+	dentro de la estructura ESTRUCTURA_REGLA donde se 
+	encuentra leyendo la info relativa a la nueva regla
 
 	Devuelve: Un booleano
 		--true: Ya hay una regla igual
 		-- false: No la hay
 ----------------------------------------------------------*/
 bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
-	char *accion, int pos_dentro_cont_alerta);
+	int pos_dentro_cont_alerta);
 
 
 /* -------------------------------------------------------
@@ -204,4 +205,5 @@ void recarga_Snort ();
 	Recibe: El nombre del fichero
 ---------------------------------------------------*/
 char *vacia_fichero(char *nombre_fichero);
+
 #endif

@@ -370,6 +370,9 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 
 					contenido_fichero_alerta.protocolo[numero_de_coincidencia]= strdup(ICMP);
 				}
+
+				//Alamcenamos la acción que queremos realizar
+				contenido_fichero_alerta.accion[numero_de_coincidencia] = strdup("drop");
 				//Aumentamos el número de coincidencias para el string dado al principio
 				numero_de_coincidencia++;
 			}			
@@ -479,7 +482,7 @@ bool comprueba_IP(char *direccion_IP){
 	una igual para evitar introducir reglas duplicadas
 
 	Recibe: Estructura del tipo CONTENIDO_FICHERO,
-	estructura del tipo ESTRUCTURA_REGLA, una acción
+	estructura del tipo ESTRUCTURA_REGLA,
 	y la posición dentro de la estructura ESTRUCTURA_REGLA
 	donde se encuentra leyendo la info relativa a la nueva
 	regla
@@ -500,7 +503,7 @@ bool comprueba_IP(char *direccion_IP){
 -----------------------------------------------------*/
 
 bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ESTRUCTURA_REGLA contenido_fichero_alerta, 
-	char *accion, int pos_dentro_cont_alerta) {
+	int pos_dentro_cont_alerta) {
 
 	
 	//Bandera para detectar la coincidencia en una regla
@@ -528,7 +531,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		-----------------------------------------------------------------*/
 
 		//Comprobamos conjuntamente si la pareja acción protocolo son iguales
-		if ((strcmp(accion, contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_ACCION]) == IGUAL) &&
+		if ((strcmp(contenido_fichero_alerta.accion[pos_dentro_cont_alerta], contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_ACCION]) == IGUAL) &&
 		 	(strcmp(contenido_fichero_alerta.protocolo[pos_dentro_cont_alerta], 
 				contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_PROTOCOLO]) == IGUAL )){
 				
@@ -665,8 +668,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
 		reglas , una estructura del tipo ESTRUCTURA_REGLA
-		la acción y un string para añadir informacion a la
-		regla
+		y un string para añadir informacion a la regla
 	
 	Devuelve: Booleano indicando si se ha escrito la regla
 
@@ -681,7 +683,7 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 		distinto
 -----------------------------------------------------------*/
 
-bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *accion, char *info_extra){
+bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGLA contenido_fichero_alerta, char *info_extra){
 	
 	//Variable a devolver que indica si se ha creado la regla
 	bool regla_creada;
@@ -725,13 +727,13 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 		}
 		
 		//Comprobamos si la regla que queremos crear está ya en el fichero o no
-		coincide = comprueba_Regla(contenido_del_fichero_reglas, contenido_fichero_alerta, accion, cont_aux_regla);
+		coincide = comprueba_Regla(contenido_del_fichero_reglas, contenido_fichero_alerta, cont_aux_regla);
 		
 		//En el caso en el que no encontramos ninguna coincidencia en el fichero
 		if (coincide == false){
 				
 			//Comenzamos añadiendo la acción que queremos ejecutar en esa regla
-			strcpy(reglas_aux,accion);
+			strcpy(reglas_aux,contenido_fichero_alerta.accion[cont_aux_regla]);
 			strcat(reglas_aux, " ");
 			//Añadimos el protocolo 
 			strcat(reglas_aux, contenido_fichero_alerta.protocolo[cont_aux_regla]);
@@ -806,7 +808,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 			strcat(reglas_aux, "(msg:\"");
 			strcat(reglas_aux, info_extra);
 			strcat(reglas_aux, ": ");
-			strcat(reglas_aux,accion);
+			strcat(reglas_aux,contenido_fichero_alerta.accion[cont_aux_regla]);
 			strcat(reglas_aux, " ");
 			strcat(reglas_aux, contenido_fichero_alerta.protocolo[cont_aux_regla]);
 			strcat(reglas_aux, "\"; sid:");
