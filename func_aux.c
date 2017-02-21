@@ -535,10 +535,10 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 				//Comprobamos si la dirección IP estaba en el campo origen	
 				if (contenido_fichero_alerta.dir_en_origen[pos_dentro_cont_alerta] == true){
 
-					//En ese caso, comprobamos que coincida la dir_IP con la origen de la regla y la destino con "any"
+					//En ese caso, comprobamos que coincida la dir_IP con la origen de la regla y la destino con "$HOME_NET"
 					if (strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
 							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
-						strcmp("any", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST] )== IGUAL){
+						strcmp("$HOME_NET", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST] )== IGUAL){
 
 						//Comprobamos si la dir_IP tenía asociada un puerto
 						if (contenido_fichero_alerta.dir_Con_Puerto[pos_dentro_cont_alerta] == true){
@@ -589,8 +589,8 @@ bool comprueba_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, stru
 				//Si la dirección IP no estaba en el campo origen
 				else { 
 					
-					//Comprobamos que el campo origen sea "any" y el destno la dir_IP de la regla que queremos crear
-					if (strcmp("any", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
+					//Comprobamos que el campo origen sea "$HOME_NET" y el destno la dir_IP de la regla que queremos crear
+					if (strcmp("$HOME_NET", contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_ORIG]) == IGUAL &&
 						strcmp (contenido_fichero_alerta.dir_IP[pos_dentro_cont_alerta],
 							contenido_del_fichero_reglas.contenido_leido_del_fichero[cont_aux_linea][POS_DIR_IP_DEST]) == IGUAL ){
 
@@ -762,7 +762,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 			//Si la dir_IP no estaba en el campo origen añadimos los valores por defecto
 			else{
 
-				strcat(reglas_aux, "any");
+				strcat(reglas_aux, "$HOME_NET");
 				strcat(reglas_aux, " ");	
 				strcat(reglas_aux, "any");
 				
@@ -791,7 +791,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 
 			else{
 
-				strcat(reglas_aux, "any");
+				strcat(reglas_aux, "$HOME_NET");
 				strcat(reglas_aux, " ");
 				strcat(reglas_aux, "any");
 			}
