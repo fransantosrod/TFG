@@ -10,6 +10,7 @@ en los ataques MITM
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <unistd.h>
 #include "func_aux.h"
 #include "func_aux_mod2.h"
 
@@ -34,82 +35,89 @@ int main () {
 	num_lineas_anterior = INICIO;
 	crear_regla = false;
 
-	//Leemos el fichero
-	contenido_del_fichero = lee_fichero(nombre_fichero);
-	
-	//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
-	if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
+	while(true){
 		
-		//Comprobamos si hemos leido alguna línea nueva
-		if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
+		//Leemos el fichero
+		contenido_del_fichero = lee_fichero(nombre_fichero);
+		//Miramos a ver si algún registro ha pasado el tiempo ya
+		detecta_Registro_caducado("registro_reglas_MITM");
+		
+		//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
+		if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
 			
-			//Buscamos si hemos detectado un cambio en la MAC
-			informacion_regla=busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
-			
-			//Comprobamos si tenemos que crear alguna regla
-			if (informacion_regla.numero_lineas > INICIO){
-
+			//Comprobamos si hemos leido alguna línea nueva
+			if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
+				
+				//Buscamos si hemos detectado un cambio en la MAC
+				informacion_regla=busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
+				
 				//Registramos la regla que vamos a crear
 				registra_Regla(informacion_regla);
-				//Creamos la regla
-				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
-				//Comprobamos si la hemos creado correctamente
-				if (crear_regla == true) {
-					//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
-					crear_regla = false;
-					//Reiniciamos Snort
-					//recarga_Snort();
+
+				//Comprobamos si tenemos que crear alguna regla
+				if (informacion_regla.numero_lineas > INICIO){
+
+					
+					//Creamos la regla
+					crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
+					//Comprobamos si la hemos creado correctamente
+					if (crear_regla == true) {
+						//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
+						crear_regla = false;
+						//Reiniciamos Snort
+						//recarga_Snort();
+					}
 				}
 			}
 		}
-	}
-	
-	//En el caso en el que estemos cerca del límite
-	else {
 		
-		//Llamamos a la función deseada para que nos vacie el fichero
-		nuevo_fichero = vacia_fichero(nombre_fichero);
-		
-		/*--------------------------------------------------------
-		Para asegurarnos que no perdemos información
-		en ningún momento, volvemos a leer el fichero
-		al que le hemos cambiado el nombre siempre y
-		cuando no supere el número máximo (NUM_FRASES)
-		
-		Esta comprobació la hacemos por si el fichero 
-		se encontraba en el rango entre LIMITE y NUM_FRASES
-		y haya información que se pueda perder
-		--------------------------------------------------------*/
-		
-		contenido_del_fichero = lee_fichero(nuevo_fichero);
-		//Comprobamos que ese fichero no ha superado el límite
-		if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
+		//En el caso en el que estemos cerca del límite
+		else {
 			
-			//Creamos las reglas con las que hayamos encontrado
-			informacion_regla = busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
+			//Llamamos a la función deseada para que nos vacie el fichero
+			nuevo_fichero = vacia_fichero(nombre_fichero);
 			
-			//Comprobamos si hemos detectado la necesidad de crear alguna regla
-			if (informacion_regla.numero_lineas > INICIO){
+			/*--------------------------------------------------------
+			Para asegurarnos que no perdemos información
+			en ningún momento, volvemos a leer el fichero
+			al que le hemos cambiado el nombre siempre y
+			cuando no supere el número máximo (NUM_FRASES)
+			
+			Esta comprobació la hacemos por si el fichero 
+			se encontraba en el rango entre LIMITE y NUM_FRASES
+			y haya información que se pueda perder
+			--------------------------------------------------------*/
+			
+			contenido_del_fichero = lee_fichero(nuevo_fichero);
+			//Comprobamos que ese fichero no ha superado el límite
+			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
 				
-				//Creamos la regla
-				//crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
+				//Creamos las reglas con las que hayamos encontrado
+				informacion_regla = busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
+				
+				//Comprobamos si hemos detectado la necesidad de crear alguna regla
+				if (informacion_regla.numero_lineas > INICIO){
+					
+					//Creamos la regla
+					//crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
 
-				//Comprobamos que la hemos creado correctamente
-				if (crear_regla == true){
+					//Comprobamos que la hemos creado correctamente
+					if (crear_regla == true){
 
-					//Cambiamos el valor de la bandera
-					crear_regla = false;
-					//Recargamos Snort
-					//recarga_Snort();
+						//Cambiamos el valor de la bandera
+						crear_regla = false;
+						//Recargamos Snort
+						//recarga_Snort();
+					}
 				}
+				
 			}
-			
+			contenido_del_fichero.num_frases_fichero = INICIO;
 		}
-		contenido_del_fichero.num_frases_fichero = INICIO;
+		
+		num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
+		sleep(INTERVALO_LECTURA);
 	}
-	
-	num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
-
 	//Liberamos memoria 
 	free(nombre_fichero);
 	free(nuevo_fichero);

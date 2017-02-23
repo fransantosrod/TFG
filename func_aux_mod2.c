@@ -352,9 +352,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 	//Cerramos el fichero
 	fclose(fichero_registro);
 	
-	//Miramos a ver si algún registro ha pasado el tiempo ya
-	detecta_Registro_caducado("registro_reglas_MITM");
-
+	
 
 	//Liberamos memoria
 	free(info_reglas);
