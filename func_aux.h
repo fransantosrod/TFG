@@ -76,6 +76,9 @@ necesarias para que estas funcionen
 #define LIMITE_LINEAS_LEIDAS NUM_FRASES-30
 //Constante que devolverá la funcion busca_Regla cuando no encuentre una igual
 #define NO_COINCIDE -1
+//Constante de tiempo para definir los segundos que pasaran entre actividad
+#define INTERVALO_LECTURA 3
+
 typedef struct CONTENIDO_FICHERO{
 
 	//Variable auxiliar para almacenar cuantas palabras tiene cada frase
