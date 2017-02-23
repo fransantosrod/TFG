@@ -49,8 +49,9 @@ int main () {
 			//Comprobamos si tenemos que crear alguna regla
 			if (informacion_regla.numero_lineas > INICIO){
 
-				//Creamos la regla
+				//Registramos la regla que vamos a crear
 				registra_Regla(informacion_regla);
+				//Creamos la regla
 				crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
 				//Comprobamos si la hemos creado correctamente
 				if (crear_regla == true) {
