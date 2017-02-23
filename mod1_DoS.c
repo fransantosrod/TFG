@@ -49,7 +49,7 @@ int main (){
 		
 			if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
 				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
-				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS");
+				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
 				
 				//Comprobamos que hemos detectado alguna alerta
 				if (contenido_fichero_alerta.numero_lineas > INICIO){	
@@ -89,7 +89,7 @@ int main (){
 			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
 				
 				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
-				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS");
+				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
 				if (contenido_fichero_alerta.numero_lineas > INICIO){
 					
 					//Creamos las reglas con las que hayamos encontrado
