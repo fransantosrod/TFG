@@ -9,6 +9,7 @@ que se usarán en el segundo módulo
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "func_aux.h"
 #include "func_aux_mod2.h"
 
@@ -17,6 +18,7 @@ que se usarán en el segundo módulo
 	la palabra deseada para almacenar información 
 
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
+	y la línea en la que debe empezar a buscar
 
 	Devuelve: Nada
 
@@ -27,7 +29,7 @@ que se usarán en el segundo módulo
 		un ataque MITM
 ----------------------------------------------------------*/
 
-struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero) {
+struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero, int linea_inicio) {
 
 	//Estructura que se va a devolver para almacenar los datos de las reglas que queremos crear
 	struct ESTRUCTURA_REGLA informacion_regla;
@@ -59,7 +61,7 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 	flag_cambio_MAC_Inmediato = false;
 
 	//Bucle para recorrer las frases que hemos leido del fichero
-	for (cont_aux_frases=0; 
+	for (cont_aux_frases=linea_inicio; 
 		cont_aux_frases < contenido_del_fichero.num_frases_fichero; 
 		cont_aux_frases++){
 		
@@ -231,4 +233,304 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 	//Almacenamos el número de reglas que deseamos crear
 	informacion_regla.numero_lineas = num_reglas;
 	return informacion_regla;
+}
+
+
+
+
+/*-------------------------------------------------------------
+	Función que se encarga de registrar las reglas ante los 
+	ataques MITM que se puedan producir para posteriormente
+	poder borrarlas ya que estas serán temporales
+
+	Recibe: Estructura del tipo ESTRUCTURA_REGLA con la info
+	de las relglas que queremos crear
+
+	Devuelve: Nada
+
+	Caracteristicas:
+		Esta función en primer lugar, abre el fichero de 
+		reglas de Snort y obtiene las que se han creado
+		tras esto, comprueba si la info que tenemos
+		de la nueva que vamos a registrar es la relativa a
+		una regla ya existente, si esto ocurre no 
+		registraremos nada ya que se sobre entiende que se
+		registro anteriormente
+-------------------------------------------------------------*/
+void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
+
+	//Fichero para almacenar la regla y la hora de creación
+	FILE *fichero_registro;
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//String auxiliar para almacenar la información que vamos a escribir
+	char *info_reglas = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
+	//Variable auxiliar para almacenar el instante en el que se cambia el fichero
+	time_t tiempo_creacion_regla = time(NULL);
+	//Array para almacenar la fecha
+	char t_creacion_regla[TAM_FECHA];
+	//Variable auxiliar para recorrer la estructura
+	int cont_aux_reglas;
+	//Variable para almacenar si ya hay una regla igual a la que queremos introducir
+	int coincidencia_regla;
+	//Estructura para almacenar hora en el momento deseado
+	struct tm *tm;
+	
+	//Inicializamos las variables
+	fichero_registro = fopen("registro_reglas_MITM", "a+");
+	cont_aux_reglas = INICIO;
+	coincidencia_regla = INICIO;
+
+	//Recorremos la estructura donde tenemos la info de las reglas
+	for (cont_aux_reglas=0;
+		cont_aux_reglas< informacion_regla.numero_lineas;
+		cont_aux_reglas++){
+
+		//Leemos el fichero de las reglas que ya hemos creado
+		contenido_del_fichero = lee_fichero("local.rules_prueba");
+		
+		/*--------------------------------------------------------
+			El siguiente paso es necesario realizarlo ya que
+			esto se realiza ante de escribir las reglas luego
+			no sabemos si la info que vamos a registrar estaba
+			registrada anteriormente y de esta forma evitamos que
+			estén duplicados los registros
+		---------------------------------------------------------*/
+		//Miramos a ver si existe alguna igual a la que vamos a registrar
+		coincidencia_regla = busca_Regla(contenido_del_fichero, informacion_regla, cont_aux_reglas);
+		
+		//Si la regla no estaba creada anteriormente
+		if (coincidencia_regla == NO_COINCIDE){
+
+			//Obtenemos el instante en el que lo hemos detectado
+			tm = localtime(&tiempo_creacion_regla);
+			
+			//Nos interesa obtener la hora y los minutos de creación de la regla
+			strftime(t_creacion_regla, sizeof(t_creacion_regla), "%H%M", tm);
+			strcpy(info_reglas, t_creacion_regla);
+			strcat(info_reglas, " ");
+
+			//Añadimos la información de la reglas
+
+			//Acción a tomar
+			strcat(info_reglas, informacion_regla.accion[cont_aux_reglas]);
+			strcat(info_reglas, " ");
+
+
+			//Protocolo
+			strcat(info_reglas, informacion_regla.protocolo[cont_aux_reglas]);
+			strcat(info_reglas, " ");
+
+			//IP
+			strcat(info_reglas, informacion_regla.dir_IP[cont_aux_reglas]);
+			strcat(info_reglas, " ");
+
+			//Posición de la dirección IP
+			if (informacion_regla.dir_en_origen[cont_aux_reglas] == true){
+				strcat(info_reglas, "true");
+			}
+			else {
+				strcat(info_reglas, "false");
+			}
+			strcat(info_reglas, " ");
+
+
+			
+			/*-----------------------------------------------
+				Sabemos de antemano que los ataques MITM no
+				llevan ningún puerto asociado
+			-----------------------------------------------*/
+			//Asociamos la bandera al puerto
+			strcat(info_reglas, "false");
+			strcat(info_reglas, "\n");
+
+			//Escribimos en el fichero
+			fputs(info_reglas, fichero_registro);
+		}
+	}
+		
+	//Cerramos el fichero
+	fclose(fichero_registro);
+	
+	//Miramos a ver si algún registro ha pasado el tiempo ya
+	detecta_Registro_caducado("registro_reglas_MITM");
+
+
+	//Liberamos memoria
+	free(info_reglas);
+}
+
+/*--------------------------------------------------------
+	Función que se encarga de detectar cuando una regla
+	sobrepasa un tiempo dado, en este caso una hora
+
+	Recibe: El nombre del fichero
+
+	Devuelve: Nada
+
+	Características:
+		Lo primero que realiza es la lectura del fichero
+		tras esto, toma la hora actual y comienza a 
+		recorrer el array del fichero que hemos leido 
+		para comparar los tiempos en los que se realizó
+		la creación de la regla y la hora actual
+		Si este tiempo es mayor a una hora, procedemos 
+		a obtener la información de ese registro y 
+		lo eliminamos, por último eliminamos la regla 
+		que generó el registro
+
+En este caso, queremos eliminar las reglas  que se
+realizan en este módulo ya que bloquean el tráfico
+para direcciones de la red local y así solo prohibimos
+esa dirección durante un intervalo de tiempo no para 
+siempre
+--------------------------------------------------------*/
+
+
+void detecta_Registro_caducado(char *nombre_fichero){
+
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//Estructura para almacenar la información de la regla
+	struct ESTRUCTURA_REGLA informacion_regla;
+	//Variable para recorrer la estructura
+	int cont_aux_frases_fichero;
+	//Variable auxiliar para almacenar el instante de tiempo actual
+	time_t tiempo_actual = time(NULL);
+	//Array para almacenar la fecha
+	char t_actual[TAM_FECHA];
+	//Estructura para almacenar hora en el momento deseado
+	struct tm *tm;
+
+
+	//Inicializamos
+	cont_aux_frases_fichero = INICIO;
+
+	//Leemos el fichero
+	contenido_del_fichero = lee_fichero(nombre_fichero);
+
+	//Obtenemos el instante en el que lo hemos detectado
+	tm = localtime(&tiempo_actual);
+			
+	//Nos interesa obtener la hora y los minutos de creación de la regla
+	strftime(t_actual, sizeof(t_actual), "%H%M", tm);
+	
+	//Recorremos la estructura
+	for (cont_aux_frases_fichero=0;
+		cont_aux_frases_fichero < contenido_del_fichero.num_frases_fichero;
+		cont_aux_frases_fichero++){
+
+		//Comprobamos si ha pasado una hora desde la hora de creación de la regla y la actual
+		if (atoi(t_actual) - atoi(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][HORA]) >= PASA_UNA_HORA) {
+
+			//Rellenamos la estructura con la información que hemos recogido del fichero donde registramos las reglas
+			informacion_regla.accion[INICIO] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][POS_ACCION+1]);
+			informacion_regla.protocolo[INICIO] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][POS_PROTOCOLO+1]);
+			informacion_regla.dir_IP[INICIO] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][POS_DIR_IP_ORIG+1]);
+
+			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][POS_BANDERA_IP],"true")==IGUAL) {
+				informacion_regla.dir_en_origen[INICIO] = true;
+			}
+			else {
+				informacion_regla.dir_en_origen[INICIO] = false;
+			}
+
+			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][POS_BANDERA_PUERTO],"true")==IGUAL){
+				informacion_regla.dir_Con_Puerto[INICIO] = true;
+			}
+			else {
+				informacion_regla.dir_Con_Puerto[INICIO] = false;
+			}
+			//Eliminamos el registro para no detectarlo más
+			elimina_Registro(nombre_fichero, cont_aux_frases_fichero);
+			//Eliminamos la regla que creó ese registro
+			elimina_Regla("local.rules_prueba",informacion_regla, INICIO);
+		}
+
+	}
+
+}
+
+
+/*-----------------------------------------------------
+	Función que se encarga de eliminar una línea del
+	fichero de registro de reglas
+
+	Recibe: El nombre del fichero de registro y la
+	línea que se desea eliminar
+
+	Devuelve: Nada
+
+	Características:
+		Lee el fichero y lo almacena en un array,
+		posteriormente recorre ese array saltandose
+		la línea que se desea elminar y escribe cada
+		línea
+-----------------------------------------------------*/
+
+void elimina_Registro(char *nombre_fichero, int numero_linea){
+
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//Fichero donde escribiremos todos los registros menos el que se desea borrar
+	FILE *fichero_borrar;
+	//Variable auxiliar para almacenar el registro que vamos a sobreescribir
+	char *registro_aux = (char *)malloc(sizeof(char) *NUM_CARACTERES_REGLAS);
+	//Variables para recorrer la tabla con el contenido del fichero
+	int cont_aux_frases_fichero;
+	int cont_aux_palabras_fichero;
+	
+	//Inicializamos las variables
+	cont_aux_frases_fichero = INICIO;
+	cont_aux_palabras_fichero = INICIO;
+
+
+	//Leemos el contenido del fichero
+	contenido_del_fichero = lee_fichero(nombre_fichero);
+
+	//Abrimos el fichero vacío
+	fichero_borrar = fopen(nombre_fichero, "w");
+
+	//Recorremos el array que rellenamos cuando lo leimos por primera vez
+	for (cont_aux_frases_fichero=0;
+		cont_aux_frases_fichero < contenido_del_fichero.num_frases_fichero;
+		cont_aux_frases_fichero++){
+			
+		//Comprobamos que la línea que vamos a escribir no es la que queremos eliminar
+		if (cont_aux_frases_fichero != numero_linea) {
+
+			//Recorremos las palabras de esa frase
+			for(cont_aux_palabras_fichero =0;
+				cont_aux_palabras_fichero <= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero];
+				cont_aux_palabras_fichero++) {
+				
+				//Si es la pirmera palabra
+				if (cont_aux_palabras_fichero == INICIO){
+
+					//Copiamos esa palabra en nuestro string auxiliar
+					strcpy(registro_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+							
+				}
+				
+				//Si es una palabra distinta a la primera
+				else {
+					//Concatenamos el contenido al string auxiliar
+					strcat(registro_aux, " ");
+					strcat(registro_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+					
+				}
+			}
+
+			//Añadimos un salto de línea
+			strcat(registro_aux, "\n");
+			//Escribimos el contenido en el fichero
+			fputs(registro_aux, fichero_borrar);
+		}
+	}
+
+	//Cerramos el fichero
+	fclose(fichero_borrar);
+
+	//Liberamos memoria
+	free(registro_aux);
 }

@@ -29,15 +29,60 @@ segundo módulo
 //Tamaño de la dirección MAC
 #define TAM_MAC 17
 #define IP "IP"
+//Constante donde definimos la posición de la hora en el fichero de registro
+#define HORA 0
+//Constante paara definir el paso de una hora
+#define PASA_UNA_HORA 100
+//Constante para definir la posición de la bandera que indica si la IP es origen o destino
+#define POS_BANDERA_IP 4
+//Constante para definir la posición de la bandera que indica si la IP lleva puerto asociado
+#define POS_BANDERA_PUERTO 5
 
 /*----------------------------------------------------------
 	Función que se encarga de leer un fichero y buscar 
 	la palabra deseada para almacenar información 
 
-	Recibe: Una estructura del tipo CONTENIDO_FICHERO
+	Recibe: Una estructura del tipo CONTENIDO_FICHERO y 
+	la línea en la que debe empezar a buscar
 
 	Devuelve: Nada
 ----------------------------------------------------------*/
-struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero);
+struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero, int linea_inicio);
+
+
+/*-------------------------------------------------------------
+	Función que se encarga de registrar las reglas ante los 
+	ataques MITM que se puedan producir para posteriormente
+	poder borrarlas ya que estas serán temporales
+
+	Recibe: Estructura del tipo ESTRUCTURA_REGLA con la info
+	de las relglas que queremos crear
+
+	Devuelve: Nada
+------------------------------------------------------------*/
+void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla);
+
+
+/*--------------------------------------------------------
+	Función que se encarga de detectar cuando una regla
+	sobrepasa un tiempo dado, en este caso una hora
+
+	Recibe: El nombre del fichero
+
+	Devuelve: Nada
+-------------------------------------------------------*/
+void detecta_Registro_caducado(char *nombre_fichero);
+
+
+/*-----------------------------------------------------
+	Función que se encarga de eliminar una línea del
+	fichero de registro de reglas
+
+	Recibe: El nombre del fichero de registro y la
+	línea que se desea eliminar
+
+	Devuelve: Nada
+----------------------------------------------------*/
+void elimina_Registro(char *nombre_fichero, int numero_linea);
 
 #endif
