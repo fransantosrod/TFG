@@ -148,9 +148,11 @@ bool comprueba_IP(char *direccion_IP);
 	string está en el contenido leido de un fichero
 	
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
+	el nombre que vamos a buscar y la línea por la
+	que debe empezar a buscar
 	Devuelve: Estructura del tipo ESTRUCTURA_REGLA
 ----------------------------------------------------------*/
-struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia);
+struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, char * nombre_Coincidencia, int linea_inicio);
 
 
 /* -------------------------------------------------------
@@ -210,4 +212,18 @@ void recarga_Snort ();
 ---------------------------------------------------*/
 char *vacia_fichero(char *nombre_fichero);
 
+
+/*--------------------------------------------------------
+	Función que se encarga de eliminar una regla
+	del fichero de reglas de Snort
+
+	Recibe: El fichero del que se quiere eliminar
+	las reglas, la estructura del tipo ESTRUCTURA_REGLA
+	que contiene la información de la regla que se
+	desea borrar y la posición dentro de la 
+	estructura
+
+	Devuelve: Nada
+------------------------------------------------------*/
+void elimina_Regla(char *nombre_fichero_borrar, struct ESTRUCTURA_REGLA informacion_regla, int pos_dentro_estruct_regla);
 #endif
