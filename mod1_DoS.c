@@ -13,8 +13,6 @@ en los ataques DoS
 #include <unistd.h>
 #include "func_aux.h"
 
-#define INTERVALO_LECTURA 3
-
 
 
 int main (){
