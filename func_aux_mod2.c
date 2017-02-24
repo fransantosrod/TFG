@@ -443,6 +443,8 @@ void detecta_Registro_caducado(char *nombre_fichero){
 			elimina_Registro(nombre_fichero, cont_aux_frases_fichero);
 			//Eliminamos la regla que creó ese registro
 			elimina_Regla("local.rules_prueba",informacion_regla, INICIO);
+			//Recargamos la configuración de SNORT para que elimine la regla 
+			recarga_Snort();
 		}
 
 	}
