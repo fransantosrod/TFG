@@ -31,7 +31,7 @@ int main () {
 	bool crear_regla;
 
 	//Inicalizamos las variables
-	strcpy(nombre_fichero, "arpwatch_prueba.log");
+	strcpy(nombre_fichero, "/var/log/arpwatch.log");
 	num_lineas_anterior = INICIO;
 	crear_regla = false;
 
@@ -59,7 +59,7 @@ int main () {
 
 					
 					//Creamos la regla
-					crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
+					crear_regla = crea_y_escribe_regla("/etc/snort/rules/local.rules", informacion_regla, "MITM");
 					//Comprobamos si la hemos creado correctamente
 					if (crear_regla == true) {
 						//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva

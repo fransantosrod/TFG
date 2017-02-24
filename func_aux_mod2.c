@@ -287,7 +287,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 		cont_aux_reglas++){
 
 		//Leemos el fichero de las reglas que ya hemos creado
-		contenido_del_fichero = lee_fichero("local.rules_prueba");
+		contenido_del_fichero = lee_fichero("/etc/snort/rules/local.rules");
 		
 		/*--------------------------------------------------------
 			El siguiente paso es necesario realizarlo ya que
@@ -442,7 +442,7 @@ void detecta_Registro_caducado(char *nombre_fichero){
 			//Eliminamos el registro para no detectarlo más
 			elimina_Registro(nombre_fichero, cont_aux_frases_fichero);
 			//Eliminamos la regla que creó ese registro
-			elimina_Regla("local.rules_prueba",informacion_regla, INICIO);
+			elimina_Regla("/etc/snort/rules/local.rules",informacion_regla, INICIO);
 			//Recargamos la configuración de SNORT para que elimine la regla 
 			recarga_Snort();
 		}
