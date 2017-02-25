@@ -26,5 +26,5 @@ parámetros que nos interesa para ello */
 sudo nano /etc/arpwatch.conf
 
 //Al final de este fichero introducimos
-eth0 -a -n 10.10.10.0/24
-wlan0 -a -n 192.168.1.0/24
+eth0 -a -n X.X.X.X/24
+wlan0 -a -n X.X.X.X/24
