@@ -1,0 +1,33 @@
+//Instalamos la suite
+sudo apt-get install aircrack-ng
+
+//Creamos la interfaz en modo monitor
+sudo airmon-ng start wlan0
+	
+	/*Si queremos comprobar si la interfaz en modo
+	monitor se creó bastará con ejecutar el comando*/
+		ifconfig -a
+
+	/*Si lo que queremos es eliminar esta interfaz
+	en modo monito bastará con ejecutar el siguiente
+	comando*/
+		sudo airmon-ng stop mon0
+
+/*Para realizar la primera prueba de monitorización 
+de prueba ejecutamos*/
+sudo airodump-ng mon0
+	/* Con este comando irá saltando canal por canal
+	detectando BSSID*/
+
+/* Si queremos dirigir la captura necesitamos la 
+dirección MAC del AP, una vez que lo tenemos*/
+sudo airodump-ng mon0 --bssid DIR_MAC
+
+/*Si además lo que queremos es guardar la captura
+en un fichero*/
+sudo airodump-ng  mon0 --bssid DIR_MAC -w nombre_fichero
+
+/* En nuestro caso nos interesa recorrer todos los canales 
+para detectar cualquier BSSID duplicado o ESSID por lo 
+que el comando que nos interesa a nosotros es el siguiente*/
+sudo airodump-ng mon0 -w nombre_fichero
