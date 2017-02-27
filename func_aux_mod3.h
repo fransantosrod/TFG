@@ -54,4 +54,14 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero);
 	Recibe: Estructura del tipo CONTENIDO_FICHERO
 ------------------------------------------------------*/
 struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fichero);
+
+/*------------------------------------------------------------------
+	Función que se encarga de detectar la posibilidad de SSID 
+	duplicado.
+
+	Devuelve: La estructura del tipo INFO_SSID
+	Recibe: Estructura del tipo INFO_SSID, el ssid y la MAC que
+	queremos comprobar
+-----------------------------------------------------------------*/
+struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ssid);
 #endif
