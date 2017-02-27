@@ -20,6 +20,10 @@ que se usarán en el tercer módulo
 
 	Devuelve: Una estructura del tipo CONTENIDO_FICHERO 
 				con los datos obtenidos del fichero
+
+	Características:
+		Los fichero CSV diferencian sus valores por el caracter
+		',' por lo que esto nos marcará el fin de cada palabra
 ------------------------------------------------------------*/
 struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	
@@ -108,19 +112,28 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 							}
 							
 							//Si estamos ante un espcacio
-							else if (c == ESPACIO){
+							else if (c == ESPACIO && c_ant != COMA){
 								
-								//Añadimos el terminador
-								palabra_aux[letra++] = TERMINADOR;
-
-								//Almacenamos la palabra en la estructura
-								contenido_del_fichero.contenido_leido_del_fichero[frases][palabras] = strdup(palabra_aux);
-
-								//Reiniciamos los contadores
-								palabras++;
-								letra = INICIO;
-							
+								//Almacenamos el espacio 
+								palabra_aux[letra] = ESPACIO;
+								//Aumentamos el contador
+								letra++;
+										
 							}
+						}
+						//Si estamos leyendo el caracter ',' estamos ante una nueva palabra
+						else {
+
+							//Añadimos el terminador
+							palabra_aux[letra++] = TERMINADOR;
+
+							//Almacenamos la palabra en la estructura
+							contenido_del_fichero.contenido_leido_del_fichero[frases][palabras] = strdup(palabra_aux);
+
+							//Aumentamos el número de palabras leiddas
+							palabras++;
+							//Reiniciamos el contador	
+							letra = INICIO;
 						}
 					}
 				}
@@ -153,4 +166,104 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	free(palabra_aux);
 
 	return contenido_del_fichero;
+}
+
+
+
+
+/*------------------------------------------------------
+	Función que se encarga de extraer del fichero leido
+	la información de los SSID
+
+	Devuelve: Estructura del tipo INFO_SSID formada por:
+		-- essid[NUM_SSID]: Array que almacena los
+					ESSID leidos
+		-- bssid[NUM_SSID]: Array que almacena los 
+					BSSID leidos
+		-- num_ssid: Contador que almacena el número
+			total de SSID leidos para poder recorrer
+			los arrays en cualquier momento
+	Recibe: Estructura del tipo CONTENIDO_FICHERO
+------------------------------------------------------*/
+struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fichero){
+
+	//Estructura que será devuelta
+	struct INFO_SSID info_ssid;
+	//Variable auxiliar para almacenar el número de SSID detectados
+	int cont_aux_ssid;
+	//Variable auxiliar para recorrer las filas del fichero CSV
+	int cont_aux_filas;
+	//Variable auxiliar para recorrer las columnas del fichero CSV
+	int cont_aux_columnas;
+	//Variable para almacenar la columna en la que se encuentra el ESSID
+	int pos_essid;
+	//Variable para alamcenar la columna donde se encuentra el BSSID
+	int pos_bssid;
+	//Variable para alamcenar la fila en la que se encuentra la palabra ESSID
+	int fil_essid;
+	//Variable para almacenar la fila en la que se encuentra la palbra BSSID
+	int fil_bssid;
+	//Bandera para indicar el momento en el que comienza la info de los clientes
+	bool info_clientes;
+
+	//Inicializamos
+	cont_aux_ssid = INICIO;
+	cont_aux_filas = INICIO;
+	cont_aux_columnas = INICIO;
+	pos_bssid = INICIO;
+	fil_bssid = INICIO;
+	pos_essid = INICIO;
+	fil_essid = INICIO;
+	info_clientes = false;
+
+	//Recorremos la estructura
+	for (cont_aux_filas=1; cont_aux_filas< contenido_del_fichero.num_frases_fichero; cont_aux_filas++){
+		
+		for (cont_aux_columnas=0; cont_aux_columnas<=contenido_del_fichero.palabras_por_frase[cont_aux_filas]; cont_aux_columnas++){
+			
+			/*--------------------------------------------------
+				Al ser un fichero CSV, tiene una estructura
+				fija en la que cada valor pertenece a una
+				columna, aprovechando esto, vamos a fijar
+				los valores de las columnas para obtener
+				los que nos interesa
+			--------------------------------------------------*/
+			//Buscamos la información que ocuparán los ESSID
+			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas], ESSID) == IGUAL){
+				pos_essid = cont_aux_columnas;
+				fil_essid = cont_aux_filas;
+			}
+
+			//Buscamos la posición que ocuparán los BSSID
+			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas], BSSID) == IGUAL){
+				pos_bssid = cont_aux_columnas;
+				fil_bssid = cont_aux_filas;
+			}
+			
+			//Comprobamos si vamos a pasar a ver la información relativa a los clientes
+			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas], INFO_CLIENTES) == IGUAL){
+				
+				//Cambiamos el valor de la bandera
+				info_clientes = true;
+			}
+
+			if (info_clientes == false 
+				&& (cont_aux_filas > fil_bssid && cont_aux_filas > fil_essid)){
+
+				if (cont_aux_columnas== pos_bssid){
+					info_ssid.bssid[cont_aux_ssid] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas]);
+					
+				}
+
+				else if (cont_aux_columnas==pos_essid) {
+					info_ssid.essid[cont_aux_ssid] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas]);
+					cont_aux_ssid++;
+				
+				}
+			}
+		}
+	}
+	info_ssid.num_ssid = cont_aux_ssid;
+
+	return info_ssid;
 }
