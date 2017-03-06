@@ -279,12 +279,8 @@ struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fich
 	queremos comprobar
 
 	Caracterísitcas:
-		Dado que el fichero en el que vamos a comprobar si existe
-		un SSID duplicado debe contener como mínimo una coincidencia
-		que es la propia que estamos buscando, vamos a generar
-		una alerta a partir de la segunda coincidencia almacenando
-		la info de esta ya que vamos a suponer que la primera 
-		que se ha detectado es la correcta.
+		Comprobamos los dos casos que se pueden dar para suplantar
+		un SSID, mismo ESSID y distinto BSSID o viceversa
 ------------------------------------------------------------------*/
 struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ssid){
 
@@ -294,38 +290,44 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 	int cont_aux_ssid;
 	//Contador auxiliar para almacemar el número de coincidencias
 	int num_ssid_coincidentes;
-	//Bandera para indicar si nos encontramos ante la primera coincidencia
-	bool primera_coincidencia;
-
+	
 
 	//Inicializamos
 	cont_aux_ssid = INICIO;
 	num_ssid_coincidentes = INICIO;
-	primera_coincidencia = true;
-
+	
 
 	for (cont_aux_ssid=0; cont_aux_ssid<info_ssid.num_ssid;cont_aux_ssid++){
-		
-		if ((strcmp(info_ssid.essid[cont_aux_ssid], ssid) == IGUAL) || (strcmp(info_ssid.bssid[cont_aux_ssid], mac_ssid) == IGUAL)){
-			
-			/*------------------------------------------------------------------------
-				Dado que el fichero debe contener el mismo SSID del que estamos 
-				buscando si hay alguno duplicado, la primera coincidencia la vamos
-				a ignorar ya que vamos a suponer que esta es la correcta
-			-------------------------------------------------------------------------*/
-			
-			//Comprobamos que no estamos ante la primera coincidencia
-			if (primera_coincidencia == false){
-				ssid_coincidentes.essid[num_ssid_coincidentes] = info_ssid.essid[cont_aux_ssid];
-				ssid_coincidentes.bssid[num_ssid_coincidentes] = info_ssid.bssid[cont_aux_ssid];
-				num_ssid_coincidentes++;
-			}
 
-			//Si estamos ante la primera coincidencia
-			else {
-				//Cambiamos el valor de la bandera
-				primera_coincidencia = false;
-			}
+		
+		/*--------------------------------------------
+			La primera casuística sería la del 
+			la suplantacion del ESSID, para ello
+			buscamos si el ESSID coincide y el BSSID
+			es distinto
+		--------------------------------------------*/
+		if ((strcmp(info_ssid.essid[cont_aux_ssid], ssid) == IGUAL) && (strcmp(info_ssid.bssid[cont_aux_ssid], mac_ssid) != IGUAL)) {
+
+			//Almacenamos los datos en la estructura
+			ssid_coincidentes.essid[num_ssid_coincidentes] = info_ssid.essid[cont_aux_ssid];
+			ssid_coincidentes.bssid[num_ssid_coincidentes] = info_ssid.bssid[cont_aux_ssid];
+			num_ssid_coincidentes++;
+		}
+
+		/*-------------------------------------------
+			El segundo caso sería el de suplantar
+			el BSSID, por tanto comprobamos si 
+			hemos leido el mismo BSSID y distinto
+			ESSID
+		-------------------------------------------*/
+		else if ((strcmp(info_ssid.essid[cont_aux_ssid], ssid) != IGUAL) && (strcmp(info_ssid.bssid[cont_aux_ssid], mac_ssid) == IGUAL)){
+			
+			//Almacenamos los datos en la estructura
+			ssid_coincidentes.essid[num_ssid_coincidentes] = info_ssid.essid[cont_aux_ssid];
+			ssid_coincidentes.bssid[num_ssid_coincidentes] = info_ssid.bssid[cont_aux_ssid];
+			num_ssid_coincidentes++;
+
+
 		}
 	}
 

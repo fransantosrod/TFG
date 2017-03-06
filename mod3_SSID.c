@@ -45,6 +45,8 @@ int main () {
 	for (i=0;i<ssid_coincidentes.num_ssid;i++){
 		printf("%s %s\n", ssid_coincidentes.essid[i], ssid_coincidentes.bssid[i]);
 	}
+
 	return 0;
 }
+
 
