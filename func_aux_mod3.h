@@ -71,4 +71,17 @@ struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fich
 	queremos comprobar
 -----------------------------------------------------------------*/
 struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ssid);
+
+
+/*----------------------------------------------------------
+	Función que se encarga de crear una regla en IPTABLES
+	si encuentra un ESSID duplicado y notifica si encuentra
+	un BSSID duplicado
+
+	Devuelve: Nada
+	Recibe: Una estructura del tipo INFO_SSID
+----------------------------------------------------------*/
+
+void bloquea_SSID (struct INFO_SSID ssid_coincidentes);
+
 #endif

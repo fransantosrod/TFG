@@ -338,3 +338,77 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 	//Devolvemos la estructura
 	return ssid_coincidentes;
 }
+
+
+/*----------------------------------------------------------
+	Función que se encarga de crear una regla en IPTABLES
+	si encuentra un ESSID duplicado y notifica si encuentra
+	un BSSID duplicado
+
+	Devuelve: Nada
+
+	Recibe: Una estructura del tipo INFO_SSID
+
+	Características:
+		Debe comprobar si la coincidencia es de 
+		BSSID o ESSID
+			
+			ESSID; Obtener el BSSID correspondiente
+			y bloquear el tráfico mediante IPTABLES
+			
+			BSSID; Notifica que ha detectado un BSSID duplicado
+
+----------------------------------------------------------*/
+
+
+void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
+
+	/*--------------------------------------------
+		
+	--------------------------------------------*/
+	//Variable para recorrer la estructura
+	int cont_aux_ssid;
+	//String para almacenar el comando que vamos a utilizar
+	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Inicializamos
+	cont_aux_ssid = INICIO;
+
+	for (cont_aux_ssid=0;cont_aux_ssid<ssid_coincidentes.num_ssid;cont_aux_ssid++){
+
+	
+		//Comprobamos si la coincidencia se ha dado en el ESSID
+		if (ssid_coincidentes.coincide_BSSID[cont_aux_ssid] == false) {
+
+			/*--------------------------------------
+				Creamos la regla para cortar todo
+				el tráfico entrante de esa dirección
+				MAC de esta forma evitamos recibir
+				los beacons y así la posibilidad de
+				establecer una conexión
+			---------------------------------------*/
+
+			strcpy(comando, "sudo iptables -A INPUT -m mac --mac-source ");
+			strcat(comando, ssid_coincidentes.bssid[cont_aux_ssid]);
+			strcat(comando, " -j DROP");
+			system(comando);
+			
+		}
+
+		//En caso contrario la coincidencia será en el BSSID
+		else if (ssid_coincidentes.coincide_BSSID[cont_aux_ssid] == true){
+
+			/*---------------------------------------------------
+				Dado que estamos analizando el espectro y las
+				comunicaciones en capa dos, no podemos obtener
+				la dirección IP del SSID del cuál hemos detectado
+				el BSSID duplicado, y tampoco podemos aplicar
+				la misma regla que anteriormente ya que nos 
+				dejaría sin conexión a nuestro router, luego
+				la única acción que podemos tomar es notificar
+			---------------------------------------------------*/
+			fprintf(stdout, "Encontrado BSSID duplicado %s %s\n", ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
+		}
+	}
+
+	free(comando);
+}

@@ -14,7 +14,7 @@ de detectar la suplantación de SSID
 #define ESSID_propio "M"
 #define BSSID_propio "D"
 
-void bloquea_SSID (struct INFO_SSID ssid_coincidentes);
+
 
 
 int main () {
@@ -29,7 +29,7 @@ int main () {
 			3. Para la captura 
 			X4. Leer el fichero
 			X5. Analizar la lectura
-			6. Tomar acciones si hay alguna coincidencia
+			X6. Tomar acciones si hay alguna coincidencia
 	-------------------------------------------*/
 	//Estructura que almacenará el contenido del fichero
 	struct CONTENIDO_FICHERO contenido_del_fichero;
@@ -45,46 +45,7 @@ int main () {
 	
 	ssid_coincidentes = busca_SSID(info_ssid, ESSID_propio, BSSID_propio);
 
-	bloquea_SSID(ssid_coincidentes);
+	//DESCOMENTAR CUANDO ESTÉ EL CÓDIGO EN LA RASPBERRY YA QUE CREA UNA REGLA DE IPTABLES
+	//bloquea_SSID(ssid_coincidentes);
 	return 0;
-}
-
-void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
-
-	/*--------------------------------------------
-		Debe comprobar si la coincidencia es de 
-		BSSID o ESSID
-			
-			ESSID; Obtener el BSSID correspondiente
-			y bloquear el tráfico mediante IPTABLES
-			
-			BSSID; A partir de la dirección MAC
-			obtener la diercción IP y bloquearla
-			mediante IPTABLES
-	--------------------------------------------*/
-	//Variable para recorrer la estructura
-	int cont_aux_ssid;
-	//String para almacenar el comando que vamos a utilizar
-	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Inicializamos
-	cont_aux_ssid = INICIO;
-
-	for (cont_aux_ssid=0;cont_aux_ssid<ssid_coincidentes.num_ssid;cont_aux_ssid++){
-
-	
-		//Comprobamos si la coincidencia se ha dado en el ESSID
-		if (ssid_coincidentes.coincide_BSSID[cont_aux_ssid] == false) {
-
-			//Creamos la regla
-			strcpy(comando, "sudo iptables ");
-			printf("%s\n", comando);
-		}
-
-		//En caso contrario la coincidencia será en el BSSID
-		else if (ssid_coincidentes.coincide_BSSID[cont_aux_ssid] == true){
-			printf("%s %s\n", ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
-		}
-	}
-
-	free(comando);
 }
