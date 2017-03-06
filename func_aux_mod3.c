@@ -412,3 +412,120 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 
 	free(comando);
 }
+
+/*----------------------------------------------------
+	Función que se encarga de capturar los SSID
+	existentes en la red WiFi
+
+	Recibe: Nada
+	Devuelve: Nada
+
+	Características:
+		Se encarga de capturar el tráfico durante
+		un tiempo, tras esto para la captura para
+		generar el fichero correspondiente.
+		Antes de iniciar la captura se asegura de 
+		que el fichero donde la vamos a almacenar
+		no existía previamente
+----------------------------------------------------*/
+
+void escanea_WiFi() {
+
+	//Variable para almacenar el nombre del fichero
+	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//String para almacenar los comandos auxiliares
+	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para almacenar el PID
+	char *pid = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para almacenar el nombre del fichero
+	char *nombre_fichero_pid = (char * )malloc(sizeof(char *)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para saber en la línea en la que nos encontramos
+	int cont_aux_linea;
+	//Variable auxiliar para saber en que palabra nos encontramos
+	int cont_aux_palara;
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+
+	//Inicializamos las variables
+	strcpy(nombre_fichero_pid, "pid.txt");
+	cont_aux_linea = INICIO;
+	cont_aux_palara = INICIO;
+
+
+
+	//Almacenamos el nombre del fichero
+	strcpy(nombre_fichero, "primera_captura_prueba");
+
+
+	//Comprobamos si el fichero que vamos a generar existe
+	/*-------------------------------------------
+		Con la función acces podremos saber si
+		el fichero existe o no, el parámetro F_OK
+		se le pasa para saber si existe
+	-------------------------------------------*/
+	if ( access(nombre_fichero, F_OK) != NO_EXISTE) {
+		
+		/*--------------------------------------------
+			En caso de que exista, nos interesa
+			eliminarlo ya que airodump no sobreescribe
+			los ficheros sino que va añadiendo una 
+			terminación numérica y de esta forma
+			nos sería imposible seguir por qué fichero
+			vamos, así que si lo eliminamos nos 
+			aseguramos que siempre lo escribimos con 
+			el mismo nombre
+		---------------------------------------------*/
+		//Eliminamos el fichero para la próxima captura
+		strcpy(comando, "sudo rm -rf ");
+		strcat(comando, nombre_fichero);
+		strcat(comando, ".*");
+		system(comando);
+	}
+
+	//Creamos el comando para iniciar la captura
+	strcpy(comando, "sudo airodump mon0 -w ");
+	strcat(comando, nombre_fichero);
+	strcat(comando, " &");
+	system(comando);
+	
+	//Capturamos durante un tiempo
+	sleep(TIEMPO_CAPTURA);
+	
+	//Creamos el comando para obtener el PID y redireccionarlo al fichero
+	strcpy(comando, "pidof airodump > ");
+	strcat(comando, nombre_fichero_pid);
+	//Ejecutamos dicho comando
+	system(comando);
+
+
+	//Leemos el fichero
+	contenido_del_fichero = lee_fichero(nombre_fichero_pid);
+
+	//Recorremos el array devuelto para obtener el PID
+	for (cont_aux_linea=0;
+			cont_aux_linea < contenido_del_fichero.num_frases_fichero; 
+			cont_aux_linea++){
+		
+		for (cont_aux_palara=0;
+			cont_aux_palara<=contenido_del_fichero.palabras_por_frase[cont_aux_linea];
+			cont_aux_palara++) {
+
+			//Almacenamos el PID en nuestra variable específica
+			strcpy(pid,
+				contenido_del_fichero.contenido_leido_del_fichero[cont_aux_linea][cont_aux_palara]);
+
+		}
+	}
+
+	//Creamos el comando para parar la captura
+	strcpy(comando, "sudo kill -9 ");
+	strcat(comando, pid);
+	//Ejecutamos dicho comando
+	system(comando);
+
+	//Liberamos memoria
+	free(nombre_fichero);
+	free(nombre_fichero_pid);
+	free(comando);
+	free(pid);
+}

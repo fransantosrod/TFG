@@ -8,6 +8,7 @@ tercer módulo
 -------------------------------------------*/
 #include <stdio.h>
 #include <stdbool.h>
+#include <unistd.h>
 #include "func_aux.h"
 
 #ifndef func_aux_mod3
@@ -23,7 +24,9 @@ tercer módulo
 #define INFO_CLIENTES "Station MAC"
 //Constante para definir el número máximo de SSID que vamos a almacenar en la estructura
 #define NUM_SSID 50
-
+//Constante para definir el tiempo en el que estaremos capturando tráfico de la red
+#define TIEMPO_CAPTURA 30
+#define NO_EXISTE -1
 //Estructura para almacenar los SSID leidos
 typedef struct INFO_SSID {
 	
@@ -81,7 +84,17 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 	Devuelve: Nada
 	Recibe: Una estructura del tipo INFO_SSID
 ----------------------------------------------------------*/
-
 void bloquea_SSID (struct INFO_SSID ssid_coincidentes);
+
+
+/*----------------------------------------------------
+	Función que se encarga de capturar los SSID
+	existentes en la red WiFi
+
+	Recibe: Nada
+	Devuelve: Nada
+----------------------------------------------------*/
+void escanea_WiFi();
+
 
 #endif
