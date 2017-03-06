@@ -32,31 +32,34 @@ int main () {
 	//Inicializamos
 	strcpy(nombre_fichero, "primera_captura_prueba.csv");
 
-	//Escanemaos la red WiFi
-	//DESCOMENTAR
-	//escanea_WiFi();
+	while(true){
+		//Escanemaos la red WiFi
+		//DESCOMENTAR
+		//escanea_WiFi();
 
-	//Leemos el fichero
-	contenido_del_fichero = lee_fichero_csv(nombre_fichero);
+		//Leemos el fichero
+		contenido_del_fichero = lee_fichero_csv(nombre_fichero);
 
-	//Obtenemos los SSID leidos
-	info_ssid = procesa_fichero_CSV(contenido_del_fichero);
-	
-	//Buscamos posibles SSID duplicados
-	ssid_coincidentes = busca_SSID(info_ssid, ESSID_propio, BSSID_propio);
+		//Obtenemos los SSID leidos
+		info_ssid = procesa_fichero_CSV(contenido_del_fichero);
+		
+		//Buscamos posibles SSID duplicados
+		ssid_coincidentes = busca_SSID(info_ssid, ESSID_propio, BSSID_propio);
 
-	//DESCOMENTAR CUANDO ESTÉ EL CÓDIGO EN LA RASPBERRY YA QUE CREA UNA REGLA DE IPTABLES
-/*	
-	//Creamos las reglas para esos SSIDs que hemos detectado
-	bloquea_SSID(ssid_coincidentes);
-	
-	//Eliminamos el fichero para la próxima captura
-	strcpy(comando, "sudo rm -rf ");
-	strcat(comando, nombre_fichero);
-	strcat(comando, ".*");
-	system(comando);
-	
-*/
+		//DESCOMENTAR CUANDO ESTÉ EL CÓDIGO EN LA RASPBERRY YA QUE CREA UNA REGLA DE IPTABLES
+	/*	
+		//Creamos las reglas para esos SSIDs que hemos detectado
+		bloquea_SSID(ssid_coincidentes);
+		
+		//Eliminamos el fichero para la próxima captura
+		strcpy(comando, "sudo rm -rf ");
+		strcat(comando, nombre_fichero);
+		strcat(comando, ".*");
+		system(comando);
+		
+	*/
+		sleep(INTERVALO_LECTURA);
+	}
 	//Liberamos memoria
 	free(nombre_fichero);
 	free(comando);
