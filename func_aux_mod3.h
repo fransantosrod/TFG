@@ -31,6 +31,13 @@ typedef struct INFO_SSID {
 	char *essid[NUM_SSID];
 	//Array para almacenar los BSSID que se lean
 	char *bssid[NUM_SSID];
+	/*--------------------------------------------
+		Bandera para conocer si la coincidencia 
+		fue ESSID o BSSID
+			-- true; La coincidencia es en BSSID
+			-- false; La coincidencia es en ESSID
+	--------------------------------------------*/
+	bool coincide_BSSID[NUM_SSID];
 	//Variable para almacenar la cantidad de SSID leidos
 	int num_ssid;
 

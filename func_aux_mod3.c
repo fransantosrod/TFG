@@ -311,6 +311,7 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 			//Almacenamos los datos en la estructura
 			ssid_coincidentes.essid[num_ssid_coincidentes] = info_ssid.essid[cont_aux_ssid];
 			ssid_coincidentes.bssid[num_ssid_coincidentes] = info_ssid.bssid[cont_aux_ssid];
+			ssid_coincidentes.coincide_BSSID[num_ssid_coincidentes] = false;
 			num_ssid_coincidentes++;
 		}
 
@@ -325,8 +326,8 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 			//Almacenamos los datos en la estructura
 			ssid_coincidentes.essid[num_ssid_coincidentes] = info_ssid.essid[cont_aux_ssid];
 			ssid_coincidentes.bssid[num_ssid_coincidentes] = info_ssid.bssid[cont_aux_ssid];
+			ssid_coincidentes.coincide_BSSID[num_ssid_coincidentes] = true;
 			num_ssid_coincidentes++;
-
 
 		}
 	}
