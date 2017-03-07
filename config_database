@@ -1,0 +1,11 @@
+/* Para realizar la base de datos vamos
+a obtener la información de los clientes
+a través del fichero que genera ARPWATCH*/
+
+/* Este fichero se encuentra bajo el directorio*/
+/var/lib/arpwatch/nombre_interfaz.dat
+
+/*Previamente debemos administrar permisos
+para poder acceder sin ser superusuario*/
+sudo chmod -R 777 /var/lib/arpwatch
+
