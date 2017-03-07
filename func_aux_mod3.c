@@ -53,7 +53,7 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	palabras = INICIO;
 	frases = INICIO;
 	letra = INICIO;
-
+	
 
 	if (fichero_lectura != NULL){
 
@@ -151,6 +151,11 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 		//Almacenamos el número total de líneas leidas
 		contenido_del_fichero.num_frases_fichero = frases;
 
+	
+	
+        //Cerramos el fichero
+        fclose(fichero_lectura);
+        
 	}
 
 	else {
@@ -159,8 +164,6 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	
 	}
 
-	//Cerramos el fichero
-	fclose(fichero_lectura);
 	
 	//Liberamos la memoria
 	free(palabra_aux);
@@ -439,6 +442,8 @@ void escanea_WiFi() {
 	char *pid = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para almacenar el nombre del fichero
 	char *nombre_fichero_pid = (char * )malloc(sizeof(char *)*NUM_CARACTERES_PALABRA);
+	//Variable auxiliar para almacenar el nombre del fichero y la extensi�n
+	char *nombre_fichero_completo = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para saber en la línea en la que nos encontramos
 	int cont_aux_linea;
 	//Variable auxiliar para saber en que palabra nos encontramos
@@ -447,23 +452,25 @@ void escanea_WiFi() {
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 
 	//Inicializamos las variables
-	strcpy(nombre_fichero_pid, "pid.txt");
+	strcpy(nombre_fichero_pid, "pid_airodump.txt");
 	cont_aux_linea = INICIO;
 	cont_aux_palara = INICIO;
 
 
 
 	//Almacenamos el nombre del fichero
-	strcpy(nombre_fichero, "primera_captura_prueba");
+	strcpy(nombre_fichero, "primera_captura");
 
 
 	//Comprobamos si el fichero que vamos a generar existe
+	strcpy(nombre_fichero_completo, nombre_fichero);
+	strcat(nombre_fichero_completo, "-01.csv");
 	/*-------------------------------------------
 		Con la función acces podremos saber si
 		el fichero existe o no, el parámetro F_OK
 		se le pasa para saber si existe
 	-------------------------------------------*/
-	if ( access(nombre_fichero, F_OK) != NO_EXISTE) {
+	if ( access(nombre_fichero_completo, F_OK) != NO_EXISTE) {
 		
 		/*--------------------------------------------
 			En caso de que exista, nos interesa
@@ -478,21 +485,25 @@ void escanea_WiFi() {
 		//Eliminamos el fichero para la próxima captura
 		strcpy(comando, "sudo rm -rf ");
 		strcat(comando, nombre_fichero);
-		strcat(comando, ".*");
+		strcat(comando, "*");
 		system(comando);
 	}
 
 	//Creamos el comando para iniciar la captura
-	strcpy(comando, "sudo airodump mon0 -w ");
+	strcpy(comando, "{ sudo airodump-ng mon0 --output-format csv -w ");
 	strcat(comando, nombre_fichero);
-	strcat(comando, " &");
+	strcat(comando, " 2>> output.txt; } &");
 	system(comando);
 	
 	//Capturamos durante un tiempo
 	sleep(TIEMPO_CAPTURA);
 	
+	//Eliminamos el fichero auxiliar que hemos creado anteriormente
+	strcpy(comando, "rm -rf output.txt");
+	system(comando);
+	
 	//Creamos el comando para obtener el PID y redireccionarlo al fichero
-	strcpy(comando, "pidof airodump > ");
+	strcpy(comando, "pidof airodump-ng > ");
 	strcat(comando, nombre_fichero_pid);
 	//Ejecutamos dicho comando
 	system(comando);
@@ -514,18 +525,19 @@ void escanea_WiFi() {
 			strcpy(pid,
 				contenido_del_fichero.contenido_leido_del_fichero[cont_aux_linea][cont_aux_palara]);
 
+			//Creamos el comando para parar la captura
+        		strcpy(comando, "sudo kill -9 ");
+        		strcat(comando, pid);
+        		//Ejecutamos dicho comando
+        		system(comando);
 		}
 	}
 
-	//Creamos el comando para parar la captura
-	strcpy(comando, "sudo kill -9 ");
-	strcat(comando, pid);
-	//Ejecutamos dicho comando
-	system(comando);
-
+	
 	//Liberamos memoria
 	free(nombre_fichero);
 	free(nombre_fichero_pid);
+	free(nombre_fichero_completo);
 	free(comando);
 	free(pid);
 }
