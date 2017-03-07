@@ -23,8 +23,6 @@ tail -f /var/log/arpwatch.log
 /* Introducimos en el fichero de configuración los
 parámetros que nos interesa para ello */
 
-sudo nano /etc/arpwatch.conf
-
-//Al final de este fichero introducimos
-eth0 -a -n X.X.X.X/24
-wlan0 -a -n X.X.X.X/24
+sudo nano /etc/default/arpwatch
+//Escribimos al final del documento
+INTERFACES="eth0 wlan0"
