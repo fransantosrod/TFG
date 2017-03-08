@@ -70,9 +70,9 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	
 		//Comenzamos a leer el fichero
 		while ((c=fgetc(fichero_lectura))!=EOF && sobrepasa_tamanio==false){
-		
+			
 			if (frase < NUM_FRASES){
-				if (c!= ESPACIO && c!=SALTO_DE_LINEA){
+				if (c!= ESPACIO && c!=SALTO_DE_LINEA && c!= TABULADOR){
 					//Almacenamos el caracter leido
 					palabras_frase[letra] = c;
 					//Aumentamos el número de letras leidas
@@ -108,7 +108,8 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 				}
 			
 				//Comprobamos si el caracter es un espacio y si se ha leido alguno 
-				else if (c == ESPACIO && letra >0){
+				
+				else if ((c == ESPACIO || c == TABULADOR) && letra >0  ){
 				
 					//Almacenamos la palabra de la frase deseada en nuestra estructura
 					palabras_frase[letra++] = TERMINADOR;

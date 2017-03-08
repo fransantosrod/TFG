@@ -24,6 +24,7 @@ necesarias para que estas funcionen
 //Constante para definir el número máximo de caracteres para una palabra
 #define NUM_CARACTERES_PALABRA 100
 #define INICIO 0
+#define TABULADOR '\t'
 #define SALTO_DE_LINEA '\n'
 #define ESPACIO ' '
 #define PUNTO '.'
