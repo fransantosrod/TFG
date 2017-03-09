@@ -9,3 +9,93 @@ a través del fichero que genera ARPWATCH*/
 para poder acceder sin ser superusuario*/
 sudo chmod -R 777 /var/lib/arpwatch
 
+/*-----------------------------------------
+	Pasamos a instalar el sitema gestor
+	de base de datos
+-----------------------------------------*/
+sudo apt-get install postgresql
+
+/* Al instalar se crea un usuario que será
+superusuario en postgres*/
+Usuario: postgres
+Contraseña; pgsqlroot
+
+//Para cambiar la contraseña basta con ejecutar
+
+sudo passwd postgres
+/* La contraseña que vamos a poner es; postgres*/
+
+/* Tras esto, vamos a pasar a crear un usuario
+propio para el módulo que se encargará de la BBDD*/
+//Para ello accedemos al superusuario de la BBDD
+
+su postgres
+
+psql
+
+/* Con el iguiente comando crearemos un nuevo usuario 
+llamado clientes con contraseña clientes para almacenar ahí 
+la información que nos interesa en este módulo*/
+
+CREATE USER clientes WITH ENCRYPTED PASSWORD 'clientes' CREATEDB;
+
+//Salimos
+
+\q
+exit
+
+/* Cambiamos la configuración para permitir la autenticación
+por contraseña del usuario nuevo que hemos creado*/
+
+//Accedemos al fichero para modificarlo
+sudo nano /etc/postgresql/9.4/main/pg_hba.conf
+
+/* Introducimos ANTES de la línes que contiene
+local all all peer lo siguiente*/
+
+local	all		clientes	md5
+
+//Tras esto reiniciamos el servicio
+
+sudo /etc/init.d/postgresql restart
+
+/* Tras esto, sólo falta crear la base de datos
+y las tablas que vamos a rellenar*/
+
+//Para crear la base de datos ejecutamos el siguiente comando
+
+createdb -U clientes clientes_asociados 
+
+/* Siendo clientes_asociados
+el nombre de la base de datos que vamos a crear*/
+
+//Si queremos acceder a la base de datos que acabamos de crear
+ psql -U clientes -d clientes_asociados
+\q
+
+//Cargamos la tabla que vamos a rellenar
+psql -U clientes -d clientes_asociados -f crea_tabla_bbdd.sql
+
+//Siendo crea_tabla_bbdd.sql un fichero que contiene lo siguiente
+
+
+CREATE TABLE datos_clientes
+(
+dir_mac macaddr NOT NULL,      
+dir_ip inet NOT NULL,  
+fecha timestamp without time zone NOT NULL,
+CONSTRAINT primary_key PRIMARY KEY (dir_mac, fecha)
+);
+
+
+
+/* Tras esto, ya tendríamos la base de datos lista para llenarla*/
+
+//Si queremos introducir datos habrá que ejecutar dentro de la base de datos
+INSERT INTO datos_clientes VALUES ('direccionMAC', 'direccionIP', to_timestamp(valortimestamp));
+
+//Si lo queremos introducir desde fuera de la base de datos
+psql -U clientes -d clientes_asociados -c "INSERT INTO datos_clientes VALUES ('direccionMAC', 'direccionIP', to_timestamp(valortimestamp)); "
+
+//Si lo que queremos es introducir sin que se nos pregunte por la contraseña
+export PGPASSWORD='clientes'; psql -U clientes -d clientes_asociados -c "INSERT INTO datos_clientes VALUES ('direccionMAC', 'direccionIP', to_timestamp(valortimestamp)); "
