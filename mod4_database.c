@@ -10,6 +10,8 @@ de los clientes asociados
 #include <stdlib.h>
 #include <string.h>
 #include "func_aux.h"
+#include "func_aux_mod4.h"
+
 
 int main () {
 
@@ -18,20 +20,19 @@ int main () {
 	//Estructura que almacenará los datos relativos al fichero
 	struct CONTENIDO_FICHERO lista_de_ficheros;
 	//Variable auxiliar para almacenar el nombre del fichero que se crea
-	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
 	//Variable auxiliar para almacenar el nombre del fichero sin extensión
-	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
 	//Variable auxiliar para almacenar el número de líneas leídas en la iteración anterior
 	int num_lineas_anteriores;
 	//Variables auxiliares para recorrer la estrutura leida
 	int cont_aux_frases;
-	int cont_aux_palabras;
+	
 
 
 	//Inicializamos
 	num_lineas_anteriores = INICIO;
 	cont_aux_frases = INICIO;
-	cont_aux_palabras = INICIO;
 	strcpy(nombre_fichero, "registro_clientes.txt");
 
 
@@ -56,20 +57,10 @@ int main () {
 
 		//Comprobamos que ha aumentado el número de clientes registrado desde la última vez que lo leimos
 		if (contenido_del_fichero.num_frases_fichero > num_lineas_anteriores) {
-
-			//Recorremos las nuevas líneas para crear el ficheo que vamos a cargar en la base de datos
-			for (cont_aux_frases=num_lineas_anteriores; 
-				cont_aux_frases<contenido_del_fichero.num_frases_fichero;
-				cont_aux_frases++) {
-
-				for (cont_aux_palabras=0;
-					cont_aux_palabras<=contenido_del_fichero.palabras_por_frase[cont_aux_frases];
-					cont_aux_palabras++) {
-
-						printf("%s ", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
-				}
-				printf("\n");
-			}	
+			
+			//Cargamos los nuevos datos en la base de datos
+			inserta_en_BBDD(contenido_del_fichero, num_lineas_anteriores);
+			
 		}
 	}
 
@@ -81,26 +72,15 @@ int main () {
 		
 		//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
 		contenido_del_fichero = lee_fichero(nuevo_fichero);
-
+		
 		//Comprobamos que ha aumentado el número de clientes registrado desde la última vez que lo leimos
 		if (contenido_del_fichero.num_frases_fichero > num_lineas_anteriores) {
-
-			//Recorremos las nuevas líneas para crear el ficheo que vamos a cargar en la base de datos
-			for (cont_aux_frases=num_lineas_anteriores; 
-				cont_aux_frases<contenido_del_fichero.num_frases_fichero;
-				cont_aux_frases++) {
-
-				for (cont_aux_palabras=0;
-					cont_aux_palabras<=contenido_del_fichero.palabras_por_frase[cont_aux_frases];
-					cont_aux_palabras++) {
-
-						printf("%s ", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
-				}
-				printf("\n");
-			}	
+			
+			//Cargamos los nuevos datos en la base de datos
+			inserta_en_BBDD(contenido_del_fichero, num_lineas_anteriores);	
 		}
 
-	
+		
 		/*-------------------------------------------------------
 			También es necesario vaciar los ficheros .dat ya
 			que si no se vacian en la próxima iteración se
@@ -114,6 +94,7 @@ int main () {
 		//Leemos el fichero donde hemos almacenado todos los ficheros
 		lista_de_ficheros = lee_fichero("lista_ficheros");
 
+		//Recorremos todos los dicheros existentes
 		for (cont_aux_frases=0; 
 				cont_aux_frases<lista_de_ficheros.num_frases_fichero;
 				cont_aux_frases++) {
@@ -122,13 +103,17 @@ int main () {
 			vacia_fichero(lista_de_ficheros.contenido_leido_del_fichero[cont_aux_frases][INICIO]);
 		}
 
+		//Cambiamos el valor de líneas leídas a 0
 		contenido_del_fichero.num_frases_fichero = INICIO;
 		
 	}
 
+	//Almacenamos el número de líneas leidas
 	num_lineas_anteriores = contenido_del_fichero.num_frases_fichero;
 
+	//Liberamos memoria
 	free(nuevo_fichero);
 	free(nombre_fichero);
+	
 	return 0;
 }
