@@ -720,21 +720,15 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	//Recorremos la estructura de coincidencias que le pasasmos como parámetro
 	for (cont_aux_regla=0; cont_aux_regla<contenido_fichero_alerta.numero_lineas; cont_aux_regla++) {
 		
-		//Abrimos el fichero de las reglas de snort en modo lectura
-		fichero_escritura = fopen(nombre_fichero_escritura, "r");
-		
-		if (fichero_escritura != NULL){
-			//Leemos el fichero de reglas ya creadas y almacenamos la info en la estructura
-			contenido_del_fichero_reglas = lee_fichero(nombre_fichero_escritura);
-			fclose(fichero_escritura);
+		//Leemos el fichero de reglas ya creadas y almacenamos la info en la estructura
+		contenido_del_fichero_reglas = lee_fichero(nombre_fichero_escritura);
 
-		}
-		
 		//Comprobamos si la regla que queremos crear está ya en el fichero o no
 		coincide = busca_Regla(contenido_del_fichero_reglas, contenido_fichero_alerta, cont_aux_regla);
 		
+
 		//En el caso en el que no encontramos ninguna coincidencia en el fichero
-		if (coincide <= INICIO){
+		if (coincide < INICIO){
 				
 			//Comenzamos añadiendo la acción que queremos ejecutar en esa regla
 			strcpy(reglas_aux,contenido_fichero_alerta.accion[cont_aux_regla]);
