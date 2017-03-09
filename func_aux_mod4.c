@@ -94,6 +94,7 @@ void inserta_en_BBDD(struct CONTENIDO_FICHERO contenido_del_fichero, int frase_i
 		strcat(comando, ");\"");
 		
 		//Redireccionamos la salida
+		strcat(comando, " >> /tmp/salida_bbdd.txt");
 		strcat(comando, " 2>> /tmp/salida_bbdd.txt");
 		//Ejecutamos el comando
 		system(comando);

@@ -7,6 +7,7 @@ encarga de la gestión de la base de datos
 de los clientes asociados 
 -------------------------------------------*/
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include "func_aux.h"
@@ -35,82 +36,83 @@ int main () {
 	cont_aux_frases = INICIO;
 	strcpy(nombre_fichero, "registro_clientes.txt");
 
-
-	/*-------------------------------------------------------
-	Obtenemos todos los registros almacenados en ARPWATCH
-		Nos interesa únicamente las tres primeras columnas
-			-- En la primera tenemos la dirección MAC
-			-- En la segunda la dirección IP
-			-- En la tercera el instante de tiempo en el que 
-				se almacenó
-	-------------------------------------------------------*/
-
-	system("cat *.dat | cut -f 1,2,3 > registro_clientes.txt");
-	system("cat *.dat- | cut -f 1,2,3 >> registro_clientes.txt");
-	
-	//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
-	contenido_del_fichero = lee_fichero(nombre_fichero);
-
-	//Comprobamos que el fichero no está en el límite
-	if (contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
-
-
-		//Comprobamos que ha aumentado el número de clientes registrado desde la última vez que lo leimos
-		if (contenido_del_fichero.num_frases_fichero > num_lineas_anteriores) {
-			
-			//Cargamos los nuevos datos en la base de datos
-			inserta_en_BBDD(contenido_del_fichero, num_lineas_anteriores);
-			
-		}
-	}
-
-	//Si estamos cerca del límite
-	else {
-		
-		//Vaciamos el fichero de registro de clientes
-		nuevo_fichero = vacia_fichero(nombre_fichero);
-		
-		//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
-		contenido_del_fichero = lee_fichero(nuevo_fichero);
-		
-		//Comprobamos que ha aumentado el número de clientes registrado desde la última vez que lo leimos
-		if (contenido_del_fichero.num_frases_fichero > num_lineas_anteriores) {
-			
-			//Cargamos los nuevos datos en la base de datos
-			inserta_en_BBDD(contenido_del_fichero, num_lineas_anteriores);	
-		}
-
-		
+	while (true){
 		/*-------------------------------------------------------
-			También es necesario vaciar los ficheros .dat ya
-			que si no se vacian en la próxima iteración se
-			volverá a llenar el fichero de registro ya que 
-			se vuelca el contenido de todos los ficheros
-		-------------------------------------------------------*/	
-		//Obtenemos todos los ficheros .dat existentes
-		system("ls *.dat > lista_ficheros");
-		system("ls *.dat- >> lista_ficheros");
+		Obtenemos todos los registros almacenados en ARPWATCH
+			Nos interesa únicamente las tres primeras columnas
+				-- En la primera tenemos la dirección MAC
+				-- En la segunda la dirección IP
+				-- En la tercera el instante de tiempo en el que 
+					se almacenó
+		-------------------------------------------------------*/
 
-		//Leemos el fichero donde hemos almacenado todos los ficheros
-		lista_de_ficheros = lee_fichero("lista_ficheros");
+		system("cat /var/lib/arpwatch/*.dat | cut -f 1,2,3 > registro_clientes.txt");
+		system("cat /var/lib/arpwatch/*.dat- | cut -f 1,2,3 >> registro_clientes.txt");
+	
+		//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
+		contenido_del_fichero = lee_fichero(nombre_fichero);
 
-		//Recorremos todos los dicheros existentes
-		for (cont_aux_frases=0; 
+		//Comprobamos que el fichero no está en el límite
+		if (contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
+
+
+			//Comprobamos que ha aumentado el número de clientes registrado desde la última vez que lo leimos
+			if (contenido_del_fichero.num_frases_fichero > num_lineas_anteriores) {
+			
+				//Cargamos los nuevos datos en la base de datos
+				inserta_en_BBDD(contenido_del_fichero, num_lineas_anteriores);
+			
+			}
+		}
+
+		//Si estamos cerca del límite
+		else {
+		
+			//Vaciamos el fichero de registro de clientes
+			nuevo_fichero = vacia_fichero(nombre_fichero);
+		
+			//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
+			contenido_del_fichero = lee_fichero(nuevo_fichero);
+		
+			//Comprobamos que ha aumentado el número de clientes registrado desde la última vez que lo leimos
+			if (contenido_del_fichero.num_frases_fichero > num_lineas_anteriores) {
+			
+				//Cargamos los nuevos datos en la base de datos
+				inserta_en_BBDD(contenido_del_fichero, num_lineas_anteriores);	
+			}
+
+		
+			/*-------------------------------------------------------
+				También es necesario vaciar los ficheros .dat ya
+				que si no se vacian en la próxima iteración se
+				volverá a llenar el fichero de registro ya que 
+				se vuelca el contenido de todos los ficheros
+			-------------------------------------------------------*/	
+			//Obtenemos todos los ficheros .dat existentes
+			system("ls /var/lib/arpwatch/*.dat > lista_ficheros");
+			system("ls /var/lib/arpwatch/*.dat- >> lista_ficheros");
+
+			//Leemos el fichero donde hemos almacenado todos los ficheros
+			lista_de_ficheros = lee_fichero("lista_ficheros");
+
+			//Recorremos todos los dicheros existentes
+			for (cont_aux_frases=0; 
 				cont_aux_frases<lista_de_ficheros.num_frases_fichero;
 				cont_aux_frases++) {
 
-			//Vaciamos el fichero y lo almacenamos en otro auxiliar
-			vacia_fichero(lista_de_ficheros.contenido_leido_del_fichero[cont_aux_frases][INICIO]);
+				//Vaciamos el fichero y lo almacenamos en otro auxiliar
+				vacia_fichero(lista_de_ficheros.contenido_leido_del_fichero[cont_aux_frases][INICIO]);
+			}
+
+			//Cambiamos el valor de líneas leídas a 0
+			contenido_del_fichero.num_frases_fichero = INICIO;
+		
 		}
 
-		//Cambiamos el valor de líneas leídas a 0
-		contenido_del_fichero.num_frases_fichero = INICIO;
-		
+		//Almacenamos el número de líneas leidas
+		num_lineas_anteriores = contenido_del_fichero.num_frases_fichero;
+		sleep(INTERVALO_LECTURA);
 	}
-
-	//Almacenamos el número de líneas leidas
-	num_lineas_anteriores = contenido_del_fichero.num_frases_fichero;
-
 	//Liberamos memoria
 	free(nuevo_fichero);
 	free(nombre_fichero);
