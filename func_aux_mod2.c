@@ -287,7 +287,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 		cont_aux_reglas++){
 
 		//Leemos el fichero de las reglas que ya hemos creado
-		contenido_del_fichero = lee_fichero("/etc/snort/rules/local.rules");
+		contenido_del_fichero = lee_fichero("local.rules_prueba");
 		
 		/*--------------------------------------------------------
 			El siguiente paso es necesario realizarlo ya que
@@ -419,7 +419,8 @@ void detecta_Registro_caducado(char *nombre_fichero){
 		cont_aux_frases_fichero++){
 
 		//Comprobamos si ha pasado una hora desde la hora de creación de la regla y la actual
-		if (atoi(t_actual) - atoi(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][HORA]) >= PASA_UNA_HORA) {
+		if ((atoi(t_actual) - atoi(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][HORA]) >= PASA_UNA_HORA) ||
+			(atoi(t_actual) - atoi(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][HORA]) < INICIO)) {
 
 			//Rellenamos la estructura con la información que hemos recogido del fichero donde registramos las reglas
 			informacion_regla.accion[INICIO] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][POS_ACCION+1]);
@@ -442,9 +443,12 @@ void detecta_Registro_caducado(char *nombre_fichero){
 			//Eliminamos el registro para no detectarlo más
 			elimina_Registro(nombre_fichero, cont_aux_frases_fichero);
 			//Eliminamos la regla que creó ese registro
-			elimina_Regla("/etc/snort/rules/local.rules",informacion_regla, INICIO);
-			//Recargamos la configuración de SNORT para que elimine la regla 
+			elimina_Regla("local.rules_prueba",informacion_regla, INICIO);
+			//Recargamos la configuración de SNORT para que elimine la regla
+			
+			/*DESCOMENTAR 
 			recarga_Snort();
+			*/
 		}
 
 	}
