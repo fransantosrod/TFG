@@ -7,7 +7,9 @@ necesarias para que estas funcionen
 -------------------------------------------*/
 #include <stdio.h>
 #include <stdbool.h>
-
+#include <fcntl.h>
+#include <semaphore.h>
+#include <unistd.h>
 #ifndef func_aux
 #define func_aux
 
@@ -79,6 +81,17 @@ necesarias para que estas funcionen
 #define NO_COINCIDE -1
 //Constante de tiempo para definir los segundos que pasaran entre actividad
 #define INTERVALO_LECTURA 3
+//Constante para almacenar el nombre del semáforo para los ficheros de lecturas
+#define SEM_LECTURA "semaforo_lectura"
+//Constante para definir el nombre del semáforo que se usará para la recarga de Snort
+#define SEM_SNORT "semaforo_snort"
+//Constante para definir el nombre del semáforo que usará el fichero donde se almacena el sid
+#define SEM_SID "semaforo_sid"
+//Constante para definir el nombre del semáforo que usará el fichero de reglas de snort
+#define SEM_REGLAS_SNORT "semaforo_reglas_snort"
+//Constante para definir el valor inicial del semáforo
+#define INICIO_SEM 1
+
 
 typedef struct CONTENIDO_FICHERO{
 
@@ -230,4 +243,36 @@ char *vacia_fichero(char *nombre_fichero);
 	Devuelve: Nada
 ------------------------------------------------------*/
 void elimina_Regla(char *nombre_fichero_borrar, struct ESTRUCTURA_REGLA informacion_regla, int pos_dentro_estruct_regla);
+
+
+
+/*----------------------------------------------------
+	Función que se encarga de crear un semáforo
+
+	Recibe: Nombre del semaforo a crear
+	Devuelve: Nada
+----------------------------------------------------*/
+void crea_semaforo(char *nombre_semaforo);
+
+
+
+/*---------------------------------------------
+	Función que se encarga de eliminar un
+	semáforo que fue creado previamente
+
+	Recibe: El nombre del semáforo a eliminar
+	Devuelve: Nada
+---------------------------------------------*/
+void elimina_semaforo(char *nombre_semaforo);
+
+
+/*----------------------------------------
+	Función que implementa el primer 
+	módulo
+
+		Recibe: Nada
+		Devuelve: Nada
+----------------------------------------*/
+
+void mod1();
 #endif
