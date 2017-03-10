@@ -13,9 +13,16 @@ en los ataques DoS
 #include <unistd.h>
 #include "func_aux.h"
 
+/*----------------------------------------
+	Función que implementa el primer 
+	módulo
 
+		Recibe: Nada
 
-int main (){
+		Devuelve: Nada
+----------------------------------------*/
+
+void mod1 (){
 
 	
 	//Estructura que almacenará los datos relativos al fichero
@@ -30,85 +37,95 @@ int main (){
 	int num_lineas_anterior;
 	//Variable para conocer si hemos creado alguna regla o no
 	bool regla_creada;
+	
 
 	//Inicializamos las variables
-	strcpy(nombre_fichero, "/var/log/snort/alert");
+	strcpy(nombre_fichero, "alert");
 	num_lineas_anterior = INICIO;
 	regla_creada=false;
-
-	//Bucle para leer periodicamente el fichero de alertas
-	while (true){
-		
-		//Leemos el fichero
-		contenido_del_fichero = lee_fichero(nombre_fichero);
 	
-		//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
-		if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
+	
+	
 		
-			if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
-				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
-				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
+	//Leemos el fichero
+	contenido_del_fichero = lee_fichero(nombre_fichero);
+
+
+	//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
+	if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
+		
+		if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
+			//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
+			contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
 				
-				//Comprobamos que hemos detectado alguna alerta
-				if (contenido_fichero_alerta.numero_lineas > INICIO){	
+			//Comprobamos que hemos detectado alguna alerta
+			if (contenido_fichero_alerta.numero_lineas > INICIO){	
 					
-					//Creamos las reglas con las que hayamos encontrado
-					regla_creada = crea_y_escribe_regla("/etc/snort/rules/local.rules", contenido_fichero_alerta, "DOS");
+				//Creamos las reglas con las que hayamos encontrado
+				regla_creada = crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "DOS");
 					
-					//Comprobamos si hemos escrito alguna regla	
-					if (regla_creada==true){
-						regla_creada = false;
-						recarga_Snort();
-					}
+				//Comprobamos si hemos escrito alguna regla	
+				if (regla_creada==true){
+					regla_creada = false;
+					/*DESCOMENTAR
+					recarga_Snort();
+					*/
+						
+				}
+			}
+		}
+		
+	}
+
+	//En el caso en el que estemos cerca del límite
+	else {
+			
+		//Llamamos a la función deseada para que nos vacie el fichero
+		nuevo_fichero = vacia_fichero(nombre_fichero);
+		/*--------------------------------------------------------
+			Para asegurarnos que no perdemos información
+			en ningún momento, volvemos a leer el fichero
+			al que le hemos cambiado el nombre siempre y
+			cuando no supere el número máximo (NUM_FRASES)
+				
+			Esta comprobació la hacemos por si el fichero 
+			se encontraba en el rango entre LIMITE y NUM_FRASES
+			y haya información que se pueda perder
+
+		--------------------------------------------------------*/
+		contenido_del_fichero = lee_fichero(nuevo_fichero);
+
+
+
+		//Comprobamos que ese fichero no ha superado el límite
+		if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
+				
+			//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
+			contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
+			if (contenido_fichero_alerta.numero_lineas > INICIO){
+					
+				//Creamos las reglas con las que hayamos encontrado
+				regla_creada = crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "DOS");
+				//Comprobamos si hemos creado la regla
+				if (regla_creada == true){
+					regla_creada = false;
+					
+					/*DESCOMENTAR
+					recarga_Snort();
+					*/
 				}
 			}
 			
 		}
 
-		//En el caso en el que estemos cerca del límite
-		else {
-			
-			//Llamamos a la función deseada para que nos vacie el fichero
-			nuevo_fichero = vacia_fichero(nombre_fichero);
-			/*--------------------------------------------------------
-				Para asegurarnos que no perdemos información
-				en ningún momento, volvemos a leer el fichero
-				al que le hemos cambiado el nombre siempre y
-				cuando no supere el número máximo (NUM_FRASES)
-				
-				Esta comprobació la hacemos por si el fichero 
-				se encontraba en el rango entre LIMITE y NUM_FRASES
-				y haya información que se pueda perder
+		contenido_del_fichero.num_frases_fichero = INICIO;
+	}
 
-			--------------------------------------------------------*/
-			contenido_del_fichero = lee_fichero(nuevo_fichero);
+	num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
 
-			//Comprobamos que ese fichero no ha superado el límite
-			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
-				
-				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
-				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
-				if (contenido_fichero_alerta.numero_lineas > INICIO){
-					
-					//Creamos las reglas con las que hayamos encontrado
-					regla_creada = crea_y_escribe_regla("/etc/snort/rules/local.rules", contenido_fichero_alerta, "DOS");
-					//Comprobamos si hemos creado la regla
-					if (regla_creada == true){
-						regla_creada = false;
-						recarga_Snort();
-					}
-				}
-				
-			}
-			contenido_del_fichero.num_frases_fichero = INICIO;
-		}
-		num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
-		sleep(INTERVALO_LECTURA);
-	}	
 	
 	//Liberamos la memoria
 	free(nombre_fichero);
 	free(nuevo_fichero);
-	return 0;
 
 } 
