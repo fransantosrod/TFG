@@ -16,4 +16,5 @@ int main () {
 	elimina_semaforo(SEM_SID);
 	elimina_semaforo(SEM_REGLAS_SNORT);
 	
+return 0;
 }

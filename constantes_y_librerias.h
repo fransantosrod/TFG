@@ -24,13 +24,13 @@ la ejecución del programa
 	Constantes para definir las rutas y nombres de los ficheros que se
 	va a usar en las funciones
 -----------------------------------------------------------------------*/
-#define FICHERO_ALERT_SNORT "alert"
-#define FICHERO_REGLAS_SNORT "local.rules_prueba"
+#define FICHERO_ALERT_SNORT "/var/log/snort/alert"
+#define FICHERO_REGLAS_SNORT "/etc/snort/rules/local.rules"
 #define FICHERO_SID "sid"
 #define FICHERO_PID_SNORT "pid.txt"
-#define FICHERO_ARPWATCH "arpwatch_prueba.log"
+#define FICHERO_ARPWATCH "/var/log/arpwatch.log"
 #define FICHERO_REGISTRO_REGLAS_MITM "registro_reglas_MITM"
-#define FICHERO_CAPTURA_WIFI "primera_captura_prueba.csv"
+#define FICHERO_CAPTURA_WIFI "primera_captura_prueba-01.csv"
 #define FICHERO_CAPTURA_WIFI_SIN_EXTENSION "primera_captura_prueba"
 #define EXTENSION_FICHERO_CAPTURA_WIFI "-01.csv"
 #define FICHERO_PID_AIRODUMP "pid_airodump.txt"

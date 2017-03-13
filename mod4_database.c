@@ -43,11 +43,11 @@ void *mod4 () {
 				-- En la tercera el instante de tiempo en el que 
 					se almacenó
 		-------------------------------------------------------*/
-		strcpy(comando, "cat *.dat | cut -f 1,2,3 > ");
+		strcpy(comando, "cat /var/lib/arpwatch/*.dat | cut -f 1,2,3 > ");
 		strcat(comando, FICHERO_REGISTRO_CLIENTES);
 		system(comando);
-		;
-		strcpy(comando, "cat *.dat- | cut -f 1,2,3 >> ");
+
+		strcpy(comando, "cat /var/lib/arpwatch/*.dat- | cut -f 1,2,3 >> ");
 		strcat(comando, FICHERO_REGISTRO_CLIENTES);
 		system(comando);
 		
@@ -94,8 +94,8 @@ void *mod4 () {
 				se vuelca el contenido de todos los ficheros
 			-------------------------------------------------------*/	
 			//Obtenemos todos los ficheros .dat existentes
-			system("ls *.dat > lista_ficheros");
-			system("ls *.dat- >> lista_ficheros");
+			system("ls /var/lib/arpwatch/*.dat > lista_ficheros");
+			system("ls /var/lib/arpwatch/*.dat- >> lista_ficheros");
 
 			//Leemos el fichero donde hemos almacenado todos los ficheros
 			lista_de_ficheros = lee_fichero("lista_ficheros");

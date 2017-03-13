@@ -62,10 +62,8 @@ void *mod1 (){
 					//Comprobamos si hemos escrito alguna regla	
 					if (regla_creada==true){
 						regla_creada = false;
-						/*DESCOMENTAR
+	
 						recarga_Snort();
-						*/
-							
 					}
 				}
 			}
@@ -105,9 +103,7 @@ void *mod1 (){
 					if (regla_creada == true){
 						regla_creada = false;
 						
-						/*DESCOMENTAR
 						recarga_Snort();
-						*/
 					}
 				}
 				

@@ -65,10 +65,9 @@ void *mod2 () {
 					if (crear_regla == true) {
 						//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
 						crear_regla = false;
-						/*DESCOMENTAR
+						
 						//Reiniciamos Snort
 						recarga_Snort();
-						*/
 					}
 				}
 			}
@@ -109,10 +108,9 @@ void *mod2 () {
 
 						//Cambiamos el valor de la bandera
 						crear_regla = false;
-						/*DESCOMENTAR
+
 						//Recargamos Snort
 						recarga_Snort();
-						*/
 					}
 				}
 					

@@ -440,10 +440,7 @@ void detecta_Registro_caducado(char *nombre_fichero){
 			//Eliminamos la regla que creó ese registro
 			elimina_Regla(FICHERO_REGLAS_SNORT,informacion_regla, INICIO);
 			//Recargamos la configuración de SNORT para que elimine la regla
-			
-			/*DESCOMENTAR 
 			recarga_Snort();
-			*/
 		}
 
 	}

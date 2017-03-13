@@ -388,10 +388,7 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 			strcpy(comando, "sudo iptables -A INPUT -m mac --mac-source ");
 			strcat(comando, ssid_coincidentes.bssid[cont_aux_ssid]);
 			strcat(comando, " -j DROP");
-			printf("%s\n", comando);
-			/* DESCOMENTAR
 			system(comando);
-			*/			
 		}
 
 		//En caso contrario la coincidencia será en el BSSID
@@ -483,14 +480,14 @@ void escanea_WiFi() {
 		strcpy(comando, "sudo rm -rf ");
 		strcat(comando, nombre_fichero);
 		strcat(comando, "*");
-		//system(comando);
+		system(comando);
 	}
 
 	//Creamos el comando para iniciar la captura
 	strcpy(comando, "{ sudo airodump-ng mon0 --output-format csv -w ");
 	strcat(comando, nombre_fichero);
 	strcat(comando, " 2>> output.txt; } &");
-	//system(comando);
+	system(comando);
 	
 	//Capturamos durante un tiempo
 	sleep(TIEMPO_CAPTURA);
@@ -503,7 +500,7 @@ void escanea_WiFi() {
 	strcpy(comando, "pidof airodump-ng > ");
 	strcat(comando, nombre_fichero_pid);
 	//Ejecutamos dicho comando
-	//system(comando);
+	system(comando);
 
 
 	//Leemos el fichero
@@ -526,7 +523,7 @@ void escanea_WiFi() {
         		strcpy(comando, "sudo kill -9 ");
         		strcat(comando, pid);
         		//Ejecutamos dicho comando
-        		//system(comando);
+        		system(comando);
 		}
 	}
 
