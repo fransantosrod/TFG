@@ -45,13 +45,11 @@ void *mod4 () {
 		-------------------------------------------------------*/
 		strcpy(comando, "cat *.dat | cut -f 1,2,3 > ");
 		strcat(comando, FICHERO_REGISTRO_CLIENTES);
-		printf("%s\n",comando );
-		//system(comando);
+		system(comando);
 		;
 		strcpy(comando, "cat *.dat- | cut -f 1,2,3 >> ");
 		strcat(comando, FICHERO_REGISTRO_CLIENTES);
-		printf("%s\n",comando );
-		//system(comando);
+		system(comando);
 		
 		//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
 		contenido_del_fichero = lee_fichero(nombre_fichero);

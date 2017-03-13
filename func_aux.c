@@ -948,7 +948,7 @@ void crea_semaforo(char *nombre_semaforo){
 
 			--valor_sem: Valor inicial del semáforo
 	-----------------------------------------------*/
-	semaforo = sem_open(nombre_semaforo, O_CREAT, 600, valor_sem);
+	semaforo = sem_open(nombre_semaforo, O_CREAT, 0600, valor_sem);
 
 	if (semaforo == NULL) {
 

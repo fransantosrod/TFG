@@ -33,6 +33,8 @@ func_aux_mod1.o: func_aux_mod1.c func_aux_mod1.h
 func_aux.o: func_aux.c func_aux.h
 	gcc -W -Wall -c func_aux.c
 
+eliminaSem: elmina_semaforos.c constantes_y_librerias.h func_aux.c func_aux.h
+	gcc -W -Wall -o eliminaSem elmina_semaforos.c func_aux.c -pthread
 
 clean:
 	rm *.o
