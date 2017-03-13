@@ -82,5 +82,5 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes);
 ----------------------------------------------------*/
 void escanea_WiFi();
 
-void *mod3 ();
+
 #endif

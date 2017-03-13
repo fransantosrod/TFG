@@ -24,5 +24,5 @@ cuarto módulo
 void inserta_en_BBDD(struct CONTENIDO_FICHERO contenido_del_fichero, int frase_inicio);
 
 
-void *mod4 ();
+
 #endif

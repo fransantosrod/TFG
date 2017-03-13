@@ -46,6 +46,17 @@ la ejecución del programa
 //Constante para definir la tabla a la que vamos a acceder
 #define NOMBRE_TABLA_BBDD "datos_clientes"
 
+/*------------------------------------------------------
+	Constante para definir los errores que pueden 
+	existir
+------------------------------------------------------*/
+#define ERROR_NUM_LINEAS "El fichero %s supera las %d líneas útiles máximas\n"
+#define ERROR_APERTURA_FICHERO "No se puede abrir el fichero %s \n"
+#define ERROR_APERTURA_SEMAFORO "Error al abrir el semáforo %s\n"
+#define ERROR_APERTURA_VARIOS_SEMAFOROS "Error al abrir los semáforos %s y %s\n"
+#define ERROR_CREACION_SEMAFORO "Error al crear el semáforo %s\n"
+#define ERROR_CERRAR_SEMAFORO "Error al cerrar el semáforo %s\n"
+#define BSSID_DUPLICADO "Encontrado BSSID duplicado %s %s\n"
 
 #define INICIO 0
 #define IGUAL 0
@@ -185,4 +196,40 @@ la ejecución del programa
 #define INFO_CLIENTES "Station MAC"
 
 
+/*----------------------------------------
+	Función que implementa el primer 
+	módulo
+
+		Recibe: Nada
+		Devuelve: Nada
+----------------------------------------*/
+
+void *mod1();
+
+/*-------------------------------------------
+	Función que se encarga de implementar
+	las funcionalidades del módulo 2
+
+	Recibe: Nada
+	Devuelve: Nada
+-------------------------------------------*/
+void *mod2();
+
+/*-------------------------------------------
+	Función que se encarga de implementar
+	las funcionalidades del módulo 3
+
+	Recibe: Nada
+	Devuelve: Nada
+-------------------------------------------*/
+void *mod3 ();
+
+/*-------------------------------------------
+	Función que se encarga de implementar
+	las funcionalidades del módulo 4
+
+	Recibe: Nada
+	Devuelve: Nada
+-------------------------------------------*/
+void *mod4 ();
 #endif

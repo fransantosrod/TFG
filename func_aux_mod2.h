@@ -61,12 +61,5 @@ void elimina_Registro(char *nombre_fichero, int numero_linea);
 
 
 
-/*-------------------------------------------
-	Función que se encarga de implementar
-	las funcionalidades del módulos 2
 
-	Recibe: Nada
-	Devuelve: Nada
--------------------------------------------*/
-void *mod2();
 #endif

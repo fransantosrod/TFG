@@ -139,7 +139,7 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 			//En caso contrario indicamos que hemos sobrepasado el número de líneas
 			else {
 
-				fprintf(stderr, "El fichero %s supera el número de líneas\n", fichero);
+				fprintf(stderr, ERROR_NUM_LINEAS, fichero, NUM_FRASES);
 			}
 		}
 
@@ -155,7 +155,7 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 
 	else {
 	
-		fprintf(stderr,"Error al abrir el archivo\n");
+		fprintf(stderr,ERROR_APERTURA_FICHERO, fichero);
 	
 	}
 
@@ -406,7 +406,7 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 				dejaría sin conexión a nuestro router, luego
 				la única acción que podemos tomar es notificar
 			---------------------------------------------------*/
-			fprintf(stdout, "Encontrado BSSID duplicado %s %s\n", ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
+			fprintf(stdout, BSSID_DUPLICADO, ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
 		}
 	}
 

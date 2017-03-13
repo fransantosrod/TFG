@@ -140,14 +140,14 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 				else {
 
 					sobrepasa_tamanio = true;
-					fprintf(stderr, "El fichero %s supera las %d líneas útiles máximas\n", nombre_fichero, NUM_FRASES);
+					fprintf(stderr, ERROR_NUM_LINEAS, nombre_fichero, NUM_FRASES);
 				}
 			}
 			fclose(fichero_lectura);
 		}
 
 		else 
-			fprintf(stderr,"No se puede abrir el fichero para su lectura\n");
+			fprintf(stderr,ERROR_APERTURA_FICHERO, nombre_fichero);
 		
 		//Subimos el semáforo
 		sem_post(semaforo_lectura);
@@ -160,7 +160,7 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	}
 
 	else {
-		fprintf(stderr, "Error al abrir el semáforo %s\n", SEM_LECTURA);
+		fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_LECTURA);
 	}
 	//Liberamos la memoria
 	free(palabras_frase);
@@ -549,7 +549,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				}
 
 				else
-					fprintf(stderr, "Error al abrir el fichero sid\n");	
+					fprintf(stderr, ERROR_APERTURA_FICHERO, FICHERO_SID);	
 				
 				
 				//Lo volvemos a crear y almacenamos el nuevo número
@@ -604,17 +604,17 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 		if (semaforo_reglas_snort != NULL) {
 			
 			sem_close(semaforo_reglas_snort);
-			fprintf(stderr, "Error al abrir el semáforo %s\n", SEM_SID);
+			fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_SID);
 		}
 
 		else if (semaforo_sid != NULL) {
 
 			sem_close(semaforo_sid);
-			fprintf(stderr, "Error al abrir el semáforo %s\n", SEM_REGLAS_SNORT);
+			fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
 		}
 
 		else {
-			fprintf(stderr, "Error al abrir los semáforos %s y %s\n", SEM_SID, SEM_REGLAS_SNORT);
+			fprintf(stderr, ERROR_APERTURA_VARIOS_SEMAFOROS, SEM_SID, SEM_REGLAS_SNORT);
 		}
 	}
 
@@ -721,7 +721,7 @@ void recarga_Snort () {
 	//En caso de que uno de los semáforo no se abra correctamente
 	else {
 		
-		fprintf(stderr, "Error al abrir el semáforo %s\n", SEM_SNORT);	
+		fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_SNORT);	
 	}
 		
 	//Liberamos la memoria
@@ -911,7 +911,7 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 	}
 	else {
 
-		fprintf(stderr, "Error al abrir el semáforo %s\n", SEM_REGLAS_SNORT);
+		fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
 	}
 
 	//Liberamos memoria
@@ -952,7 +952,7 @@ void crea_semaforo(char *nombre_semaforo){
 
 	if (semaforo == NULL) {
 
-		fprintf(stderr, "Error al crear el semáforo %s\n", nombre_semaforo);
+		fprintf(stderr, ERROR_CREACION_SEMAFORO, nombre_semaforo);
 	}
 }
 
@@ -978,7 +978,7 @@ void elimina_semaforo(char *nombre_semaforo) {
 
 	//Comprobamos que se eliminó correctamente
 	if (valor_devuelto != INICIO) {
-		fprintf(stderr, "Error al cerrar el semáforo %s\n", nombre_semaforo);
+		fprintf(stderr, ERROR_CERRAR_SEMAFORO, nombre_semaforo);
 	}
 
 }

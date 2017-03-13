@@ -33,14 +33,6 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 bool comprueba_IP(char *direccion_IP);
 
 
-/*----------------------------------------
-	Función que implementa el primer 
-	módulo
 
-		Recibe: Nada
-		Devuelve: Nada
-----------------------------------------*/
-
-void *mod1();
 
 #endif

@@ -7,11 +7,6 @@ todos los módulos
 
 #include "constantes_y_librerias.h"
 #include "func_aux.h"
-#include "func_aux_mod1.h"
-#include "func_aux_mod2.h"
-#include "func_aux_mod3.h"
-#include "func_aux_mod4.h"
-
 #define NUM_MODULOS 4
 
 	/*--------------------------
