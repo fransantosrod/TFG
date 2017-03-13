@@ -5,13 +5,8 @@ Descripción: Fichero que contiene la
 implementación del primer módulo centrado 
 en los ataques DoS
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <time.h>
-#include <unistd.h>
-#include "func_aux.h"
+
+#include "func_aux_mod1.h"
 
 /*----------------------------------------
 	Función que implementa el primer 
@@ -40,7 +35,7 @@ void *mod1 (){
 	
 
 	//Inicializamos las variables
-	strcpy(nombre_fichero, "alert");
+	strcpy(nombre_fichero, FICHERO_ALERT_SNORT);
 	num_lineas_anterior = INICIO;
 	regla_creada=false;
 	
@@ -62,7 +57,7 @@ void *mod1 (){
 				if (contenido_fichero_alerta.numero_lineas > INICIO){	
 						
 					//Creamos las reglas con las que hayamos encontrado
-					regla_creada = crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "DOS");
+					regla_creada = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, contenido_fichero_alerta, "DOS");
 						
 					//Comprobamos si hemos escrito alguna regla	
 					if (regla_creada==true){
@@ -105,7 +100,7 @@ void *mod1 (){
 				if (contenido_fichero_alerta.numero_lineas > INICIO){
 						
 					//Creamos las reglas con las que hayamos encontrado
-					regla_creada = crea_y_escribe_regla("local.rules_prueba", contenido_fichero_alerta, "DOS");
+					regla_creada = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, contenido_fichero_alerta, "DOS");
 					//Comprobamos si hemos creado la regla
 					if (regla_creada == true){
 						regla_creada = false;

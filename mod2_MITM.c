@@ -5,13 +5,6 @@ Descripción: Fichero que contiene las
 implementaciones del segundo módulo centrado
 en los ataques MITM 
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <time.h>
-#include <unistd.h>
-#include "func_aux.h"
 #include "func_aux_mod2.h"
 
 /*-------------------------------------------
@@ -38,7 +31,7 @@ void *mod2 () {
 	bool crear_regla;
 
 	//Inicalizamos las variables
-	strcpy(nombre_fichero, "arpwatch_prueba.log");
+	strcpy(nombre_fichero, FICHERO_ARPWATCH);
 	num_lineas_anterior = INICIO;
 	crear_regla = false;
 
@@ -48,7 +41,7 @@ void *mod2 () {
 		contenido_del_fichero = lee_fichero(nombre_fichero);
 
 		//Miramos a ver si algún registro ha pasado el tiempo ya
-		detecta_Registro_caducado("registro_reglas_MITM");
+		detecta_Registro_caducado(FICHERO_REGISTRO_REGLAS_MITM);
 				
 		//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
 		if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
@@ -67,7 +60,7 @@ void *mod2 () {
 
 						
 					//Creamos la regla
-					crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
+					crear_regla = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, informacion_regla, "MITM");
 					//Comprobamos si la hemos creado correctamente
 					if (crear_regla == true) {
 						//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
@@ -109,7 +102,7 @@ void *mod2 () {
 				if (informacion_regla.numero_lineas > INICIO){
 						
 					//Creamos la regla
-					crear_regla = crea_y_escribe_regla("local.rules_prueba", informacion_regla, "MITM");
+					crear_regla = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, informacion_regla, "MITM");
 
 					//Comprobamos que la hemos creado correctamente
 					if (crear_regla == true){

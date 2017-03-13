@@ -6,11 +6,7 @@ implementación del cuarto módulo que se
 encarga de la gestión de la base de datos
 de los clientes asociados 
 -------------------------------------------*/
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include "func_aux.h"
+
 #include "func_aux_mod4.h"
 
 
@@ -24,6 +20,8 @@ void *mod4 () {
 	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
 	//Variable auxiliar para almacenar el nombre del fichero sin extensión
 	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
+	//String para almacenar los comandos auxiliares
+	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_REGLAS);
 	//Variable auxiliar para almacenar el número de líneas leídas en la iteración anterior
 	int num_lineas_anteriores;
 	//Variables auxiliares para recorrer la estrutura leida
@@ -34,7 +32,7 @@ void *mod4 () {
 	//Inicializamos
 	num_lineas_anteriores = INICIO;
 	cont_aux_frases = INICIO;
-	strcpy(nombre_fichero, "registro_clientes.txt");
+	strcpy(nombre_fichero, FICHERO_REGISTRO_CLIENTES);
 
 	while(true){
 		/*-------------------------------------------------------
@@ -45,9 +43,15 @@ void *mod4 () {
 				-- En la tercera el instante de tiempo en el que 
 					se almacenó
 		-------------------------------------------------------*/
-
-		system("cat *.dat | cut -f 1,2,3 > registro_clientes.txt");
-		system("cat *.dat- | cut -f 1,2,3 >> registro_clientes.txt");
+		strcpy(comando, "cat *.dat | cut -f 1,2,3 > ");
+		strcat(comando, FICHERO_REGISTRO_CLIENTES);
+		printf("%s\n",comando );
+		//system(comando);
+		;
+		strcpy(comando, "cat *.dat- | cut -f 1,2,3 >> ");
+		strcat(comando, FICHERO_REGISTRO_CLIENTES);
+		printf("%s\n",comando );
+		//system(comando);
 		
 		//Leemos el nombre del fichero en el que hemos almacenado todos lo datos
 		contenido_del_fichero = lee_fichero(nombre_fichero);
@@ -121,6 +125,7 @@ void *mod4 () {
 	//Liberamos memoria
 	free(nuevo_fichero);
 	free(nombre_fichero);
+	free(comando);
 
 	pthread_exit(NULL);
 }

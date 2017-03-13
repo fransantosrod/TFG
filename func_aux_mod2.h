@@ -6,37 +6,11 @@ declaraciones y constantes de las
 funciones auxiliares que se usarán en el 
 segundo módulo
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdbool.h>
+#include "constantes_y_librerias.h"
 #include "func_aux.h"
 
 #ifndef func_aux_mod2
 #define func_aux_mod2
-
-//Indica que la dirección MAC ha cambiado para una misma IP
-#define CAMBIO_EN_MAC "changed"
-//Indica que la MAC ha cambiado en un intervalo muy corto de tiempo 
-#define CAMBIO_MAC_INMEDIATO "flip"
-//Posición que ocupa la dirección IP
-#define POS_DIR_IP 3
-#define POS_DIR_IP_INM POS_DIR_IP-1
-//Posición que ocupa la nueva dirección MAC
-#define POS_DIR_MAC_NUEVA 4
-#define POS_DIR_MAC_NUEVA_INM POS_DIR_MAC_NUEVA-1
-//Posición que ocupa la vieja dirección MAC
-#define POS_DIR_MAC_VIEJA 5
-#define POS_DIR_MAC_VIEJA_INM POS_DIR_MAC_VIEJA-1
-//Tamaño de la dirección MAC
-#define TAM_MAC 17
-#define IP "IP"
-//Constante donde definimos la posición de la hora en el fichero de registro
-#define HORA 0
-//Constante paara definir el paso de una hora
-#define PASA_UNA_HORA 100
-//Constante para definir la posición de la bandera que indica si la IP es origen o destino
-#define POS_BANDERA_IP 4
-//Constante para definir la posición de la bandera que indica si la IP lleva puerto asociado
-#define POS_BANDERA_PUERTO 5
 
 /*----------------------------------------------------------
 	Función que se encarga de leer un fichero y buscar 

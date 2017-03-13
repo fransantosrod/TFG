@@ -5,12 +5,7 @@ Descripción: Fichero que contiene las
 implementaciones de las funciones auxiliares
 que se usarán en el segundo módulo
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <time.h>
-#include "func_aux.h"
+
 #include "func_aux_mod2.h"
 
 /*----------------------------------------------------------
@@ -277,7 +272,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 	struct tm *tm;
 	
 	//Inicializamos las variables
-	fichero_registro = fopen("registro_reglas_MITM", "a+");
+	fichero_registro = fopen(FICHERO_REGISTRO_REGLAS_MITM, "a+");
 	cont_aux_reglas = INICIO;
 	coincidencia_regla = INICIO;
 
@@ -287,7 +282,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 		cont_aux_reglas++){
 
 		//Leemos el fichero de las reglas que ya hemos creado
-		contenido_del_fichero = lee_fichero("local.rules_prueba");
+		contenido_del_fichero = lee_fichero(FICHERO_REGLAS_SNORT);
 		
 		/*--------------------------------------------------------
 			El siguiente paso es necesario realizarlo ya que
@@ -443,7 +438,7 @@ void detecta_Registro_caducado(char *nombre_fichero){
 			//Eliminamos el registro para no detectarlo más
 			elimina_Registro(nombre_fichero, cont_aux_frases_fichero);
 			//Eliminamos la regla que creó ese registro
-			elimina_Regla("local.rules_prueba",informacion_regla, INICIO);
+			elimina_Regla(FICHERO_REGLAS_SNORT,informacion_regla, INICIO);
 			//Recargamos la configuración de SNORT para que elimine la regla
 			
 			/*DESCOMENTAR 

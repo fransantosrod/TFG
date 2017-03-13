@@ -5,11 +5,6 @@ Descripción: Fichero que contiene las
 implementaciones del tercer módulo encargado
 de detectar la suplantación de SSID
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include "func_aux.h"
 #include "func_aux_mod3.h"
 
 #define ESSID_propio "M"
@@ -30,7 +25,7 @@ void *mod3 () {
 	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 
 	//Inicializamos
-	strcpy(nombre_fichero, "primera_captura_prueba.csv");
+	strcpy(nombre_fichero, FICHERO_CAPTURA_WIFI);
 
 	while(true){
 		//Escanemaos la red WiFi

@@ -5,11 +5,6 @@ Descripción: Fichero que contiene las
 implementaciones de las funciones auxiliares
 que se usarán en el tercer módulo
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "func_aux.h"
 #include "func_aux_mod3.h"
 
 
@@ -454,19 +449,19 @@ void escanea_WiFi() {
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 
 	//Inicializamos las variables
-	strcpy(nombre_fichero_pid, "pid_airodump.txt");
+	strcpy(nombre_fichero_pid, FICHERO_PID_AIRODUMP);
 	cont_aux_linea = INICIO;
 	cont_aux_palara = INICIO;
 
 
 
 	//Almacenamos el nombre del fichero
-	strcpy(nombre_fichero, "primera_captura");
+	strcpy(nombre_fichero, FICHERO_CAPTURA_WIFI_SIN_EXTENSION);
 
 
 	//Comprobamos si el fichero que vamos a generar existe
 	strcpy(nombre_fichero_completo, nombre_fichero);
-	strcat(nombre_fichero_completo, "-01.csv");
+	strcat(nombre_fichero_completo, EXTENSION_FICHERO_CAPTURA_WIFI);
 	/*-------------------------------------------
 		Con la función acces podremos saber si
 		el fichero existe o no, el parámetro F_OK

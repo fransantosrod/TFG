@@ -6,27 +6,13 @@ declaraciones y constantes de las
 funciones auxiliares que se usarán en el 
 tercer módulo
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdbool.h>
-#include <unistd.h>
+#include "constantes_y_librerias.h"
 #include "func_aux.h"
 
 #ifndef func_aux_mod3
 #define func_aux_mod3s
 
-//Constante para definir el caracter ','
-#define COMA ','
-//Constante para definir la palabra ESSID
-#define ESSID "ESSID"
-//Connstante para definir la palabra BSSID
-#define BSSID "BSSID"
-//Constante para definir la palabra que indica que comienza la info de los clientes
-#define INFO_CLIENTES "Station MAC"
-//Constante para definir el número máximo de SSID que vamos a almacenar en la estructura
-#define NUM_SSID 50
-//Constante para definir el tiempo en el que estaremos capturando tráfico de la red
-#define TIEMPO_CAPTURA 30
-#define NO_EXISTE -1
+
 //Estructura para almacenar los SSID leidos
 typedef struct INFO_SSID {
 	
