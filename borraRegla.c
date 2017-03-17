@@ -23,6 +23,7 @@ int main () {
 	printf("<html>\n");
 	
 		printf("<head>\n");
+			printf("<link rel=\"stylesheet\" type=\"text/css\" href=\"../cgi/hoja_estilo.css\">\n");
 			printf("<title>Gestion WIPS </title>\n");
 		printf("</head>\n");
 
@@ -80,7 +81,8 @@ int main () {
 
 			printf("</p>\n");
 
-			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/procesa_borrado_regla.out\">\n");
+			
+			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/procesa_borrado_regla.out\" class=\"form_borrar_reglas\">\n");
 					
 					contenido_del_fichero = lee_fichero("../cgi/local.rules");
 					
@@ -105,7 +107,7 @@ int main () {
 					}	
 					
 
-					printf("<button type=\"submit\">\n");
+					printf("<button type=\"submit\" id=\"button2\">\n");
 						printf("Borrar regla\n");
 					printf("</button>\n");
 

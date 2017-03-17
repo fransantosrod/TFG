@@ -12,6 +12,7 @@ int main () {
 	printf("<html>\n");
 	
 		printf("<head>\n");
+			printf("<link rel=\"stylesheet\" type=\"text/css\" href=\"../cgi/hoja_estilo.css\">\n");
 			printf("<title>Gestion WIPS </title>\n");
 		printf("</head>\n");
 
@@ -73,7 +74,7 @@ int main () {
 
 				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
 
-					printf("<button type=\"submit\">\n");
+					printf("<button type=\"submit\" class=\"button1\">\n");
 						printf("Actualizar reglas\n");
 					printf("</button>\n");	
 
@@ -85,7 +86,7 @@ int main () {
 
 				printf("<p>\n");
 
-					printf("<iframe src=\"../cgi/reglas_iptables\" height=\"500\" width=\"95% \"  >\n");
+					printf("<iframe src=\"../cgi/reglas_iptables\" \"  >\n");
 					printf("</iframe>\n");
 				
 				printf("</p>\n");

@@ -26,6 +26,7 @@ int main () {
 	printf("<html>\n");
 	
 		printf("<head>\n");
+			printf("<link rel=\"stylesheet\" type=\"text/css\" href=\"../cgi/hoja_estilo.css\">\n");
 			printf("<title>Gestion WIPS </title>\n");
 		printf("</head>\n");
 

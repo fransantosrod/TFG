@@ -1,0 +1,89 @@
+
+
+body {
+
+	background-color: #3366ff
+}
+
+button {
+
+	border: 2px solid #bfbfbf;
+	border-radius:5px;
+
+	position:relative;
+	top: 20px ;
+	left: 15%;
+	float: left;
+	
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.4s;
+	background-color: #8099b3; 
+
+}
+
+button:hover {
+
+	background-color: #bfbfbf;
+	color: white;
+}
+
+.button1 {
+	
+	border: 2px solid #dad9d8;
+	border-radius:5px;
+
+	position:absolute;
+	top: 70px;
+	left: 15%;
+	float: left;
+
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.4s;
+
+	word-break: break-all;
+}
+
+iframe {
+
+	border-style: none;
+	height:500px; 
+	width:85%;
+
+	position: relative;
+	top: 80px;
+	left: 15%;
+	float: left;
+
+	color: white;
+	background-color: #3366ff; 
+}
+
+.form_borrar_reglas {
+
+	position: relative;
+	top: 60px;
+	left: 15%;
+	float: left;
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 14px;
+
+}
+
+#button2 {
+	
+	border: 2px solid #dad9d8;
+	border-radius:5px;
+
+	position:relative;
+	top: 20px;
+	left: 2%;
+	float: left;
+
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.4s;
+
+	word-break: break-all;
+}
