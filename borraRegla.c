@@ -1,10 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "/home/dit/Desktop/TFG/func_aux.h"
 
 int main () {
 	
-	//CAMBIAR POR LA ORDEN PARA IPTABLES
-	system("echo \"Hola\" > /home/dit/web/cgi/reglas_iptables");
+	//Estructura que almacenará los datos relativos al fichero
+	struct CONTENIDO_FICHERO contenido_del_fichero;
+	//Variables auxiliares para recorrer la estructura
+	int cont_aux_lineas;
+	int cont_aux_palabras_por_linea;
+	//Variable para indicar el ID de cada regla
+	int id_regla;
+
+	//Inicializamos
+	cont_aux_lineas = INICIO;
+	cont_aux_palabras_por_linea = INICIO;	
+	id_regla = INICIO;
 
 	printf("Content-Type:text/html\n\n");
 	printf("<!DOCTYPE html>\n");
@@ -16,7 +27,7 @@ int main () {
 		printf("</head>\n");
 
 		printf("<body>\n");
-		
+	
 			printf("<p>\n");
 
 				printf("<form method=\"get\" action=\"../cgi/prueba.html\" style=\"display:inline\">\n");
@@ -69,29 +80,37 @@ int main () {
 
 			printf("</p>\n");
 
-			printf("<p>\n");
+			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/procesa_borrado_regla.out\">\n");
+					
+					contenido_del_fichero = lee_fichero("../cgi/local.rules");
+					
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
+					for (cont_aux_lineas=0;
+						cont_aux_lineas< contenido_del_fichero.num_frases_fichero;
+						cont_aux_lineas++){
+						
+						printf("<p>\n");	
+						printf("<input type=\"radio\" name=\"regla\" id=\"%d\" value=\"%d\">\n", id_regla, id_regla);
+						id_regla++;
+
+							for (cont_aux_palabras_por_linea=0;
+								cont_aux_palabras_por_linea<=contenido_del_fichero.palabras_por_frase[cont_aux_lineas];
+								cont_aux_palabras_por_linea++) {
+
+								printf("%s ", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_lineas][cont_aux_palabras_por_linea]);
+							}
+
+						printf("<br>\n");
+						printf("</p>\n");
+					}	
+					
 
 					printf("<button type=\"submit\">\n");
-						printf("Actualizar reglas\n");
-					printf("</button>\n");	
+						printf("Borrar regla\n");
+					printf("</button>\n");
 
-				printf("</form>\n");
 
-			printf("</p>\n");	
-	
-			printf("<div>\n");
-
-				printf("<p>\n");
-
-					printf("<iframe src=\"../cgi/reglas_iptables\" height=\"500\" width=\"95% \"  >\n");
-					printf("</iframe>\n");
-				
-				printf("</p>\n");
-			
-			printf("</div>\n");
-
+			printf("</form>\n");
 		printf("</body>\n");
 	
 	printf("</html>\n");
