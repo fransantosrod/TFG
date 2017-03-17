@@ -821,6 +821,11 @@ char *vacia_fichero(char *nombre_fichero){
 		abre el fichero vacio y lo reescribe con los
 		datos que almacenó al principio saltandose la 
 		línea que deseamos eliminar
+
+		Tendremos la opción de pasar directamente la 
+		línea que queremos eliminar, para ello,
+		pasaremos la estructura vacía y en el tercer
+		parámetro la línea que queremos eliminar
 -------------------------------------------------------*/
 
 void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informacion_regla, 
@@ -856,9 +861,21 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 		//Leemos el fichero del que queremos borrar la regla
 		contenido_del_fichero = lee_fichero(nombre_fichero_borrar);	
 
-		//Buscamo dicha regla en el fichero
-		linea_regla = busca_Regla(contenido_del_fichero, informacion_regla, pos_dentro_estruct_regla);
-
+		//Comprobamos si la estructura está vacía
+		if (informacion_regla.numero_lineas > INICIO) {
+			//Buscamo dicha regla en el fichero
+			linea_regla = busca_Regla(contenido_del_fichero, informacion_regla, pos_dentro_estruct_regla);
+		
+		}
+		/*-------------------------------------------
+			En caso de estar vacía, el tercer 
+			parámetro nos indica la línea que 
+			deseamos eliminar
+		--------------------------------------------*/
+		else {
+			
+			linea_regla = pos_dentro_estruct_regla;
+		}
 
 		//Si hemos encontrado la regla
 		if (linea_regla >= INICIO){
@@ -948,7 +965,7 @@ void crea_semaforo(char *nombre_semaforo){
 
 			--valor_sem: Valor inicial del semáforo
 	-----------------------------------------------*/
-	semaforo = sem_open(nombre_semaforo, O_CREAT, 0600, valor_sem);
+	semaforo = sem_open(nombre_semaforo, O_CREAT, 0666, valor_sem);
 
 	if (semaforo == NULL) {
 
