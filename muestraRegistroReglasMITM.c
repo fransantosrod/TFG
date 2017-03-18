@@ -9,14 +9,11 @@ int main () {
 	//Variables auxiliares para recorrer la estructura
 	int cont_aux_lineas;
 	int cont_aux_palabras_por_linea;
-	//Variable para indicar el ID de cada regla
-	int id_regla;
-
+	
 	//Inicializamos
 	cont_aux_lineas = INICIO;
 	cont_aux_palabras_por_linea = INICIO;	
-	id_regla = INICIO;
-
+	
 	printf("Content-Type:text/html\n\n");
 	printf("<!DOCTYPE html>\n");
 	
@@ -82,35 +79,46 @@ int main () {
 			printf("</p>\n");
 
 			
-			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/procesa_borrado_regla.out\" class=\"reglas\">\n");
+			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out\" class=\"reglas\">\n");
 					
-					contenido_del_fichero = lee_fichero("../cgi/local.rules");
-					
-
-					for (cont_aux_lineas=0;
-						cont_aux_lineas< contenido_del_fichero.num_frases_fichero;
-						cont_aux_lineas++){
-						
-						printf("<p>\n");	
-						printf("<input type=\"radio\" name=\"regla\" id=\"%d\" value=\"%d\">\n", id_regla, id_regla);
-						id_regla++;
-
-							for (cont_aux_palabras_por_linea=0;
-								cont_aux_palabras_por_linea<=contenido_del_fichero.palabras_por_frase[cont_aux_lineas];
-								cont_aux_palabras_por_linea++) {
-
-								printf("%s ", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_lineas][cont_aux_palabras_por_linea]);
-							}
-
-						printf("<br>\n");
-						printf("</p>\n");
-					}	
+					contenido_del_fichero = lee_fichero("../cgi/registro_reglas_MITM");
 					
 					if (contenido_del_fichero.num_frases_fichero == INICIO)
-						printf("<p class=\"info_regla\">No hay reglas<br></p>\n");
+						printf("<p class=\"info_regla\">No hay registro<br></p>\n");
 
-					printf("<button type=\"submit\" id=\"button2\">\n");
-						printf("Borrar regla\n");
+					else {
+
+						printf("<table>\n");
+						
+							printf("<tr>\n");
+								printf("<th>Hora</th>\n");
+								printf("<th>Accion</th>\n");
+								printf("<th>Protocolo</th>\n");
+								printf("<th>IP</th>\n");
+								printf("<th>Dir. en Origen</th>\n");
+								printf("<th>Dir. con Puerto</th>\n");
+							printf("</tr>\n");
+							
+							for (cont_aux_lineas=0;
+								cont_aux_lineas< contenido_del_fichero.num_frases_fichero;
+								cont_aux_lineas++){
+								
+								printf("<tr>\n");	
+								
+									for (cont_aux_palabras_por_linea=0;
+										cont_aux_palabras_por_linea<=contenido_del_fichero.palabras_por_frase[cont_aux_lineas];
+										cont_aux_palabras_por_linea++) {
+
+										printf("<td>%s</td>", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_lineas][cont_aux_palabras_por_linea]);
+									}
+
+								printf("</tr>\n");
+							}	
+							
+						printf("</table>\n");
+					}	
+					printf("<button type=\"submit\">\n");
+						printf("Actualizar registro\n");
 					printf("</button>\n");
 
 

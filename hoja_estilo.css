@@ -19,6 +19,8 @@ button {
 	transition-duration: 0.4s;
 	background-color: #8099b3; 
 
+	text-transform: capitalize;
+
 }
 
 button:hover {
@@ -43,35 +45,6 @@ button:hover {
 	word-break: break-all;
 }
 
-iframe {
-
-	border-style: none;
-	height:500px; 
-	width:85%;
-
-	position: relative;
-	top: 80px;
-	left: 15%;
-	float: left;
-
-	color: white;
-	background-color: #3366ff; 
-}
-
-.form_borrar_reglas {
-
-	position: relative;
-	top: 60px;
-	left: 15%;
-	float: left;
-
-	text-align: left;
-	text-transform: uppercase;
-	font-family: "Arial", Sans-serif;
-	font-size: 14px;
-
-}
-
 #button2 {
 	
 	border: 2px solid #dad9d8;
@@ -86,4 +59,84 @@ iframe {
 	transition-duration: 0.4s;
 
 	word-break: break-all;
+}
+
+iframe {
+
+	border-style: none;
+	height:500px; 
+	width:85%;
+
+	position: relative;
+	top: 80px;
+	left: 15%;
+	float: left;
+
+	background-color: #3366ff; 
+}
+
+.reglas {
+
+	position: absolute;
+	top: 60px;
+	left: 15%;
+	float: left;
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 14px;
+
+}
+
+.info_regla {
+
+	position: relative;
+	top: 10px;
+	left: 15%;
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 16px;
+	color: white;
+}
+
+table {
+
+	position: absolute;
+	top: 60px;
+	left: 15%;
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 13px;
+
+	border-collapse: collapse;
+	border: 4px solid #dad9d8;	
+}
+
+th, td {
+	
+	padding: 4px;
+	text-align: center;
+	border: 1px solid #dad9d8;
+
+}
+
+th {
+	background: #dad9d8;
+}
+tr:hover {
+
+	background-color: #3399ff;
+	color: white;	
+}
+
+li {
+	position: relative;
+	top: 20px;
+	margin: 4px;
+	background-color: #3399ff; 
 }

@@ -9,14 +9,11 @@ int main () {
 	//Variables auxiliares para recorrer la estructura
 	int cont_aux_lineas;
 	int cont_aux_palabras_por_linea;
-	//Variable para indicar el ID de cada regla
-	int id_regla;
-
+	
 	//Inicializamos
 	cont_aux_lineas = INICIO;
 	cont_aux_palabras_por_linea = INICIO;	
-	id_regla = INICIO;
-
+	
 	printf("Content-Type:text/html\n\n");
 	printf("<!DOCTYPE html>\n");
 	
@@ -82,35 +79,36 @@ int main () {
 			printf("</p>\n");
 
 			
-			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/procesa_borrado_regla.out\" class=\"reglas\">\n");
+			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasSnort.out\" class=\"reglas\">\n");
 					
 					contenido_del_fichero = lee_fichero("../cgi/local.rules");
 					
+					printf("<ul>\n");
 
 					for (cont_aux_lineas=0;
 						cont_aux_lineas< contenido_del_fichero.num_frases_fichero;
 						cont_aux_lineas++){
 						
-						printf("<p>\n");	
-						printf("<input type=\"radio\" name=\"regla\" id=\"%d\" value=\"%d\">\n", id_regla, id_regla);
-						id_regla++;
-
+							
+							printf("<li>\n");
 							for (cont_aux_palabras_por_linea=0;
 								cont_aux_palabras_por_linea<=contenido_del_fichero.palabras_por_frase[cont_aux_lineas];
 								cont_aux_palabras_por_linea++) {
 
 								printf("%s ", contenido_del_fichero.contenido_leido_del_fichero[cont_aux_lineas][cont_aux_palabras_por_linea]);
 							}
+							printf("</li>\n");
 
 						printf("<br>\n");
-						printf("</p>\n");
 					}	
+					
+					printf("</ul>\n");
 					
 					if (contenido_del_fichero.num_frases_fichero == INICIO)
 						printf("<p class=\"info_regla\">No hay reglas<br></p>\n");
 
 					printf("<button type=\"submit\" id=\"button2\">\n");
-						printf("Borrar regla\n");
+						printf("Actualizar reglas\n");
 					printf("</button>\n");
 
 

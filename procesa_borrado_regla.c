@@ -53,11 +53,11 @@ int main () {
 				
 				elimina_Regla("../cgi/local.rules",informacion_regla, atoi(regla));
 
-				printf("<p>Regla %d eliminada correctamente\n</p>", atoi(regla));
+				printf("<p class=\"info_regla\">Regla %d eliminada correctamente\n</p>", atoi(regla));
 			}	
 			
 			else {
-				printf("<p>No se ha podido eliminar la regla</p>\n");
+				printf("<p class=\"info_regla\">No se ha podido eliminar la regla</p>\n");
 			}
 			
 			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/borraRegla.out\">\n");

@@ -4,7 +4,7 @@
 int main () {
 	
 	//CAMBIAR POR LA ORDEN PARA IPTABLES
-	system("echo \"Hola\" > /home/dit/web/cgi/reglas_iptables");
+	//system("echo \"Hola\" > /home/dit/web/cgi/reglas_iptables");
 
 	printf("Content-Type:text/html\n\n");
 	printf("<!DOCTYPE html>\n");
@@ -28,10 +28,10 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"../cgi/muestrareglas.html\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasSnort.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
-						printf("Muestra Reglas Snort\n");
+						printf("Reglas Snort\n");
 					printf("</button>\n");
 
 				printf("</form>\n");
@@ -39,7 +39,7 @@ int main () {
 				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
-						printf("Muestra Reglas Iptables\n");
+						printf("Reglas Iptables\n");
 					printf("</button>\n");
 
 				printf("</form>\n");
@@ -47,15 +47,15 @@ int main () {
 				printf("<form method=\"get\" action=\"../cgi/muestraClientesRegistrados.html\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
-						printf("Muestra Clientes Registrados\n");
+						printf("Clientes Registrados\n");
 					printf("</button>\n");
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"../cgi/muestraRegistroReglasMITM.html\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
-						printf("Muestra Registro Reglas MITM\n");
+						printf("Registro Reglas MITM\n");
 					printf("</button>\n");
 
 				printf("</form>\n");
