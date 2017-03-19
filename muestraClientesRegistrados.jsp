@@ -1,4 +1,4 @@
-<%@ page language="java" import="java.sql.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" import="java.sql.*, java.io.*, java.util.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%
 	try {
@@ -12,7 +12,7 @@
 		Connection conn = DriverManager.getConnection(url,user,pass);
 
 		Statement st = conn.createStatement();
-		ResultSet rs = st.executeQuery("SELECT * FROM datos_clientes");
+		
 	
 
 %>
@@ -99,6 +99,38 @@
 				</tr>
 					
 				<%
+								
+					String mac = request.getParameter("macaddr"); 
+					String ip = request.getParameter("ip");
+					String sentencia = "SELECT * from datos_clientes ";
+
+					if (mac != null && ip != null ) {
+						
+						if (ip.length() > 0 || mac.length()>0) {
+							sentencia+="where ";
+						}
+						
+						if (mac.length() > 0) {
+
+							sentencia+= "dir_mac='" + mac + "'";
+						}
+						
+						if (ip.length() > 0 && mac.length()>0){
+							sentencia+= " and ";
+						}
+
+						if (ip.length() > 0) {
+						
+							sentencia+= "dir_ip ='" + ip + "'";
+						}
+					
+						sentencia+=";";
+						
+					}
+					
+					ResultSet rs = st.executeQuery(sentencia);
+					
+		
 					while (rs.next()){
 					
 						out.println("<tr>");
@@ -108,10 +140,6 @@
 							out.println("<td>" + rs.getObject(3) + "</td>");
 							
 						out.println("</tr>");
-				%>
-
-				
-				<%
 					}
 						rs.close();
 						st.close();
@@ -119,8 +147,8 @@
 
 					} catch (SQLException e) {
 
-							out.println("Excepcion SQL Exception: " + e.getMessage());
-							e.printStackTrace();
+							out.println("<p class = \"error_sql\">No existe entrada para la consulta realizada, presione <b>Actualizar registro</b> para ver todos los registros</p>");
+							
 						}
 				%>
 			</table>
@@ -129,8 +157,12 @@
 				Actualizar registro
 			</button>	
 			
+
 			
 		</form>
+
+
+
 
 		<form method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp">
 			

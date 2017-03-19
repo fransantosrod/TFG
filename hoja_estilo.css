@@ -164,3 +164,11 @@ li {
 	left: 15%;
 	top: 100px;
 }
+
+.error_sql {
+
+	position: absolute;
+	left: 15%;
+	top:220px;
+	color: white;
+}
