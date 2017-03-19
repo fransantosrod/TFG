@@ -55,7 +55,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"../cgi/muestraClientesRegistrados.html\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraClientesRegistrados.jsp\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Clientes Registrados\n");
@@ -91,7 +91,7 @@ int main () {
 						cont_aux_lineas< contenido_del_fichero.num_frases_fichero;
 						cont_aux_lineas++){
 						
-						printf("<p>\n");	
+						printf("<p class=\"borrar_regla\">\n");	
 						printf("<input type=\"radio\" name=\"regla\" id=\"%d\" value=\"%d\">\n", id_regla, id_regla);
 						id_regla++;
 

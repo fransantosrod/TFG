@@ -52,7 +52,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"../cgi/muestraClientesRegistrados.html\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraClientesRegistrados.jsp\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Clientes Registrados\n");

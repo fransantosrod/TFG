@@ -125,9 +125,11 @@ th, td {
 
 }
 
-th {
+th, th:hover {
 	background: #dad9d8;
+	color: black;
 }
+
 tr:hover {
 
 	background-color: #3399ff;
@@ -135,8 +137,30 @@ tr:hover {
 }
 
 li {
+	
 	position: relative;
 	top: 20px;
 	margin: 4px;
 	background-color: #3399ff; 
+}
+
+.borrar_regla {
+
+	position: relative;
+	left: 2%;
+	background-color: #3399ff;	
+}
+
+.tabla_clientes {
+	position: absolute;
+	top: 180px;
+	left: 15%;
+}
+
+
+.filtro {
+
+	position: absolute;
+	left: 15%;
+	top: 100px;
 }
