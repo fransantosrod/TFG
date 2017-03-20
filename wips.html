@@ -1,0 +1,83 @@
+<!--
+	Fecha: 16-03-2017
+	Autor: Francisco Javier Santos Rodríguez
+	Descripción: Página principal de la 
+	interfaz web
+-->
+
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<!--
+			Definimos en la cabecera el título de la página 
+			y la hoja de estilos que se aplicará
+		-->
+		<link rel="stylesheet" type="text/css" href="hoja_estilo.css">
+		<title> Gestion WIPS </title>
+	</head>
+	
+	<body>
+		<!--
+			CREAMOS LA BOTONERA SUPERIOR
+		-->
+		<p>
+		<!-- 
+			Indicamos la dirección a la que nos dirigimos si se pulsa 
+			ese botón, el método con el que se realizará la petición y
+			el estilo del botón, que será en línea para que todos aparezcan
+			en la parte superior
+		-->
+			<form method="get" action="wips.html" style="display:inline">
+				
+				<button type="submit">
+					Inicio
+				</button>
+			
+			</form>
+
+			<form method="get" action="http://localhost/dit/cgi-bin/muestraReglasSnort.out" style="display:inline">
+			
+				<button type="submit">
+					Reglas Snort
+				</button>
+			
+			</form>
+
+			<form method="get" action="http://localhost/dit/cgi-bin/muestraReglasIptables.out" style="display:inline">
+			
+				<button type="submit">
+					Reglas Iptables
+				</button>
+			
+			</form>
+
+			<form method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp" style="display:inline">
+			
+				<button type="submit">
+					Clientes Registrados
+				</button>
+			
+			</form>
+
+			<form method="get" action="http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out" style="display:inline">
+			
+				<button type="submit">
+					Registro Reglas MITM
+				</button>
+			
+			</form>
+
+			<form method="get" action="http://localhost/dit/cgi-bin/borraRegla.out" style="display:inline">
+			
+				<button type="submit">
+					Borrar Reglas
+				</button>
+			
+			</form>
+
+		</p>
+
+	</body>
+
+</html>

@@ -1,3 +1,9 @@
+/*-----------------------------------------------
+	Fecha: 17-03-2017
+	Autor: Francisco Javier Santos Rodríguez
+	Descripción: Página que recibe la petición
+	de la regla a eliminar y la borra
+----------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,8 +32,13 @@ int main () {
 	printf("<html>\n");
 	
 		printf("<head>\n");
+			/*-----------------------------------------------------
+				Definimos en la cabecera el título de la página 
+				y la hoja de estilos que se aplicará
+			-----------------------------------------------------*/
 			printf("<link rel=\"stylesheet\" type=\"text/css\" href=\"../cgi/hoja_estilo.css\">\n");
 			printf("<title>Gestion WIPS </title>\n");
+		
 		printf("</head>\n");
 
 		printf("<body>\n");
@@ -49,11 +60,22 @@ int main () {
 				}
 				//Añadimos el terminador
 				regla[caracter] = SALTO_DE_LINEA;				
+				//Indicamos que la estructura estará vacía
+				/*---------------------------------------
+					De esta forma indicamos a la función
+					que se encarga de elimianr la regla
+					que el tercer parámetro es la línea
+					en la que se encuentra la regla 
+					que se desea eliminar dentro del 
+					fichero de reglas de Snort
+				----------------------------------------*/
 				informacion_regla.numero_lineas = INICIO;
 				
+				//Eliminamos la regla
 				elimina_Regla("../cgi/local.rules",informacion_regla, atoi(regla));
 
-				printf("<p class=\"info_regla\">Regla %d eliminada correctamente\n</p>", atoi(regla));
+				//Informamos la regla que se ha eliminado
+				printf("<p class=\"info_regla\">Regla %d eliminada correctamente\n</p>", atoi(regla)+1);
 			}	
 			
 			else {
@@ -61,7 +83,7 @@ int main () {
 			}
 			
 			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/borraRegla.out\">\n");
-				
+				//Botón para volver a la página de  reglas
 				printf("<button type=\"submit\">\n");
 					printf("Volver\n");
 				printf("</button>\n");

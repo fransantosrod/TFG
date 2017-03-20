@@ -1,12 +1,35 @@
+/*-------------------------------------------
+	Fecha: 16-03-2017
+	Autor: Francisco Javier Santos Rodríguez
+	Descripción: Hoja de estilos que se
+	aplicará a la interfaz web
+-------------------------------------------*/
 
 
+/*------------------------------------
+	Indicamos el color principal del
+	fondo de la página
+------------------------------------*/
 body {
 
 	background-color: #3366ff
 }
 
+/*------------------------------------
+	Definimos el estilo para los
+	distintos botones que vamos
+	a crear
+------------------------------------*/
 button {
-
+	/*------------------------------------
+		En general, todos tendrán el
+		mismo color de fondo, mismo
+		borde(2px y con las esquinas 
+		redondeadas)
+		Y tendrán un cambio de color 
+		cuando el ratón se pase por 
+		encima del botón
+	------------------------------------*/
 	border: 2px solid #bfbfbf;
 	border-radius:5px;
 
@@ -24,43 +47,46 @@ button {
 }
 
 button:hover {
-
+	/*------------------------------------
+		Definimos el color de fondo del
+		botón y de las letras que tomará
+		cuando el ratón pase por encima
+	------------------------------------*/
 	background-color: #bfbfbf;
 	color: white;
 }
 
 .button1 {
-	
-	border: 2px solid #dad9d8;
-	border-radius:5px;
 
+	/*------------------------------------
+		Definimos una nueva posición para 
+		los botones pertenecientes a 
+		esta clase
+	------------------------------------*/	
 	position:absolute;
 	top: 70px;
 	left: 15%;
 	float: left;
 
-	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.4s;
-
-	word-break: break-all;
 }
 
 #button2 {
-	
-	border: 2px solid #dad9d8;
-	border-radius:5px;
-
+	/*------------------------------------
+		Definimos una nueva posición para
+		el botón con este ID
+	------------------------------------*/	
 	position:relative;
 	top: 20px;
 	left: 2%;
 	float: left;
 
-	-webkit-transition-duration: 0.5s;
-	transition-duration: 0.4s;
-
-	word-break: break-all;
 }
 
+/*------------------------------------
+	Definimos el tamañoy la posición
+	que ocuparán en la interfaz el
+	iframe
+------------------------------------*/
 iframe {
 
 	border-style: none;
@@ -75,13 +101,22 @@ iframe {
 	background-color: #3366ff; 
 }
 
+
+/*------------------------------------
+	Definimos el estilo para las 
+	diferentes clases que se han
+	creado para las reglas
+------------------------------------*/
 .reglas {
 
 	position: absolute;
 	top: 60px;
 	left: 15%;
 	float: left;
-
+	/*------------------------------------
+		Indicamos el tipo de letra que
+		queremos 
+	------------------------------------*/
 	text-align: left;
 	text-transform: uppercase;
 	font-family: "Arial", Sans-serif;
@@ -102,6 +137,17 @@ iframe {
 	color: white;
 }
 
+.borrar_regla {
+
+	position: relative;
+	left: 2%;
+	background-color: #3399ff;	
+}
+
+
+/*------------------------------------
+	Indicamos el estilo de las tablas
+------------------------------------*/
 table {
 
 	position: absolute;
@@ -112,11 +158,19 @@ table {
 	text-transform: uppercase;
 	font-family: "Arial", Sans-serif;
 	font-size: 13px;
-
+	/*------------------------------------
+		Indicamos que queremos los bordes
+		juntos para que no contenga bordes
+		dobles
+	------------------------------------*/
 	border-collapse: collapse;
 	border: 4px solid #dad9d8;	
 }
-
+/*------------------------------------
+	Indicamos la separación entre 
+	celdas y la colocación del texto
+	en ellas
+------------------------------------*/
 th, td {
 	
 	padding: 4px;
@@ -124,7 +178,11 @@ th, td {
 	border: 1px solid #dad9d8;
 
 }
-
+/*------------------------------------
+	Definimos el efecto que tendrán
+	las filas de cambiar de color
+	cuando se pasa el ratón por encima
+------------------------------------*/
 th, th:hover {
 	background: #dad9d8;
 	color: black;
@@ -136,6 +194,20 @@ tr:hover {
 	color: white;	
 }
 
+/*------------------------------------
+	Definimos la posición que queremos
+	que ocupa la tabla con el registro
+	de clientes
+------------------------------------*/
+.tabla_clientes {
+	position: absolute;
+	top: 180px;
+	left: 15%;
+}
+
+/*------------------------------------
+	Estilo de la lista de reglas
+------------------------------------*/
 li {
 	
 	position: relative;
@@ -143,28 +215,22 @@ li {
 	margin: 4px;
 	background-color: #3399ff; 
 }
-
-.borrar_regla {
-
-	position: relative;
-	left: 2%;
-	background-color: #3399ff;	
-}
-
-.tabla_clientes {
-	position: absolute;
-	top: 180px;
-	left: 15%;
-}
-
-
+/*------------------------------------
+	Estilo de los campos del 
+	formulario para filtrar los
+	clientes registrados
+------------------------------------*/
 .filtro {
 
 	position: absolute;
 	left: 15%;
 	top: 100px;
 }
-
+/*------------------------------------
+	EStilo con el que se presentará
+	el mensaje de error cuando queremos
+	filtrar los clientes registrados
+------------------------------------*/
 .error_sql {
 
 	position: absolute;
