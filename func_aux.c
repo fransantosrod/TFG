@@ -6,7 +6,7 @@ implementaciones de las funciones auxiliares
 -------------------------------------------*/
 
 #include "func_aux.h"
-
+#include <sys/stat.h>
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
 	Recibe: El nombre del fichero a leer
@@ -961,12 +961,26 @@ void crea_semaforo(char *nombre_semaforo){
 
 			--O_CREAT: Indicamos que lo queremos crear
 
-			--600: Permisos que tendrá el semáforo
+			--666: Permisos que tendrá el semáforo
 
 			--valor_sem: Valor inicial del semáforo
 	-----------------------------------------------*/
+	/*-----------------------------------------------
+		Cambiamos los valores por defecto de umask
+		a "000" de esta forma, a los semáforos
+		se le asignarán excatamente los valores
+		que se le pasan en la función
+	-----------------------------------------------*/
+	umask(000);
 	semaforo = sem_open(nombre_semaforo, O_CREAT, 0666, valor_sem);
-
+	/*-----------------------------------------------
+		Tras crear los semáforos, volvemos a 
+		asignar a umask los valores por defectos
+		para las próxima ocasión en las que se
+		cree cualquier fichero este tenga los valores
+		por defecto
+	-----------------------------------------------*/
+	umask(022);
 	if (semaforo == NULL) {
 
 		fprintf(stderr, ERROR_CREACION_SEMAFORO, nombre_semaforo);
