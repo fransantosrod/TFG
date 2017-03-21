@@ -238,3 +238,9 @@ li {
 	top:220px;
 	color: white;
 }
+
+img {
+	position: absolute;
+	left: 20%;
+	top: 100px;
+}

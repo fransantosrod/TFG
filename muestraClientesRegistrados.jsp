@@ -31,6 +31,11 @@
 <html>
 	
 	<head>
+
+		<!--
+			Añadimos el logo en la cabecera
+		-->
+		<link rel="shortcut icon" type="image/png" href="../cgi/logo.png"/>
 		<!--
 			Definimos en la cabecera el título de la página 
 			y la hoja de estilos que se aplicará

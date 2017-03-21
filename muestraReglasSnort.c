@@ -24,8 +24,14 @@ int main () {
 	printf("<!DOCTYPE html>\n");
 	
 	printf("<html>\n");
-	
+		
 		printf("<head>\n");
+			
+			/*------------------------------------------
+				Añadimos el logo en la cabecera
+			------------------------------------------*/
+			printf("<link rel=\"shortcut icon\" type=\"image/png\" href=\"../cgi/logo.png\"/>\n");
+			
 			/*-----------------------------------------------------
 				Definimos en la cabecera el título de la página 
 				y la hoja de estilos que se aplicará
