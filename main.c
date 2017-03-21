@@ -9,11 +9,6 @@ todos los módulos
 #include "func_aux.h"
 #define NUM_MODULOS 4
 
-	/*--------------------------
-		DEBE EJECUTARSE COMO
-		SUPERUSUARIO
-	--------------------------*/
-	
 int main () {
 
 	//Variables para la creación de hilos
@@ -50,4 +45,6 @@ int main () {
 	elimina_semaforo(SEM_SNORT);
 	elimina_semaforo(SEM_SID);
 	elimina_semaforo(SEM_REGLAS_SNORT);
+
+	return 0;
 }
