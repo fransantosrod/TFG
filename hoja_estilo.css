@@ -238,9 +238,58 @@ li {
 	top:220px;
 	color: white;
 }
-
+/*------------------------------------
+	Definimos la posición que 
+	ocupaŕa la imagen
+------------------------------------*/
 img {
 	position: absolute;
 	left: 20%;
 	top: 100px;
+}
+
+/*------------------------------------
+	Definimos la posición en la
+	que aparecerán los mensajes de
+	logs
+------------------------------------*/
+.muestraLogs {
+
+	position: absolute;
+	left: 17%;
+	top: 100px;
+}
+
+/*------------------------------------
+	Definimos el estilo que tendrán
+	los mensajes de logs
+------------------------------------*/
+.logs {
+
+	border-left: 4px solid blue;
+	border-bottom: 4px solid blue;
+	background-color: #3399ff;
+
+	width: 105%;
+	height: 15px;
+
+
+	text-align: left;
+	text-transform: lowercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 13px;
+}
+/*------------------------------------
+	Definimos el estilo con el que 
+	aparecerá el mensaje de fichero
+	de log vacío
+------------------------------------*/
+.log_vacio{
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 16px;
+
+	color: white;
 }

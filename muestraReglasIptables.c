@@ -29,7 +29,7 @@ int main () {
 				y la hoja de estilos que se aplicará
 			-----------------------------------------------------*/
 			printf("<link rel=\"stylesheet\" type=\"text/css\" href=\"../cgi/hoja_estilo.css\">\n");
-			printf("<title>Gestion WIPS </title>\n");
+			printf("<title>Gesti&oacuten WIPS </title>\n");
 		
 		printf("</head>\n");
 
@@ -80,6 +80,14 @@ int main () {
 
 					printf("<button type=\"submit\">\n");
 						printf("Registro Reglas MITM\n");
+					printf("</button>\n");
+
+				printf("</form>\n");
+
+				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraLogsWIPS.jsp\" style=\"display:inline\">\n");
+
+					printf("<button type=\"submit\">\n");
+						printf("Logs WIPS\n");
 					printf("</button>\n");
 
 				printf("</form>\n");

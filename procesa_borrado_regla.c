@@ -43,7 +43,7 @@ int main () {
 				y la hoja de estilos que se aplicará
 			-----------------------------------------------------*/
 			printf("<link rel=\"stylesheet\" type=\"text/css\" href=\"../cgi/hoja_estilo.css\">\n");
-			printf("<title>Gestion WIPS </title>\n");
+			printf("<title>Gesti&oacuten WIPS </title>\n");
 		
 		printf("</head>\n");
 

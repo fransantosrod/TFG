@@ -41,7 +41,7 @@
 			y la hoja de estilos que se aplicará
 		-->
 		<link rel="stylesheet" type="text/css" href="../cgi/hoja_estilo.css">
-		<title> Gestion WIPS </title>
+		<title> Gesti&oacuten WIPS </title>
 
 	</head>
 	
@@ -95,6 +95,14 @@
 					Registro Reglas MITM
 				</button>
 
+			</form>
+
+			<form method="get" action="http://localhost/dit/jsp/muestraLogsWIPS.jsp" style="display:inline">
+			
+				<button type="submit">
+					Logs WIPS
+				</button>
+			
 			</form>
 
 			<form method="get" action="http://localhost/dit/cgi-bin/borraRegla.out" style="display:inline">
@@ -183,7 +191,7 @@
 
 					//Realizamos la consulta y la almacenamos
 					ResultSet rs = st.executeQuery(sentencia);
-						
+					
 					//Recorremos el resultado obtenido
 					while (rs.next()){
 						//Incluimos en una fila nueva cada resultado
@@ -204,7 +212,7 @@
 					} catch (SQLException e) {
 
 							//En caso de error, imprimimos el siguiente mensaje de error
-							out.println("<p class = \"error_sql\">No existe entrada para la consulta realizada, presione <b>Actualizar registro</b> para ver todos los registros</p>");
+							out.println("<p class = \"error_sql\">La consulta realizada es erronea, presione <b>Actualizar registro</b> para ver todos los registros</p>");
 							
 						}
 				%>
