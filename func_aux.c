@@ -48,7 +48,9 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	//Array auxiliar para almacenar cada palabra de la frase
 		//NUM_CARACTERES_PALABRA caracteres por palabras
 	char *palabras_frase = (char *)malloc (sizeof(char)*NUM_CARACTERES_PALABRA);
-	
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+
 	//Estructura que será devuelta
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 
@@ -140,15 +142,19 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 				else {
 
 					sobrepasa_tamanio = true;
-					fprintf(stderr, ERROR_NUM_LINEAS, nombre_fichero, NUM_FRASES);
+					
+					sprintf(log, ERROR_NUM_LINEAS, nombre_fichero, NUM_FRASES);
+					registra_log(log);
 				}
 			}
 			fclose(fichero_lectura);
 		}
 
-		else 
-			fprintf(stderr,ERROR_APERTURA_FICHERO, nombre_fichero);
-		
+		else { 
+			
+			sprintf(log, ERROR_APERTURA_FICHERO, nombre_fichero);
+			registra_log(log);
+		}	
 		//Subimos el semáforo
 		sem_post(semaforo_lectura);
 		
@@ -160,11 +166,13 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	}
 
 	else {
-		fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_LECTURA);
+		sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_LECTURA);
+		registra_log(log);
 	}
 	//Liberamos la memoria
 	free(palabras_frase);
-	
+	free(log);
+
 	return contenido_del_fichero;
 }
 
@@ -396,7 +404,9 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	FILE *fichero_escritura;	
 	//Estructura que almacenará los datos relativos al fichero de las reglas
 	struct CONTENIDO_FICHERO contenido_del_fichero_reglas;
-	
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+
 	//String auxiliar para ir formando la regla
 	char *reglas_aux= (char *) malloc (sizeof (char)*NUM_CARACTERES_REGLAS);
 	//Variable auxiliar para recorre el bucle
@@ -548,8 +558,11 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 					
 				}
 
-				else
-					fprintf(stderr, ERROR_APERTURA_FICHERO, FICHERO_SID);	
+				else{
+
+					sprintf(log, ERROR_APERTURA_FICHERO, FICHERO_SID);
+					registra_log(log);
+				}
 				
 				
 				//Lo volvemos a crear y almacenamos el nuevo número
@@ -604,23 +617,30 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 		if (semaforo_reglas_snort != NULL) {
 			
 			sem_close(semaforo_reglas_snort);
-			fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_SID);
+			
+			sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_SID);
+			registra_log(log);
 		}
 
 		else if (semaforo_sid != NULL) {
 
 			sem_close(semaforo_sid);
-			fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
+			
+			sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
+			registra_log(log);
 		}
 
 		else {
-			fprintf(stderr, ERROR_APERTURA_VARIOS_SEMAFOROS, SEM_SID, SEM_REGLAS_SNORT);
+			
+			sprintf(log, ERROR_APERTURA_VARIOS_SEMAFOROS, SEM_SID, SEM_REGLAS_SNORT);
+			registra_log(log);
 		}
 	}
 
 	//Liberamos memoria
 	free(reglas_aux);
-	
+	free(log);
+
 return regla_creada;
 }	
 
@@ -648,6 +668,8 @@ void recarga_Snort () {
 	char *nombre_fichero_pid = (char * )malloc(sizeof(char *)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para almacenar el comando que vamos a ejecutar
 	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Estructura que almacenará los datos relativos al fichero
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 	//Variable auxiliar para saber en la línea en la que nos encontramos
@@ -721,13 +743,15 @@ void recarga_Snort () {
 	//En caso de que uno de los semáforo no se abra correctamente
 	else {
 		
-		fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_SNORT);	
+		sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_SNORT);
+		registra_log(log);
 	}
 		
 	//Liberamos la memoria
 	free(nombre_fichero_pid);
 	free(comando);
 	free(pid);
+	free(log);
 }
 
 
@@ -840,6 +864,8 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 	int cont_aux_palabras_fichero;
 	//Variable auxiliar para almacenar la regla que vamos a sobreescribir
 	char *regla_aux = (char *)malloc(sizeof(char) *NUM_CARACTERES_REGLAS);
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable para almacenar la línea en la que hemos encontrado la regla
 	int linea_regla;
 	//Variable para almacenar la dirección del semáforo al abrirlo
@@ -928,11 +954,13 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 	}
 	else {
 
-		fprintf(stderr, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
+		sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
+		registra_log(log);
 	}
 
 	//Liberamos memoria
 	free(regla_aux);
+	free(log);
 }
 
 /*----------------------------------------------------
@@ -947,6 +975,8 @@ void crea_semaforo(char *nombre_semaforo){
 
 	//Variable auxiliar para almacenar el valor inicial del semáforo
 	int valor_sem;
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable que almacenará la dirección del semáforo una vez que se cree
 	sem_t *semaforo;
 
@@ -983,8 +1013,13 @@ void crea_semaforo(char *nombre_semaforo){
 	umask(022);
 	if (semaforo == NULL) {
 
-		fprintf(stderr, ERROR_CREACION_SEMAFORO, nombre_semaforo);
+		sprintf(log, ERROR_CREACION_SEMAFORO, nombre_semaforo);
+		registra_log(log);
+
 	}
+
+	//Liberamos memoria
+	free(log);
 }
 
 
@@ -1000,6 +1035,8 @@ void elimina_semaforo(char *nombre_semaforo) {
 
 	//Variable auxiliar para almacenar el valor devuelto a la hora de eliminar el semáfoross
 	int valor_devuelto;
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 
 	//Inicializamos
 	valor_devuelto = INICIO;
@@ -1009,7 +1046,66 @@ void elimina_semaforo(char *nombre_semaforo) {
 
 	//Comprobamos que se eliminó correctamente
 	if (valor_devuelto != INICIO) {
-		fprintf(stderr, ERROR_CERRAR_SEMAFORO, nombre_semaforo);
+
+		sprintf(log, ERROR_CERRAR_SEMAFORO, nombre_semaforo);
+		registra_log(log);
 	}
 
+	//Liberamos memoria
+	free(log);
+}
+
+
+/*---------------------------------------------
+	Función que se encarga de registrar en
+	el fichero de logs del WIPS las incidencias
+	que aparecen
+	
+	Recibe: La causa del log
+
+	Devuelve: Nada
+---------------------------------------------*/
+void registra_log(char *log) {
+
+	//Variable para almacenar el fichero de donde vamos a almacenar los logs
+	FILE *fichero_logs;
+
+	//Variable auxiliar para almacenar el instante en el que se recibe el log
+	time_t instante_log = time(NULL);
+	//Array para almacenar la fecha
+	char instante_registro_log[TAM_FECHA];
+	//Estructura para almacenar la fecha y hora en el momento deseado
+	struct tm *tm;
+	//Obtenemos el instante en el que lo hemos detectado
+	tm = localtime(&instante_log);
+	
+	//String para almacenar el texto que se va a registrar
+	char *registro = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+
+	//Inicializamos
+	fichero_logs = fopen(FICHERO_LOG, "a+");
+	
+	//Comprobamos que hemos abierto correctamente el fichero	
+	if (fichero_logs != NULL){ 
+	
+		/*-------------------------------------------------
+			La estructura con la que se registra el log
+			es la siguiente
+				dia/mes/año-hora:min:seg causa_del_registro
+		-------------------------------------------------*/
+		strftime(instante_registro_log, sizeof(instante_registro_log), "%d/%m/%Y-%H:%M:%S", tm);
+		
+		//Formamos el texto que vamos a escribir
+		strcpy(registro, instante_registro_log);
+		strcat(registro, " ");
+		strcat(registro, log);
+
+		//Escribimos el texto en el fichero
+		fputs(registro, fichero_logs);
+		//Cerramos el fichero
+		fclose(fichero_logs);
+	}
+
+	//Liberamos memoria
+	free(registro);
 }

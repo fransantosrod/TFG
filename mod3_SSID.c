@@ -30,7 +30,6 @@ void *mod3 () {
 	while(true){
 		//Escanemaos la red WiFi
 		
-		
 		escanea_WiFi();
 	
 		//Leemos el fichero

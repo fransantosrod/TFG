@@ -162,5 +162,13 @@ void crea_semaforo(char *nombre_semaforo);
 ---------------------------------------------*/
 void elimina_semaforo(char *nombre_semaforo);
 
-
+/*---------------------------------------------
+	Función que se encarga de registrar en
+	el fichero de logs del WIPS las incidencias
+	que aparecen
+	
+	Recibe: La causa del log
+	Devuelve: Nada
+---------------------------------------------*/
+void registra_log(char *log);
 #endif

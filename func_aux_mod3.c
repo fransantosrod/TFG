@@ -26,6 +26,8 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 	//String para almacenar la palabra antes de introducirla en la estructura
 	char *palabra_aux = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable para contabilizar el número de palabras
 	int palabras;
 	//Variables para contabilizar el número de frases
@@ -139,7 +141,8 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 			//En caso contrario indicamos que hemos sobrepasado el número de líneas
 			else {
 
-				fprintf(stderr, ERROR_NUM_LINEAS, fichero, NUM_FRASES);
+				sprintf(log, ERROR_NUM_LINEAS, fichero, NUM_FRASES);
+				registra_log(log);
 			}
 		}
 
@@ -155,13 +158,15 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 
 	else {
 	
-		fprintf(stderr,ERROR_APERTURA_FICHERO, fichero);
+		sprintf(log, ERROR_APERTURA_FICHERO, fichero);
+		registra_log(log);
 	
 	}
 
 	
 	//Liberamos la memoria
 	free(palabra_aux);
+	free(log);
 
 	return contenido_del_fichero;
 }
@@ -368,6 +373,9 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 	int cont_aux_ssid;
 	//String para almacenar el comando que vamos a utilizar
 	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	//Cadena para almacenar el informe de log
+	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+
 	//Inicializamos
 	cont_aux_ssid = INICIO;
 
@@ -403,11 +411,13 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 				dejaría sin conexión a nuestro router, luego
 				la única acción que podemos tomar es notificar
 			---------------------------------------------------*/
-			fprintf(stdout, BSSID_DUPLICADO, ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
+			sprintf(log,BSSID_DUPLICADO, ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
+			registra_log(log);
 		}
 	}
 
 	free(comando);
+	free(log);
 }
 
 /*----------------------------------------------------
