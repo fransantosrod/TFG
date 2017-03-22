@@ -80,6 +80,10 @@ int main () {
 				//Eliminamos la regla
 				elimina_Regla("../cgi/local.rules",informacion_regla, atoi(regla));
 
+				//Recargamos Snort para que los cambios tengan efecto
+				recarga_Snort();
+
+				
 				//Informamos la regla que se ha eliminado
 				printf("<p class=\"info_regla\">Regla %d eliminada correctamente\n</p>", atoi(regla)+1);
 			}	
