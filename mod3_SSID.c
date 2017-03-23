@@ -7,10 +7,18 @@ de detectar la suplantación de SSID
 -------------------------------------------*/
 #include "func_aux_mod3.h"
 
+//Constante para definir el ESSID y BSSID propio para buscar las coincidencias
 #define ESSID_propio "M"
 #define BSSID_propio "D"
 
+/*-------------------------------------------
+	Función que se encarga de implementar
+	las funcionalidades del módulos 3
 
+	Recibe: Nada
+
+	Devuelve: Nada
+-------------------------------------------*/
 void *mod3 () {
 
 	//Estructura que almacenará el contenido del fichero
@@ -28,8 +36,8 @@ void *mod3 () {
 	strcpy(nombre_fichero, FICHERO_CAPTURA_WIFI);
 
 	while(true){
+
 		//Escanemaos la red WiFi
-		
 		escanea_WiFi();
 	
 		//Leemos el fichero
@@ -42,10 +50,9 @@ void *mod3 () {
 		ssid_coincidentes = busca_SSID(info_ssid, ESSID_propio, BSSID_propio);
 			
 		//Creamos las reglas para esos SSIDs que hemos detectado
-		
 		bloquea_SSID(ssid_coincidentes);
 		
-	
+		//Esperamos un intervalo de tiempo para el próximo escanéo
 		sleep(INTERVALO_LECTURA);
 	}
 	

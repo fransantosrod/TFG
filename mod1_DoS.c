@@ -28,9 +28,9 @@ void *mod1 (){
 	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para almacenar el nombre del fichero que se crea
 	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Variable auxiliar para conocer el número de línea que leimos anteriormente
+	//Variable auxiliar para conocer el número de líneas que leimos anteriormente
 	int num_lineas_anterior;
-	//Variable para conocer si hemos creado alguna regla o no
+	//Variable para conocer si hemos creado alguna regla
 	bool regla_creada;
 	
 
@@ -46,22 +46,28 @@ void *mod1 (){
 		contenido_del_fichero = lee_fichero(nombre_fichero);
 
 
-		//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
+		//Comprobamos si el número de líneas leídas está cerca del máximo (NUM_FRASES)
 		if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
 			
+			//Comprobamos que hemos leído una línea nueva
 			if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
-				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
+				
+				//Si no lo está, comprobamos si hemos encontrado alguna alerta de DoS
 				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
 					
-				//Comprobamos que hemos detectado alguna alerta
+				//Si hemos detectado alguna alerta
 				if (contenido_fichero_alerta.numero_lineas > INICIO){	
 						
-					//Creamos las reglas con las que hayamos encontrado
+					//Creamos las reglas con las coincidencias que hayamos encontrado
 					regla_creada = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, contenido_fichero_alerta, "DOS");
 						
 					//Comprobamos si hemos escrito alguna regla	
 					if (regla_creada==true){
+
+						//Cambiamos el valor de la bandera
 						regla_creada = false;
+
+						//Recargamos Snort para hacer efectivo los cambios
 						recarga_Snort();
 					}
 				}
@@ -80,9 +86,9 @@ void *mod1 (){
 				al que le hemos cambiado el nombre siempre y
 				cuando no supere el número máximo (NUM_FRASES)
 					
-				Esta comprobació la hacemos por si el fichero 
+				Esta comprobación la hacemos por si el fichero 
 				se encontraba en el rango entre LIMITE y NUM_FRASES
-				y haya información que se pueda perder
+				y hay información que se pueda perder
 
 			--------------------------------------------------------*/
 			contenido_del_fichero = lee_fichero(nuevo_fichero);
@@ -92,25 +98,36 @@ void *mod1 (){
 			//Comprobamos que ese fichero no ha superado el límite
 			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
 					
-				//Si no lo está comprobamos si hemos encontrado alguna alerta de DoS
+				//Comprobamos si hemos encontrado alguna alerta de DoS
 				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
+				
+				//Si hemos detectano alguna alerta nueva
 				if (contenido_fichero_alerta.numero_lineas > INICIO){
 						
 					//Creamos las reglas con las que hayamos encontrado
 					regla_creada = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, contenido_fichero_alerta, "DOS");
+					
 					//Comprobamos si hemos creado la regla
 					if (regla_creada == true){
+						
+						//Cambiamos el valor de la bandera
 						regla_creada = false;
+
+						//Recargamos Snort
 						recarga_Snort();
 					}
 				}
 				
 			}
-
+			
+			//Inicializamos el número de líneas leídas para la próxima iteración 
 			contenido_del_fichero.num_frases_fichero = INICIO;
 		}
 
+		//Almacenamos el número de líneas leídas anteriormente
 		num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
+		
+		//Esperamos un tiempo para volver a leer el fichero
 		sleep(INTERVALO_LECTURA);
 	}
 		

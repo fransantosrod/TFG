@@ -6,10 +6,14 @@ implementaciones de las funciones auxiliares
 -------------------------------------------*/
 
 #include "func_aux.h"
+//Libería para poder usar la función "umask()"
 #include <sys/stat.h>
+
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
+	
 	Recibe: El nombre del fichero a leer
+	
 	Devuelve: Una estructura con
 		-- Número de frases leidas
 		-- Número de palabras en cada frase
@@ -66,10 +70,12 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 	------------------------------------*/
 	semaforo_lectura = sem_open(SEM_LECTURA, INICIO);
 	
+	//Si lo hemos abierto correctamente
 	if (semaforo_lectura != NULL){
 
 		//Bajamos el semáforo
 		sem_wait(semaforo_lectura);
+		
 		//Inicialización de variables
 		fichero_lectura = fopen(nombre_fichero, "r");
 		frase = INICIO;
@@ -79,21 +85,26 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 		flag = false;
 		sobrepasa_tamanio = false;
 
+		//Si hemos abierto el fichero correctamente
 		if (fichero_lectura != NULL){
 			
 		
 			//Comenzamos a leer el fichero
 			while ((c=fgetc(fichero_lectura))!=EOF && sobrepasa_tamanio==false){
 				
+				//Comprobamos que no sobrepasamos el número máximo de líneas que se pueden leer
 				if (frase < NUM_FRASES){
+
+					//Comprobamos que el caracter que estamos leyendo es útil
 					if (c!= ESPACIO && c!=SALTO_DE_LINEA && c!= TABULADOR){
-						//Almacenamos el caracter leido
+						
+						//Almacenamos el caracter leído
 						palabras_frase[letra] = c;
-						//Aumentamos el número de letras leidas
+						//Aumentamos el número de letras leídas
 						letra++;
 					}
 				
-					//Comprobamos si el caracter leido anteriormente y el actual son un salto de linea
+					//Comprobamos si el caracter leído anteriormente y el actual son un salto de linea
 					else if (c_ant == SALTO_DE_LINEA && c == SALTO_DE_LINEA){
 
 						//Si lo es, estamos en un nuevo parrafo
@@ -102,18 +113,21 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 					
 					}
 				
-					//Comprobamos si se ha leido alguna letra,si esta esta es un salto de línea y no estamos en el salto de parrafo 
+					//Comprobamos si se ha leído alguna letra,si esta es un salto de línea y no estamos en el salto de parrafo 
 					else if (c == SALTO_DE_LINEA && letra>0 && flag!= true){
 					
-						//Almacenamos la palabra de la frase deseada en nuestra tabla
+						//Añadimos un terminador	
 						palabras_frase[letra++] = TERMINADOR;
+						//Almacenamos la palabra de la frase deseada en nuestra tabla
 						contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
 						
 						//Volvemos a iniciar el número de letras ya que estamos en una nueva frase y palabra
 						letra = INICIO;
+						
 						//Almacenamos el número de palabras que tenía la frase que hemos terminado de leer
 						contenido_del_fichero.palabras_por_frase[frase] = palabra;
 						
+						//Reiniciamos el contador de palabras para la próxima iteración
 						palabra=INICIO;	
 					
 						//En ese caso aumentamos el número de frases leidas
@@ -121,40 +135,54 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 					
 					}
 				
-					//Comprobamos si el caracter es un espacio y si se ha leido alguno 
-					
+					//Comprobamos si el caracter es un espacioo tabulador y si se ha leído alguno 
 					else if ((c == ESPACIO || c == TABULADOR) && letra >0  ){
 					
-						//Almacenamos la palabra de la frase deseada en nuestra estructura
+						//Añadimos el terminador
 						palabras_frase[letra++] = TERMINADOR;
+						//Almacenamos la palabra de la frase deseada en nuestra estructura
 						contenido_del_fichero.contenido_leido_del_fichero[frase][palabra] = strdup(palabras_frase); 
 						
-						//Aumentamos el número de palabras leidas
+						//Aumentamos el número de palabras leídas
 						palabra++;
-						//Volvemos a iniciar el número de letras leidas ya que estamos en una nueva palabra
+						//Volvemos a iniciar el número de letras leídas ya que estamos en una nueva palabra
 						letra=INICIO;
 					}
 
+					//Almacenamos el caracter que acabamos de leer para la próxima iteración
 					c_ant=c;;
 					flag=false;
 				}
 
+				//En caso contrario
 				else {
 
+					//Cambiamos el valor de la bandera para abandonar el bucle
 					sobrepasa_tamanio = true;
 					
+					//Creamos la cadena para indicar la incidencia
 					sprintf(log, ERROR_NUM_LINEAS, nombre_fichero, NUM_FRASES);
+					
+					//Registramos la incidencia en el fichero
 					registra_log(log);
 				}
 			}
+
+			//Cerramos el fichero
 			fclose(fichero_lectura);
 		}
-
+		
+		//Si no se ha podido abrir el fichero correctamente
 		else { 
 			
+			//Creamos una cadena para notificar dicha incidencia
 			sprintf(log, ERROR_APERTURA_FICHERO, nombre_fichero);
+
+			//Registramos la incidencia en el fichero de logs
 			registra_log(log);
 		}	
+
+
 		//Subimos el semáforo
 		sem_post(semaforo_lectura);
 		
@@ -165,14 +193,21 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 		contenido_del_fichero.num_frases_fichero = frase;
 	}
 
+	//Si hemos obtenido un error al abrir el semáforo
 	else {
+
+		//Creamos la cadena para notificar la incidencia
 		sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_LECTURA);
+
+		//Registramos dicha incidencia en el fichero de logs
 		registra_log(log);
 	}
+
 	//Liberamos la memoria
 	free(palabras_frase);
 	free(log);
 
+	//Devolvemos la estructura
 	return contenido_del_fichero;
 }
 
@@ -199,7 +234,7 @@ struct CONTENIDO_FICHERO lee_fichero (char *nombre_fichero){
 		Mediante un bucle, recorre el fichero de las
 		reglas y va comprobando una a una si la 
 		info que tiene almacenada para crear la nueva
-		regla coincide con alguna ya creada para ello,
+		regla coincide con alguna ya creada, para ello,
 		va avanzando campo a campo de cada regla hasta
 		llegar al puerto destino, la info opcional
 		no se evalua ya que esta puede ser muy 
@@ -228,9 +263,10 @@ int busca_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ES
 
 		//Comprobamos si los valores a introducir coinciden con los que ya están
 		/*-----------------------------------------------------------------
-			Aprovechando la estructura de las reglas que es la siguiente:
+			Aprovechamos la estructura de las reglas que es la siguiente:
 			accion protocolo dir_IP_orig puerto_orig ->
 				dir_IP_dest puerto_dest
+			
 			Estos valores serán los que comprobaremos
 		-----------------------------------------------------------------*/
 
@@ -264,6 +300,7 @@ int busca_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ES
 							}
 						}
 
+						//Si no lleva asociado un puerto
 						else {
 								
 							//Si no tenía asociada ningún puerto, comprobamos que es "any"
@@ -362,13 +399,14 @@ int busca_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ES
 	
 	}
 
+	//Devolvemos el valor 
 	return coincide;
 }
 
 
 /*--------------------------------------------------------------
 	Función que se encarga de crear las reglas a partir de la 
-	estructura y la acción a tomar,
+	estructura y la acción a tomar.
 	
 	Recibe: El nombre del fichero donde estan  almacenadas las 
 		reglas , una estructura del tipo ESTRUCTURA_REGLA
@@ -383,7 +421,7 @@ int busca_Regla(struct CONTENIDO_FICHERO contenido_del_fichero_reglas, struct ES
 		duplicadas. Tras esto, la crea y la escribe en el 
 		fichero. Para crear las reglas es necesario un 
 		identificador único (sid) que para guardar siempre 
-		una referencia de este se almacena en otro fichero 
+		una referencia, este se almacena en otro fichero 
 		distinto
 -----------------------------------------------------------*/
 
@@ -391,7 +429,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	
 	//Variable a devolver que indica si se ha creado la regla
 	bool regla_creada;
-	//Variable para el fichero donde almacenaremos el sid por el que vamos
+	//Variable para el fichero donde almacenaremos el sid
 	FILE *fichero_sid;
 	//Variable auxiliar para la lectura del fichero donde almacenaremos el sid
 	signed char c;
@@ -419,9 +457,10 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	sem_t *semaforo_sid;
 
 
-	//Abrimos el semáforo
+	//Abrimos los semáforos
 	semaforo_reglas_snort = sem_open(SEM_REGLAS_SNORT, INICIO);
 	semaforo_sid = sem_open(SEM_SID, INICIO);
+	
 	//Inicializamos
 	cont_aux_regla = INICIO;
 	coincide = INICIO;
@@ -486,7 +525,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				strcat(reglas_aux, "->");
 				strcat(reglas_aux, " ");
 
-				//Realizamos la misma comprobación que anteriormente
+				//Realizamos la misma comprobación que antes
 				if (contenido_fichero_alerta.dir_en_origen[cont_aux_regla] == false) {
 
 					strcat(reglas_aux, contenido_fichero_alerta.dir_IP[cont_aux_regla]);
@@ -514,7 +553,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				//Añadimos los campos opcionales como mensaje de información
 				/*----------------------------------------------
 					El mensaje de info tendrá la estructura de:
-						accion + protocolo
+						info_extra + accion + protocolo
 				-----------------------------------------------*/
 				strcat(reglas_aux, "(msg:\"");
 				strcat(reglas_aux, info_extra);
@@ -527,7 +566,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				//Abrimos el fichero donde almacenamos el sid
 				/*-----------------------------------------------
 					El sid lo debemos almacenar en un fichero
-					ya que debe ser único dentro de snort.local
+					ya que debe ser único dentro de local.rules
 					de esta forma siempre tenemos la referencia
 					del último que hemos usado para la última
 					regla introducida
@@ -538,29 +577,39 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				//Leemos el fichero
 				fichero_sid = fopen(FICHERO_SID, "r");
 
+				//Comprobamos que hemos abierto el fichero correctamente	
 				if (fichero_sid != NULL){
-		
+					
+					//Reiniciamos la posición para recorrer el string
 					pos_sid = INICIO;
-				
-					if (fichero_sid !=NULL){
-						//Leemos el fichero 
-						while ((c=fgetc(fichero_sid))!=EOF){
-							if (c != SALTO_DE_LINEA){
-								sid[pos_sid] = c;
-								pos_sid++;
-							}
+					
+					//Leemos el fichero 
+					while ((c=fgetc(fichero_sid))!=EOF){
+							
+						//Comprobamos que no estamos leyendo un '\n'
+						if (c != SALTO_DE_LINEA){
+
+							//Almacenamos el número
+							sid[pos_sid] = c;
+							pos_sid++;
 						}
 					}
+					
 					//Aumentamos en uno el número que estaba almacenado en el fichero	
 					sprintf(sid, "%d", atoi(sid)+1);
 					
+					//Cerramos el fichero
 					fclose(fichero_sid);
 					
 				}
 
+				//En caso de error
 				else{
 
+					//Creamos la cadena para notificar de la incidencia
 					sprintf(log, ERROR_APERTURA_FICHERO, FICHERO_SID);
+
+					//Registramos la incidencia en el fichero de logs
 					registra_log(log);
 				}
 				
@@ -568,18 +617,29 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				//Lo volvemos a crear y almacenamos el nuevo número
 				fichero_sid = fopen(FICHERO_SID, "w");
 				
+				//Comprobamos que hemos abierto correctamente el fichero
 				if (fichero_sid != NULL){
 					fputs(sid, fichero_sid);
 					fclose(fichero_sid);
 				}
 				
+				//En caso de error
+				else{
+
+					//Creamos la cadena para notificar de la incidencia
+					sprintf(log, ERROR_APERTURA_FICHERO, FICHERO_SID);
+
+					//Registramos la incidencia en el fichero de logs
+					registra_log(log);
+				}
+				
 				//Subimos el semáforo
 				sem_post(semaforo_sid);
-
 				
 			
 				//Almacenamos este sid en la regla que estamos creando
 				strcat(reglas_aux, sid);
+				
 				//Añadimos el número de revisión, en nuestro caso será siempre 1
 				strcat(reglas_aux, "; rev:1;)");
 				strcat(reglas_aux, "\n");
@@ -590,36 +650,57 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 				//Abrimos el fichero de las reglas y nos situamos al final de este	
 				fichero_escritura = fopen(nombre_fichero_escritura, "a+");
 				
-				//Escribimos la regla que acabamos de crear
 				if (fichero_escritura != NULL){
+				
+					//Escribimos la regla que acabamos de crear
 					fputc('\n', fichero_escritura);
 					fputs(reglas_aux, fichero_escritura);
+					
+					//Cerramos el fichero
 					fclose(fichero_escritura);
+
+					//Indicamos que hemos escrito la regla correctamente
 					regla_creada = true;
 				}
+
+				//En caso de error
+				else{
+
+					//Creamos la cadena para notificar de la incidencia
+					sprintf(log, ERROR_APERTURA_FICHERO, nombre_fichero_escritura);
+
+					//Registramos la incidencia en el fichero de logs
+					registra_log(log);
+				}
+
 				//Subimos el semáforo
 				sem_post(semaforo_reglas_snort);
 
 						
 			}		
 		}
+
 		//Cerramos el semáforo
 		sem_close(semaforo_reglas_snort);
 		//Cerramos el semáforo
 		sem_close(semaforo_sid);		
+	
 	}
 
 	//En caso contrario
 	else {
 		
+
 		//Comprobamos cuál es el que no se ha abierto correctamente
-		
 		if (semaforo_reglas_snort != NULL) {
 			
+			//Cerramos el que se abrió correctamente	
 			sem_close(semaforo_reglas_snort);
 			
+			//Informamos mediante un log del que no
 			sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_SID);
 			registra_log(log);
+
 		}
 
 		else if (semaforo_sid != NULL) {
@@ -630,8 +711,10 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 			registra_log(log);
 		}
 
+		//En el caso en el que ninguno se haya abierto correctamente
 		else {
 			
+			//Notificamos que no se pudo abrir ninguno
 			sprintf(log, ERROR_APERTURA_VARIOS_SEMAFOROS, SEM_SID, SEM_REGLAS_SNORT);
 			registra_log(log);
 		}
@@ -641,6 +724,7 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	free(reglas_aux);
 	free(log);
 
+//Devolvemos la bandera
 return regla_creada;
 }	
 
@@ -670,6 +754,7 @@ void recarga_Snort () {
 	char *comando = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Cadena para almacenar el informe de log
 	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
+	
 	//Estructura que almacenará los datos relativos al fichero
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 	//Variable auxiliar para saber en la línea en la que nos encontramos
@@ -691,7 +776,7 @@ void recarga_Snort () {
 	------------------------------------*/
 	semaforo_snort = sem_open(SEM_SNORT, INICIO);
 
-	//Comprobamos que hemos abierto correctamente los semáforos
+	//Comprobamos que hemos abierto correctamente el semáforo
 	if (semaforo_snort != NULL) {	
 
 		//Bajamos el semáforo
@@ -743,7 +828,10 @@ void recarga_Snort () {
 	//En caso de que uno de los semáforo no se abra correctamente
 	else {
 		
+		//Creamos la cadena para notificar de la incidencia
 		sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_SNORT);
+
+		//Registramos la incidencia en el fichero de logs
 		registra_log(log);
 	}
 		
@@ -761,7 +849,7 @@ void recarga_Snort () {
 	que está en el límite de líneas que puede
 	leer la función que se encarga de ello
 
-	Devuelve: string con el nombre del fichero creado
+	Devuelve: String con el nombre del fichero creado
 
 	Recibe: El nombre del fichero
 
@@ -789,6 +877,7 @@ char *vacia_fichero(char *nombre_fichero){
 
 	//Obtenemos el instante en el que lo hemos detectado
 	tm = localtime(&tiempo_cambio_fichero);
+	
 	/*-------------------------------------------------
 		La estructura con la que se almacena el nuevo
 		fichero es la siguiente:
@@ -804,22 +893,27 @@ char *vacia_fichero(char *nombre_fichero){
 	//La copia estará formada por el nombre y la fecha anteriormente obtenida
 	strcat(comando, nombre_fichero);
 	strcat(comando, t_cambio_fichero);
+	//Ejecutamos el comando
 	system(comando);
 		
 	//Eliminamos el fichero que está apunto de sobrecargarse
 	strcpy(comando, "rm -f ");
 	strcat(comando, nombre_fichero);
+	//Ejecutamos el comando
 	system(comando);
 		
 	//Creamos uno nuevo vacío
 	strcpy(comando, "touch -f ");
 	strcat(comando, nombre_fichero);
+	//Ejecutamos el comnando
 	system(comando);
 	
 	strcpy(comando, nombre_fichero);
 	strcat(comando, t_cambio_fichero);
 
+	//Devolvemos el comando
 	return comando;		
+
 	//Liberamos la memoria
 	free(comando);
 }
@@ -879,6 +973,7 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 	//Abrimos el semáforo
 	semaforo_reglas_snort = sem_open(SEM_REGLAS_SNORT, INICIO);
 
+	//Comprobamos que se ha abierto correctamente
 	if (semaforo_reglas_snort != NULL) {
 		
 		//Bajamos el semáforo
@@ -887,12 +982,14 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 		//Leemos el fichero del que queremos borrar la regla
 		contenido_del_fichero = lee_fichero(nombre_fichero_borrar);	
 
-		//Comprobamos si la estructura está vacía
+		//Comprobamos que la estructura no está vacía
 		if (informacion_regla.numero_lineas > INICIO) {
-			//Buscamo dicha regla en el fichero
+			
+			//En ese caso, buscamo dicha regla en el fichero
 			linea_regla = busca_Regla(contenido_del_fichero, informacion_regla, pos_dentro_estruct_regla);
 		
 		}
+
 		/*-------------------------------------------
 			En caso de estar vacía, el tercer 
 			parámetro nos indica la línea que 
@@ -909,41 +1006,61 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 			//Abrimos el fichero vacio para volver a escribirlo
 			fichero_borrar = fopen(nombre_fichero_borrar, "w");
 			
-			//Recorremos el array que rellenamos cuando lo leimos por primera vez
-			for (cont_aux_frases_fichero=0;
-			cont_aux_frases_fichero < contenido_del_fichero.num_frases_fichero;
-			cont_aux_frases_fichero++){
-				
-				//Comprobamos que la línea que vamos a escribir no es la que queremos eliminar
-				if (cont_aux_frases_fichero != linea_regla) {
+			//Comprobamos que hemos abierto correctamente el fichero	
+			if (fichero_borrar != NULL) {
 
-					for(cont_aux_palabras_fichero =0;
-						cont_aux_palabras_fichero <= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero];
-						cont_aux_palabras_fichero++) {
+				//Recorremos el array que rellenamos cuando lo leimos por primera vez
+				for (cont_aux_frases_fichero=0;
+				cont_aux_frases_fichero < contenido_del_fichero.num_frases_fichero;
+				cont_aux_frases_fichero++){
+					
+					//Comprobamos que la línea que vamos a escribir no es la que queremos eliminar
+					if (cont_aux_frases_fichero != linea_regla) {
 
-						//Si estamos ante la primera palabra de la frase
-						if (cont_aux_palabras_fichero == 0){
-							//Copiamos para iniciar una nueva regla
-							strcpy(regla_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
-							
+						for(cont_aux_palabras_fichero =0;
+							cont_aux_palabras_fichero <= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero];
+							cont_aux_palabras_fichero++) {
+
+							//Si estamos ante la primera palabra de la frase
+							if (cont_aux_palabras_fichero == 0){
+								
+								//Copiamos para iniciar una nueva regla
+								strcpy(regla_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+								
+							}
+							//Si no encontramos ante otra palabra
+							else {
+								
+								//Concatenamos las palabras para seguir creando la regla
+								strcat(regla_aux, " ");
+								strcat(regla_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
+								
+							}
+
 						}
-						//Si no encontramos ante otra palabra
-						else {
-							//Concatenamos las palabras para seguir creando la regla
-							strcat(regla_aux, " ");
-							strcat(regla_aux, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][cont_aux_palabras_fichero]);
-							
-						}
 
+					//Añadimos un salto de línea
+					strcat(regla_aux, "\n");
+					//Escribimos la regla en el fichero
+					fputs(regla_aux, fichero_borrar);
+					
 					}
-				//Añadimos un salto de línea
-				strcat(regla_aux, "\n");
-				//Escribimos la regla en el fichero
-				fputs(regla_aux, fichero_borrar);
 				}
+
+				//Cerramos el fichero
+				fclose(fichero_borrar);
 			}
-			//Cerramos el fichero
-			fclose(fichero_borrar);
+
+			//En caso de error
+				else{
+
+					//Creamos la cadena para notificar de la incidencia
+					sprintf(log, ERROR_APERTURA_FICHERO, nombre_fichero_borrar);
+
+					//Registramos la incidencia en el fichero de logs
+					registra_log(log);
+				}
+		
 		}
 	
 		//Subimos el semáforo
@@ -952,9 +1069,14 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 		//Cerramos el semáforo
 		sem_close(semaforo_reglas_snort);
 	}
+
+	//En caso de error al abrir el semáforo
 	else {
 
+		//Creamos la cadena para indicar de la incidencia
 		sprintf(log, ERROR_APERTURA_SEMAFORO, SEM_REGLAS_SNORT);
+
+		//Registramos la incidencia en el fichero de logs
 		registra_log(log);
 	}
 
@@ -962,6 +1084,7 @@ void elimina_Regla(char *nombre_fichero_borrar,struct ESTRUCTURA_REGLA informaci
 	free(regla_aux);
 	free(log);
 }
+
 
 /*----------------------------------------------------
 	Función que se encarga de crear un semáforo
@@ -991,7 +1114,7 @@ void crea_semaforo(char *nombre_semaforo){
 
 			--O_CREAT: Indicamos que lo queremos crear
 
-			--666: Permisos que tendrá el semáforo
+			--0666: Permisos que tendrá el semáforo
 
 			--valor_sem: Valor inicial del semáforo
 	-----------------------------------------------*/
@@ -999,10 +1122,12 @@ void crea_semaforo(char *nombre_semaforo){
 		Cambiamos los valores por defecto de umask
 		a "000" de esta forma, a los semáforos
 		se le asignarán excatamente los valores
-		que se le pasan en la función
+		que se le pasan en la función (0666) en este
+		caso
 	-----------------------------------------------*/
 	umask(000);
 	semaforo = sem_open(nombre_semaforo, O_CREAT, 0666, valor_sem);
+	
 	/*-----------------------------------------------
 		Tras crear los semáforos, volvemos a 
 		asignar a umask los valores por defectos
@@ -1011,9 +1136,14 @@ void crea_semaforo(char *nombre_semaforo){
 		por defecto
 	-----------------------------------------------*/
 	umask(022);
+	
+	//Si hemos obtenido un error al crear el semáforo
 	if (semaforo == NULL) {
 
+		//Creamos una cadena para almacenar la incidencia
 		sprintf(log, ERROR_CREACION_SEMAFORO, nombre_semaforo);
+		
+		//Almacenamos la incidencia en el fichero de logs
 		registra_log(log);
 
 	}
@@ -1033,7 +1163,7 @@ void crea_semaforo(char *nombre_semaforo){
 ---------------------------------------------*/
 void elimina_semaforo(char *nombre_semaforo) {
 
-	//Variable auxiliar para almacenar el valor devuelto a la hora de eliminar el semáfoross
+	//Variable auxiliar para almacenar el valor devuelto a la hora de eliminar el semáforo
 	int valor_devuelto;
 	//Cadena para almacenar el informe de log
 	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
@@ -1044,9 +1174,10 @@ void elimina_semaforo(char *nombre_semaforo) {
 	//Eliminamos el semáforo
 	valor_devuelto = sem_unlink(nombre_semaforo);
 
-	//Comprobamos que se eliminó correctamente
+	//Si no se eliminó correctamente
 	if (valor_devuelto != INICIO) {
 
+		//Notificamos la incidencia
 		sprintf(log, ERROR_CERRAR_SEMAFORO, nombre_semaforo);
 		registra_log(log);
 	}
@@ -1076,14 +1207,15 @@ void registra_log(char *log) {
 	char instante_registro_log[TAM_FECHA];
 	//Estructura para almacenar la fecha y hora en el momento deseado
 	struct tm *tm;
-	//Obtenemos el instante en el que lo hemos detectado
-	tm = localtime(&instante_log);
 	
+
 	//String para almacenar el texto que se va a registrar
 	char *registro = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 
 	//Inicializamos
 	fichero_logs = fopen(FICHERO_LOG, "a+");
+	//Obtenemos el instante en el que lo hemos detectado
+	tm = localtime(&instante_log);
 	
 	//Comprobamos que hemos abierto correctamente el fichero	
 	if (fichero_logs != NULL){ 
@@ -1102,6 +1234,7 @@ void registra_log(char *log) {
 
 		//Escribimos el texto en el fichero
 		fputs(registro, fichero_logs);
+		
 		//Cerramos el fichero
 		fclose(fichero_logs);
 	}

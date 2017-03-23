@@ -19,7 +19,7 @@ segundo módulo
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO y 
 	la línea en la que debe empezar a buscar
 
-	Devuelve: Nada
+	Devuelve: Estructura del tipo ESTRUCTURA_REGLA
 ----------------------------------------------------------*/
 struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_del_fichero, int linea_inicio);
 

@@ -15,11 +15,11 @@ que se usarán en el segundo módulo
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
 	y la línea en la que debe empezar a buscar
 
-	Devuelve: Nada
+	Devuelve: Una estructura del tipo ESTRUCTURA_REGLA
 
 	Caracteristicas:
 		Función pensada para leer el fichero de la
-		herramienta arpwatch para buscar en el posibles
+		herramienta arpwatch para buscar en él posibles
 		conflictos de direcciones cuando se está realizando
 		un ataque MITM
 ----------------------------------------------------------*/
@@ -38,8 +38,6 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 	int palabra_coincidencia;
 	//Contador auxiliar para almacenar el número de reglas de las que hemos almacenado información
 	int num_reglas;
-	//Variable auxiliar para almacenar la dirección MAC antigua
-	//char mac_antigua[TAM_MAC];
 	//Bandera para indicar si hemos detectado una coincidencia de cambio
 	bool flag_cambio_MAC;
 	//Bandera para indicar si hemos detectado una coincidencia de cambio inmediato
@@ -61,7 +59,7 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 		cont_aux_frases++){
 		
 		/*------------------------------------------------------
-			En el fichero arpwatch.log dólo vamos a encontrar
+			En el fichero arpwatch.log sólo vamos a encontrar
 			información de la herramienta arpwatch y cada 
 			notificación se hará en una única línea
 			de ahí que cada línea sea una notificación distinta
@@ -80,7 +78,7 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 			cont_aux_palabras++) {
 
 	
-			//Comprobamos si la palabra actual es la que estamos buscando y que nos indica el cambio de MAC para una misma dir_IP 
+			//Comprobamos si la palabra actual es la que estamos buscando y hemos detectado un cambio de MAC para una misma dir_IP 
 			if (flag_cambio_MAC == false && strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras],
 				CAMBIO_EN_MAC) == IGUAL){
 
@@ -227,6 +225,8 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 
 	//Almacenamos el número de reglas que deseamos crear
 	informacion_regla.numero_lineas = num_reglas;
+
+	//Devolvemos la estructura
 	return informacion_regla;
 }
 
@@ -249,7 +249,7 @@ struct ESTRUCTURA_REGLA busca_CAMBIO_EN_MAC(struct CONTENIDO_FICHERO contenido_d
 		tras esto, comprueba si la info que tenemos
 		de la nueva que vamos a registrar es la relativa a
 		una regla ya existente, si esto ocurre no 
-		registraremos nada ya que se sobre entiende que se
+		registraremos nada ya que se sobreentiende que se
 		registro anteriormente
 -------------------------------------------------------------*/
 void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
@@ -353,6 +353,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 	free(info_reglas);
 }
 
+
 /*--------------------------------------------------------
 	Función que se encarga de detectar cuando una regla
 	sobrepasa un tiempo dado, en este caso una hora
@@ -375,7 +376,7 @@ void registra_Regla(struct ESTRUCTURA_REGLA informacion_regla){
 En este caso, queremos eliminar las reglas  que se
 realizan en este módulo ya que bloquean el tráfico
 para direcciones de la red local y así solo prohibimos
-esa dirección durante un intervalo de tiempo no para 
+esa dirección durante un intervalo de tiempo, no para 
 siempre
 --------------------------------------------------------*/
 
@@ -405,7 +406,7 @@ void detecta_Registro_caducado(char *nombre_fichero){
 	//Obtenemos el instante en el que lo hemos detectado
 	tm = localtime(&tiempo_actual);
 			
-	//Nos interesa obtener la hora y los minutos de creación de la regla
+	//Nos interesa obtener la hora y los minutos para realizar la comparación
 	strftime(t_actual, sizeof(t_actual), "%H%M", tm);
 	
 	//Recorremos la estructura
@@ -413,7 +414,7 @@ void detecta_Registro_caducado(char *nombre_fichero){
 		cont_aux_frases_fichero < contenido_del_fichero.num_frases_fichero;
 		cont_aux_frases_fichero++){
 
-		//Comprobamos si ha pasado una hora desde la hora de creación de la regla y la actual
+		//Comprobamos si ha pasado una hora desde la hora de creación de la regla
 		if ((atoi(t_actual) - atoi(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][HORA]) >= PASA_UNA_HORA) ||
 			(atoi(t_actual) - atoi(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases_fichero][HORA]) < INICIO)) {
 
@@ -435,7 +436,7 @@ void detecta_Registro_caducado(char *nombre_fichero){
 			else {
 				informacion_regla.dir_Con_Puerto[INICIO] = false;
 			}
-			//Eliminamos el registro para no detectarlo más
+			//Eliminamos el registro
 			elimina_Registro(nombre_fichero, cont_aux_frases_fichero);
 			//Eliminamos la regla que creó ese registro
 			elimina_Regla(FICHERO_REGLAS_SNORT,informacion_regla, INICIO);

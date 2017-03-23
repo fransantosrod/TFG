@@ -7,6 +7,8 @@ todos los módulos
 
 #include "constantes_y_librerias.h"
 #include "func_aux.h"
+
+//Constante para definir el número de módulos creados
 #define NUM_MODULOS 4
 
 int main () {
@@ -14,7 +16,6 @@ int main () {
 	//Variables para la creación de hilos
 	pthread_attr_t attr;
 	pthread_t thid[NUM_MODULOS];
-	//Array donde almacenaremos los nombres de las funciones
 	
 	//Creamos los semáforos
 	crea_semaforo(SEM_LECTURA);
@@ -37,10 +38,18 @@ int main () {
 	pthread_create(&thid[3], &attr, mod4, NULL);
 
 	pthread_attr_destroy (&attr);
+	
+	//Dejamos en una espera continua al proceso principal
 	while(true)
 		sleep(INTERVALO_LECTURA);
 
 	//Eliminamos los semáforos
+	/*-----------------------------------------
+		Se ha creado el fichero eliminaSem.c
+		para eliminar los semáforos cuando
+		se detiene el proceso principal y
+		los semáforos siguen abiertos
+	-----------------------------------------*/
 	elimina_semaforo(SEM_LECTURA);
 	elimina_semaforo(SEM_SNORT);
 	elimina_semaforo(SEM_SID);

@@ -18,6 +18,7 @@ de las funciones auxiliares del primer módulo
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
 	el nombre que vamos a buscar y la línea por la
 	que debe empezar a buscar
+	
 	Devuelve: Estructura del tipo ESTRUCTURA_REGLA
 ----------------------------------------------------------*/
 struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, 

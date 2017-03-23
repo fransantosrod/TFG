@@ -1,36 +1,36 @@
 /*-------------------------------------------
 Autor: Francisco Javier Santos
 Fecha: 27-02-2017
-DescripciÃ³n: Fichero que contiene las 
+Descripción: Fichero que contiene las 
 implementaciones de las funciones auxiliares
-que se usarÃ¡n en el tercer mÃ³dulo
+que se usarán en el tercer módulo
 -------------------------------------------*/
 #include "func_aux_mod3.h"
 
 
 /*------------------------------------------------------------
-	FunciÃ³n que se encarga de leer un fichero de tipo CSV
+	Función que se encarga de leer un fichero de tipo CSV
 
 	Recibe: El nombre del fichero a leer
 
 	Devuelve: Una estructura del tipo CONTENIDO_FICHERO 
 				con los datos obtenidos del fichero
 
-	CaracterÃ­sticas:
+	Características:
 		Los fichero CSV diferencian sus valores por el caracter
-		',' por lo que esto nos marcarÃ¡ el fin de cada palabra
+		',' por lo que esto nos marcará el fin de cada palabra
 ------------------------------------------------------------*/
 struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	
-	//Estructura que serÃ¡ devuelta
+	//Estructura que será devuelta
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 	//String para almacenar la palabra antes de introducirla en la estructura
 	char *palabra_aux = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
 	//Cadena para almacenar el informe de log
 	char *log = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Variable para contabilizar el nÃºmero de palabras
+	//Variable para contabilizar el número de palabras
 	int palabras;
-	//Variables para contabilizar el nÃºmero de frases
+	//Variables para contabilizar el número de frases
 	int frases;
 	//Variable auxiliar para recorrer el string
 	int letra;
@@ -51,25 +51,24 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	frases = INICIO;
 	letra = INICIO;
 	
-
+	//Si hemos abierto el fichero correctamente
 	if (fichero_lectura != NULL){
 
 		//Comenzamos a leer el fichero
 		while ((c=fgetc(fichero_lectura))!=EOF){
 			
-			//Comprobamos que no superamos el lÃ­mite
+			//Comprobamos que no superamos el límite
 			if (frases < NUM_FRASES){
 
-				// Si estamos ante una lÃ­nea en blanco
+				// Si estamos ante una línea en blanco
 				if ( (c == SALTO_DE_LINEA && c_ant == SALTO_DE_LINEA)){
 					
-					//Estamos ante una lÃ­nea vacÃ­a
-					//Reiniciamos el contador de palabras y el de letras
+					//Reiniciamos el contador de palabras y letras
 					palabras = INICIO;
 					letra= INICIO;
 				}
 				
-				//Si no estamos ante una lÃ­nea en blanco
+				//Si no estamos ante una línea en blanco
 				else  {	
 
 					//Comprobamos que no estamos ante un doble espacio en blanco
@@ -83,23 +82,23 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 								
 								//Almacenamos ese caracter	
 								palabra_aux[letra] = c;
-								//Aumentamos el contador para almacenar el prÃ³ximo caracter en esa posiciÃ³n
+								//Aumentamos el contador para almacenar el próximo caracter en esa posicion
 								letra++;
 
 							}
 							
-							//Si estamos ante un salto de lÃ­nea
+							//Si estamos ante un salto de línea
 							else if (c == SALTO_DE_LINEA ) {
 								
-								//AÃ±adimos el terminador
+								//Añadimos el terminador
 								palabra_aux[letra++] = TERMINADOR;
 								
 								//Almacenamos la palabra en la estructura
 								contenido_del_fichero.contenido_leido_del_fichero[frases][palabras] = strdup(palabra_aux);
-								//Almacenamos el nÃºmero de palabras que tiene esa frase
+								//Almacenamos el número de palabras que tiene esa frase
 								contenido_del_fichero.palabras_por_frase[frases] = palabras;
 								
-								//Aumentamos el nÃºmero de frases
+								//Aumentamos el número de frases
 								frases++;
 								
 								//Reiniciamos los contadores
@@ -118,16 +117,17 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 										
 							}
 						}
+
 						//Si estamos leyendo el caracter ',' estamos ante una nueva palabra
 						else {
 
-							//AÃ±adimos el terminador
+							//Añadimos el terminador
 							palabra_aux[letra++] = TERMINADOR;
 
 							//Almacenamos la palabra en la estructura
 							contenido_del_fichero.contenido_leido_del_fichero[frases][palabras] = strdup(palabra_aux);
 
-							//Aumentamos el nÃºmero de palabras leiddas
+							//Aumentamos el número de palabras leiddas
 							palabras++;
 							//Reiniciamos el contador	
 							letra = INICIO;
@@ -135,18 +135,22 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 					}
 				}
 			
-				//Guardamos el caracter que acabamos de leer
+				//Guardamos el caracter que acabamos de leer para la próxima iteración
 				c_ant = c;
 			}
-			//En caso contrario indicamos que hemos sobrepasado el nÃºmero de lÃ­neas
+			
+			//En caso contrario indicamos que hemos sobrepasado el número de lí­neas
 			else {
 
+				//Creamos la cadena que nos informará de la incidencia producida
 				sprintf(log, ERROR_NUM_LINEAS, fichero, NUM_FRASES);
+
+				//Registramos dicha incidencia en el fichero de logs
 				registra_log(log);
 			}
 		}
 
-		//Almacenamos el nÃºmero total de lÃ­neas leidas
+		//Almacenamos el número total de líneas leídas
 		contenido_del_fichero.num_frases_fichero = frases;
 
 	
@@ -157,8 +161,11 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	}
 
 	else {
-	
+		
+		//Creamos la cadena que nos informará de la incidencia producida
 		sprintf(log, ERROR_APERTURA_FICHERO, fichero);
+
+		//Registramos dicha incidencia en el fichero de logs
 		registra_log(log);
 	
 	}
@@ -168,6 +175,7 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 	free(palabra_aux);
 	free(log);
 
+	//Devolvemos la estructura
 	return contenido_del_fichero;
 }
 
@@ -175,24 +183,25 @@ struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero){
 
 
 /*------------------------------------------------------
-	FunciÃ³n que se encarga de extraer del fichero leido
-	la informaciÃ³n de los SSID
+	Función que se encarga de extraer del fichero leído
+	la información de los SSID
 
 	Devuelve: Estructura del tipo INFO_SSID formada por:
 		-- essid[NUM_SSID]: Array que almacena los
-					ESSID leidos
+					ESSID leídos
 		-- bssid[NUM_SSID]: Array que almacena los 
-					BSSID leidos
-		-- num_ssid: Contador que almacena el nÃºmero
-			total de SSID leidos para poder recorrer
+					BSSID leídos
+		-- num_ssid: Contador que almacena el número
+			total de SSID leídos para poder recorrer
 			los arrays en cualquier momento
+
 	Recibe: Estructura del tipo CONTENIDO_FICHERO
 ------------------------------------------------------*/
 struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fichero){
 
-	//Estructura que serÃ¡ devuelta
+	//Estructura que será devuelta
 	struct INFO_SSID info_ssid;
-	//Variable auxiliar para almacenar el nÃºmero de SSID detectados
+	//Variable auxiliar para almacenar el número de SSID detectados
 	int cont_aux_ssid;
 	//Variable auxiliar para recorrer las filas del fichero CSV
 	int cont_aux_filas;
@@ -231,49 +240,66 @@ struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fich
 				los valores de las columnas para obtener
 				los que nos interesa
 			--------------------------------------------------*/
-			//Buscamos la informaciÃ³n que ocuparÃ¡n los ESSID
+			
+			//Comprobamos si estamos en la posición que ocupará la información relativa a los ESSID
 			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas], ESSID) == IGUAL){
+				
+				//Almacenamos el número de fila y columna que ocupan
 				pos_essid = cont_aux_columnas;
 				fil_essid = cont_aux_filas;
 			}
 
-			//Buscamos la posiciÃ³n que ocuparÃ¡n los BSSID
+			//Comprobamos si estamos en la posición que ocupará la información de los BSSID
 			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas], BSSID) == IGUAL){
+				
+				//Almacenamos la columna y fila que ocupan
 				pos_bssid = cont_aux_columnas;
 				fil_bssid = cont_aux_filas;
 			}
 			
-			//Comprobamos si vamos a pasar a ver la informaciÃ³n relativa a los clientes
+			//Comprobamos si vamos a pasar a ver la información relativa a los clientes
 			if (strcmp(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas], INFO_CLIENTES) == IGUAL){
 				
 				//Cambiamos el valor de la bandera
 				info_clientes = true;
 			}
 
+			//Si no estamos leyendo info de clientes y estamos en una nueva fila
 			if (info_clientes == false 
 				&& (cont_aux_filas > fil_bssid && cont_aux_filas > fil_essid)){
 
+				//Comprobamos que la columna en la que nos encontramos es donde se almacenarán los BSSIDs
 				if (cont_aux_columnas== pos_bssid){
+
+					//Almacenamos el BSSID
 					info_ssid.bssid[cont_aux_ssid] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas]);
 					
 				}
 
+				//En caso contrario, comprobamos que estamos en la columna donde se almacenará la información del ESSID
 				else if (cont_aux_columnas==pos_essid) {
+
+					//Almacenamos la información del ESSID
 					info_ssid.essid[cont_aux_ssid] = strdup(contenido_del_fichero.contenido_leido_del_fichero[cont_aux_filas][cont_aux_columnas]);
+					
+					//Aumentamos el número de SSIDs detectados
 					cont_aux_ssid++;
 				
 				}
 			}
 		}
 	}
+
+	//Almacenamos el número de SSIDs detectados en la estructura
 	info_ssid.num_ssid = cont_aux_ssid;
 
+	//Devolvemos la estructura
 	return info_ssid;
 }
 
 
 /*------------------------------------------------------------------
-	FunciÃ³n que se encarga de detectar la posibilidad de SSID 
+	Función que se encarga de detectar la posibilidad de SSID 
 	duplicado.
 
 	Devuelve: La estructura del tipo INFO_SSID
@@ -281,17 +307,17 @@ struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fich
 	Recibe: Estructura del tipo INFO_SSID, el ssid y la MAC que
 	queremos comprobar
 
-	CaracterÃ­sitcas:
+	Caracterí­sitcas:
 		Comprobamos los dos casos que se pueden dar para suplantar
 		un SSID, mismo ESSID y distinto BSSID o viceversa
 ------------------------------------------------------------------*/
 struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ssid){
 
-	//Estructura que almacenarÃ¡ los SSID iguales a los que se les pasa por parÃ¡metros
+	//Estructura que almacenara los SSID iguales a los que se les pasa como parámetros
 	struct INFO_SSID ssid_coincidentes;
 	//Contador auxiliar para recorrer la estructura
 	int cont_aux_ssid;
-	//Contador auxiliar para almacemar el nÃºmero de coincidencias
+	//Contador auxiliar para almacemar el número de coincidencias
 	int num_ssid_coincidentes;
 	
 
@@ -300,11 +326,12 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 	num_ssid_coincidentes = INICIO;
 	
 
+	//Recorremos la estructura
 	for (cont_aux_ssid=0; cont_aux_ssid<info_ssid.num_ssid;cont_aux_ssid++){
 
 		
 		/*--------------------------------------------
-			La primera casuÃ­stica serÃ­a la del 
+			La primera casuística será la de 
 			la suplantacion del ESSID, para ello
 			buscamos si el ESSID coincide y el BSSID
 			es distinto
@@ -319,9 +346,9 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 		}
 
 		/*-------------------------------------------
-			El segundo caso serÃ­a el de suplantar
+			El segundo caso será el de suplantar
 			el BSSID, por tanto comprobamos si 
-			hemos leido el mismo BSSID y distinto
+			hemos leído el mismo BSSID y distinto
 			ESSID
 		-------------------------------------------*/
 		else if ((strcmp(info_ssid.essid[cont_aux_ssid], ssid) != IGUAL) && (strcmp(info_ssid.bssid[cont_aux_ssid], mac_ssid) == IGUAL)){
@@ -335,7 +362,7 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 		}
 	}
 
-	//Almacenamos el nÃºmero de coincidencias que hemos encontrado
+	//Almacenamos el número de coincidencias que hemos encontrado
 	ssid_coincidentes.num_ssid = num_ssid_coincidentes;
 
 	//Devolvemos la estructura
@@ -344,20 +371,21 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 
 
 /*----------------------------------------------------------
-	FunciÃ³n que se encarga de crear una regla en IPTABLES
+	Función que se encarga de crear una regla en IPTABLES
 	si encuentra un ESSID duplicado y notifica si encuentra
 	un BSSID duplicado
 
 	Devuelve: Nada
 
-	Recibe: Una estructura del tipo INFO_SSID
+	Recibe: Una estructura del tipo INFO_SSID con las 
+		coincidencias detectadas
 
-	CaracterÃ­sticas:
+	Características:
 		Debe comprobar si la coincidencia es de 
 		BSSID o ESSID
 			
 			ESSID; Obtener el BSSID correspondiente
-			y bloquear el trÃ¡fico mediante IPTABLES
+			y bloquear el tráfico mediante IPTABLES
 			
 			BSSID; Notifica que ha detectado un BSSID duplicado
 
@@ -366,9 +394,6 @@ struct INFO_SSID busca_SSID(struct INFO_SSID info_ssid, char *ssid, char *mac_ss
 
 void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 
-	/*--------------------------------------------
-		
-	--------------------------------------------*/
 	//Variable para recorrer la estructura
 	int cont_aux_ssid;
 	//String para almacenar el comando que vamos a utilizar
@@ -379,6 +404,7 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 	//Inicializamos
 	cont_aux_ssid = INICIO;
 
+	//Recorremos la estructura
 	for (cont_aux_ssid=0;cont_aux_ssid<ssid_coincidentes.num_ssid;cont_aux_ssid++){
 
 	
@@ -387,10 +413,10 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 
 			/*--------------------------------------
 				Creamos la regla para cortar todo
-				el trÃ¡fico entrante de esa direcciÃ³n
+				el tráfico entrante de esa dirección
 				MAC de esta forma evitamos recibir
-				los beacons y asÃ­ la posibilidad de
-				establecer una conexiÃ³n
+				los beacons y así­ la posibilidad de
+				establecer una conexión
 			---------------------------------------*/
 
 			strcpy(comando, "sudo iptables -A INPUT -m mac --mac-source ");
@@ -399,41 +425,46 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 			system(comando);
 		}
 
-		//En caso contrario la coincidencia serÃ¡ en el BSSID
+		//En caso contrario la coincidencia será en el BSSID
 		else if (ssid_coincidentes.coincide_BSSID[cont_aux_ssid] == true){
 
 			/*---------------------------------------------------
 				Dado que estamos analizando el espectro y las
-				comunicaciones en capa dos, no podemos obtener
-				la direcciÃ³n IP del SSID del cuÃ¡l hemos detectado
+				comunicaciones son en capa dos, no podemos obtener
+				la dirección IP del SSID del cuál hemos detectado
 				el BSSID duplicado, y tampoco podemos aplicar
 				la misma regla que anteriormente ya que nos 
-				dejarÃ­a sin conexiÃ³n a nuestro router, luego
-				la Ãºnica acciÃ³n que podemos tomar es notificar
+				dejaría sin conexión a nuestro router, luego
+				la única acción que podemos tomar es notificar
 			---------------------------------------------------*/
+			
+			//Creamos la cadena para notificar esto mediante el fichero de logs
 			sprintf(log,BSSID_DUPLICADO, ssid_coincidentes.essid[cont_aux_ssid], ssid_coincidentes.bssid[cont_aux_ssid]);
+			
+			//Registramos la incidencia en el fichero
 			registra_log(log);
 		}
 	}
 
+	//Liberamos la memoria
 	free(comando);
 	free(log);
 }
 
 /*----------------------------------------------------
-	FunciÃ³n que se encarga de capturar los SSID
+	Función que se encarga de capturar los SSID
 	existentes en la red WiFi
 
 	Recibe: Nada
 	Devuelve: Nada
 
-	CaracterÃ­sticas:
-		Se encarga de capturar el trÃ¡fico durante
+	Características:
+		Se encarga de capturar el tráfico durante
 		un tiempo, tras esto para la captura para
 		generar el fichero correspondiente.
 		Antes de iniciar la captura se asegura de 
 		que el fichero donde la vamos a almacenar
-		no existÃ­a previamente
+		no existía previamente
 ----------------------------------------------------*/
 
 void escanea_WiFi() {
@@ -448,11 +479,11 @@ void escanea_WiFi() {
 	char *nombre_fichero_pid = (char * )malloc(sizeof(char *)*NUM_CARACTERES_PALABRA);
 	//Variable auxiliar para almacenar el nombre del fichero y la extensión
 	char *nombre_fichero_completo = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Variable auxiliar para saber en la lÃ­nea en la que nos encontramos
+	//Variable auxiliar para saber en la línea en la que nos encontramos
 	int cont_aux_linea;
 	//Variable auxiliar para saber en que palabra nos encontramos
 	int cont_aux_palara;
-	//Estructura que almacenarÃ¡ los datos relativos al fichero
+	//Estructura que almacenará los datos relativos al fichero
 	struct CONTENIDO_FICHERO contenido_del_fichero;
 
 	//Inicializamos las variables
@@ -469,9 +500,10 @@ void escanea_WiFi() {
 	//Comprobamos si el fichero que vamos a generar existe
 	strcpy(nombre_fichero_completo, nombre_fichero);
 	strcat(nombre_fichero_completo, EXTENSION_FICHERO_CAPTURA_WIFI);
+	
 	/*-------------------------------------------
-		Con la funciÃ³n acces podremos saber si
-		el fichero existe o no, el parÃ¡metro F_OK
+		Con la función acces podemos saber si
+		el fichero existe o no, el parámetro F_OK
 		se le pasa para saber si existe
 	-------------------------------------------*/
 	if ( access(nombre_fichero_completo, F_OK) != NO_EXISTE) {
@@ -479,14 +511,14 @@ void escanea_WiFi() {
 		/*--------------------------------------------
 			En caso de que exista, nos interesa
 			eliminarlo ya que airodump no sobreescribe
-			los ficheros sino que va aÃ±adiendo una 
-			terminaciÃ³n numÃ©rica y de esta forma
-			nos serÃ­a imposible seguir por quÃ© fichero
-			vamos, asÃ­ que si lo eliminamos nos 
+			los ficheros sino que va añadiendo una 
+			terminación numérica y de esta forma
+			nos sería imposible seguir por qué fichero
+			vamos, así que si lo eliminamos nos 
 			aseguramos que siempre lo escribimos con 
 			el mismo nombre
 		---------------------------------------------*/
-		//Eliminamos el fichero para la prÃ³xima captura
+		//Eliminamos el fichero para la próxima captura
 		strcpy(comando, "sudo rm -rf ");
 		strcat(comando, nombre_fichero);
 		strcat(comando, "*");
@@ -496,6 +528,7 @@ void escanea_WiFi() {
 	//Creamos el comando para iniciar la captura
 	strcpy(comando, "{ sudo airodump-ng mon0 --output-format csv -w ");
 	strcat(comando, nombre_fichero);
+	//Redireccionamos la posible salida de errores a un ficheo auxiliar
 	strcat(comando, " 2>> output.txt; } &");
 	system(comando);
 	
@@ -525,7 +558,7 @@ void escanea_WiFi() {
 			cont_aux_palara<=contenido_del_fichero.palabras_por_frase[cont_aux_linea];
 			cont_aux_palara++) {
 
-			//Almacenamos el PID en nuestra variable especÃ­fica
+			//Almacenamos el PID en nuestra variable específica
 			strcpy(pid,
 				contenido_del_fichero.contenido_leido_del_fichero[cont_aux_linea][cont_aux_palara]);
 

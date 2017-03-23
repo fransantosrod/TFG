@@ -42,14 +42,16 @@ typedef struct INFO_SSID {
 ------------------------------------------------------------*/
 struct CONTENIDO_FICHERO lee_fichero_csv(char *fichero);
 
+
 /*------------------------------------------------------
 	Función que se encarga de extraer del fichero leido
 	la información de los SSID
 
-	Devuelve: Estructura del tipo INFO_SSID formada por:
+	Devuelve: Estructura del tipo INFO_SSID
 	Recibe: Estructura del tipo CONTENIDO_FICHERO
 ------------------------------------------------------*/
 struct INFO_SSID procesa_fichero_CSV(struct CONTENIDO_FICHERO contenido_del_fichero);
+
 
 /*------------------------------------------------------------------
 	Función que se encarga de detectar la posibilidad de SSID 

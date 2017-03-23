@@ -1,12 +1,10 @@
 /*-------------------------------------------
 Autor: Francisco Javier Santos
-Fecha: 12-02-2017
+Fecha: 9-03-2017
 Descripción: Fichero que contiene las 
 implementaciones de las funciones auxiliares 
+del cuarto módulo
 -------------------------------------------*/
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "func_aux_mod4.h"
 
 
@@ -42,13 +40,16 @@ void inserta_en_BBDD(struct CONTENIDO_FICHERO contenido_del_fichero, int frase_i
 	cont_aux_palabras = INICIO;
 
 
-	//Recorremos las nuevas líneas para crear el ficheo que vamos a cargar en la base de datos
+	//Recorremos las nuevas líneas para crear el comando que vamos a cargar en la base de datos
 	for (cont_aux_frases=frase_inicio; 
 			cont_aux_frases<contenido_del_fichero.num_frases_fichero;
 			cont_aux_frases++) {
 		
-		//Construimos el comando para introducir los datos
-
+		/*------------------------------------------------
+			Construimos el comando para introducir 
+			los datos
+		------------------------------------------------*/
+		
 		//Indicamos la contraseña de la base de datos
 		strcpy(comando, "export PGPASSWORD='");
 		strcat(comando, CONTRASENIA_BBDD);
@@ -61,7 +62,7 @@ void inserta_en_BBDD(struct CONTENIDO_FICHERO contenido_del_fichero, int frase_i
 		strcat(comando, " -d ");
 		strcat(comando, NOMBRE_BBDD);
 
-		//Insertamos los dato en la tabla
+		//Insertamos los datos en la tabla
 		strcat(comando, " -c \"INSERT INTO ");
 		//Nombre de la tabla dentro de esa base de datos en la que queremos insertar los datos
 		strcat(comando, NOMBRE_TABLA_BBDD);
@@ -73,6 +74,8 @@ void inserta_en_BBDD(struct CONTENIDO_FICHERO contenido_del_fichero, int frase_i
 				cont_aux_palabras++) {
 
 				//Insertamos los valores que queremos almacenar en la tabla
+				
+				//Comprobamos si estamos en la posición donde se almacena la fecha
 				if (cont_aux_palabras == FECHA){
 					
 					//Si estamos en la fecha debemos realizar previamente una conversión
@@ -83,19 +86,22 @@ void inserta_en_BBDD(struct CONTENIDO_FICHERO contenido_del_fichero, int frase_i
 				
 				else {
 
-					//Para la dirección MAC e IP los valores deben ir entrecomillados
+					//Para la dirección MAC e IP los valores deben ir entre comillas simples
 					strcat(comando, "'");
 					strcat(comando, contenido_del_fichero.contenido_leido_del_fichero[cont_aux_frases][cont_aux_palabras]);
 					strcat(comando, "', ");	
 				}
 
 			}
+
 		//Terminamos el comando
 		strcat(comando, ");\"");
 		
 		//Redireccionamos la salida
 		strcat(comando, " >> /tmp/salida_bbdd.txt");
+		//Redireccionamos la salida de errores, en caso de existir
 		strcat(comando, " 2>> /tmp/salida_bbdd.txt");
+		
 		//Ejecutamos el comando
 		system(comando);
 		

@@ -37,7 +37,7 @@ la ejecución del programa
 #define FICHERO_REGISTRO_CLIENTES "registro_clientes.txt"
 #define FICHERO_LOG "wips.log"
 
-//Constante para definir la contrasenia de la base de datos
+//Constante para definir la contraseña de la base de datos
 #define CONTRASENIA_BBDD "clientes"
 //Constante para definir el usuario con el que nos queremos registrar
 #define USUARIO_BBDD  "clientes"
@@ -71,9 +71,9 @@ la ejecución del programa
 	en blanco 
 -------------------------------------------------------*/
 #define NUM_FRASES 500
-//Constante para definir el límite a partir del cuál crearemos un nuevo fichero (en mod1_DoS.c)
+//Constante para definir el límite a partir del cuál crearemos un nuevo fichero
 #define LIMITE_LINEAS_LEIDAS NUM_FRASES-30
-//Constante para definir el número máximo de palabras en una frae
+//Constante para definir el número máximo de palabras en una frase
 #define NUM_PALABRAS_POR_FRASE 50
 //Constante para definir el número máximo de caracteres para una palabra
 #define NUM_CARACTERES_PALABRA 100

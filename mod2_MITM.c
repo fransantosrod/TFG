@@ -12,6 +12,7 @@ en los ataques MITM
 	las funcionalidades del módulos 2
 
 	Recibe: Nada
+
 	Devuelve: Nada
 -------------------------------------------*/
 
@@ -23,11 +24,11 @@ void *mod2 () {
 	struct ESTRUCTURA_REGLA informacion_regla;
 	//Variable donde almacenamos el fichero que queremos leer
 	char *nombre_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Variable auxiliar para conocer el número de línea que leimos anteriormente
+	//Variable auxiliar para conocer el número de línea que leímos anteriormente
 	int num_lineas_anterior;
 	//Variable auxiliar para almacenar el nombre del fichero que se crea
 	char *nuevo_fichero = (char *)malloc(sizeof(char)*NUM_CARACTERES_PALABRA);
-	//Bandera para indicar si se deben crear reglas
+	//Bandera para indicar si se han creado reglas
 	bool crear_regla;
 
 	//Inicalizamos las variables
@@ -40,29 +41,40 @@ void *mod2 () {
 		//Leemos el fichero
 		contenido_del_fichero = lee_fichero(nombre_fichero);
 
-		//Miramos a ver si algún registro ha pasado el tiempo ya
+		//Miramos a ver si algún registro ha pasado el tiempo
+		/*---------------------------------------------------
+			Esto se hace ya que para los ataques MITM, las
+			direcciones que vamos a bloquear son IPs 
+			pertenecientes a la red interna, luego,este 
+			bloqueo sólo será efectivo durante un periodo
+			"largo" de tiempo para impedir el ataque y 
+			permitir que esa dirección estará disponible 
+			en un futuro
+		---------------------------------------------------*/
 		detecta_Registro_caducado(FICHERO_REGISTRO_REGLAS_MITM);
 				
-		//Comprobamos si el número de líneas leidas está cerca del máximo (NUM_FRASES)
+		//Comprobamos si el número de líneas leídas está cerca del máximo (NUM_FRASES)
 		if ( contenido_del_fichero.num_frases_fichero < LIMITE_LINEAS_LEIDAS){
 				
-			//Comprobamos si hemos leido alguna línea nueva
+			//Comprobamos si hemos leído alguna línea nueva
 			if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
 					
 				//Buscamos si hemos detectado un cambio en la MAC
 				informacion_regla=busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
 					
-				//Registramos la regla que vamos a crear
-				registra_Regla(informacion_regla);
-
+				
 				//Comprobamos si tenemos que crear alguna regla
 				if (informacion_regla.numero_lineas > INICIO){
 
-						
 					//Creamos la regla
 					crear_regla = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, informacion_regla, "MITM");
+					
+					//Registramos la regla que vamos a crear
+					registra_Regla(informacion_regla);
+
 					//Comprobamos si la hemos creado correctamente
 					if (crear_regla == true) {
+							
 						//Cambiamos el valor de la bandera para que solo reiniciemos cuando se crea una regla nueva
 						crear_regla = false;
 						
@@ -76,7 +88,7 @@ void *mod2 () {
 		//En el caso en el que estemos cerca del límite
 		else {
 				
-			//Llamamos a la función deseada para que nos vacie el fichero
+			//Llamamos a la función deseada para vaicar el fichero
 			nuevo_fichero = vacia_fichero(nombre_fichero);
 				
 			/*--------------------------------------------------------
@@ -85,16 +97,17 @@ void *mod2 () {
 				al que le hemos cambiado el nombre siempre y
 				cuando no supere el número máximo (NUM_FRASES)
 				
-				Esta comprobació la hacemos por si el fichero 
+				Esta comprobación la hacemos por si el fichero 
 				se encontraba en el rango entre LIMITE y NUM_FRASES
-				y haya información que se pueda perder
+				y hay información que se puede perder
 			--------------------------------------------------------*/
-				
+			//Leemos el fichero
 			contenido_del_fichero = lee_fichero(nuevo_fichero);
+			
 			//Comprobamos que ese fichero no ha superado el límite
 			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
 					
-				//Creamos las reglas con las que hayamos encontrado
+				//Buscamos si se ha producido algún cambio en las direcciones MAC
 				informacion_regla = busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
 					
 				//Comprobamos si hemos detectado la necesidad de crear alguna regla
@@ -103,6 +116,9 @@ void *mod2 () {
 					//Creamos la regla
 					crear_regla = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, informacion_regla, "MITM");
 
+					//Registramos la regla que vamos a crear
+					registra_Regla(informacion_regla);
+					
 					//Comprobamos que la hemos creado correctamente
 					if (crear_regla == true){
 
@@ -115,10 +131,15 @@ void *mod2 () {
 				}
 					
 			}
+
+			//Reiniciamos el número de líneas para la próxima iteración
 			contenido_del_fichero.num_frases_fichero = INICIO;
 		}
-			
+		
+		//Almacenamos el número de líneas leídas
 		num_lineas_anterior = contenido_del_fichero.num_frases_fichero;
+		
+		//Esperamos un intervalo de tiempo para la próxima lectura
 		sleep(INTERVALO_LECTURA);
 	}
 

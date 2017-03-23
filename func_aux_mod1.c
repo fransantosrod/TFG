@@ -11,7 +11,7 @@ que se usarán en el primer módulo
 /*---------------------------------------------------------
 	
 	Función que para un string dado comprueba si dicho
-	string está en el contenido leido de un fichero
+	string está en el contenido leído de un fichero
 	
 	Recibe: Una estructura del tipo CONTENIDO_FICHERO
 	el nombre que vamos a buscar y la línea por la
@@ -21,7 +21,7 @@ que se usarán en el primer módulo
 
 	Caracteristicas:
 		A través de esta función podremos detectar si 
-		en el fichero hemos leido una alerta de una 
+		en el fichero hemos leído una alerta de una 
 		regla cuyo mensaje de información coincida 
 		con el string que hemos pasado 
 		La estructura que devuelve contiene
@@ -33,8 +33,8 @@ que se usarán en el primer módulo
 				--true: Esa regla tiene un puerto asociada
 				--false: no lo tiene
 			-- Bandera con info relativa a la IP
-				** true: Estaba en el campo origen
-				** false: Estaba en el campo destino
+				-- true: Estaba en el campo origen
+				-- false: Estaba en el campo destino
 ---------------------------------------------------------*/
 
 struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FICHERO contenido_del_fichero, 
@@ -48,6 +48,7 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 	bool red_local;
 	//Bandera para almacenar cuando se detecta una red externa
 	bool detectada_red_externa;
+	
 	//Estructura que alamcena los datos relativos a las coincidencias
 	struct ESTRUCTURA_REGLA contenido_fichero_alerta;
 	//Variable auxiliar para almacenar el número de coincidencias y recorrer la estructura
@@ -55,7 +56,7 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 
 	//Variable auxiliar para almacenar la dirección del caracter : y el puerto
 	char *puerto;
-	//Variable auxiliar para almacenar la dirección IP cuando
+	//Variable auxiliar para almacenar la dirección IP
 	char *dir_IP_aux = (char *)malloc(sizeof (char *) * TAM_IP*MAX_DIG_FRAGMENTO_IP);
 
 	//Variables para recorrer la tabla con el contenido del fichero
@@ -79,13 +80,16 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 
 		//Si hemos encontrado alguna coincidencia
 		if (flag == true) {
-			//Si ya no estamos dentro de la info relativa la regla que hemos encontrado
+			
+			//Si ya no estamos dentro de la info relativa a la regla que hemos encontrado
 			if (cont_aux_frases_fichero >= linea_coincidencia+FIN_REGLA_ALERTA){
+				
 				//Cambiamos el valor de la bandera para poder detectar otra coincidencia
 				flag=false;	
 			}
 		}
-
+		
+		//Recorremos las palabras de cada línea
 		for (cont_aux_palabras_fichero=0; 
 			cont_aux_palabras_fichero<= contenido_del_fichero.palabras_por_frase[cont_aux_frases_fichero] && numero_de_coincidencia < NUM_REGLAS; 
 			cont_aux_palabras_fichero++){
@@ -114,7 +118,7 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 				la posición 3 de la tabla y la destino en la 5
 
 				Los puertos están en la misma posición que las direcciones IP
-				pero tras un :	
+				pero tras un ":"	
 			-----------------------------------------------------------------*/
 
 			//Comprobamos si hemos detectado una coincidencia y si la línea en la que estamos es la siguiente al mensaje de info
@@ -212,8 +216,8 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 				línea por lo que debemos buscar ahí
 			--------------------------------------------------------*/
 			
-			//Comprobamos que estamos en la línea donde podemos comprobar el protocolo que hemos encontrado una coincidencia
-			//	y que la dirección IP anterior era una NO local
+			/*Comprobamos que estamos en la línea donde podemos comprobar el protocolo que hemos encontrado una coincidencia
+				y que la dirección IP anterior era una NO local*/
 			if (cont_aux_frases_fichero == linea_coincidencia + LINEA_PROTOCOLO && flag==true && detectada_red_externa==true){
 				
 				//Cambiamos el valor de la bandera para volver a entrar solo en el caso que se detecte una IP no local
@@ -235,19 +239,23 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 				}
 
 				//Alamcenamos la acción que queremos realizar
+				//Para las reglas DoS será "DROP" ya que necesitamos cortar ese ataque
 				contenido_fichero_alerta.accion[numero_de_coincidencia] = strdup("drop");
-				//Aumentamos el número de coincidencias para el string dado al principio
+				
+				//Aumentamos el número de coincidencias
 				numero_de_coincidencia++;
 			}			
 
 		}
 	}	
 	
+	//Almacenamos el número de coincidencias detectadas
 	contenido_fichero_alerta.numero_lineas = numero_de_coincidencia;
 
 	//Liberamos la memoria
 	free(dir_IP_aux);
 
+	//Devolvemos la estructura
 	return contenido_fichero_alerta;
 }
 
@@ -257,7 +265,7 @@ struct ESTRUCTURA_REGLA comprueba_Coincidencia_Fichero_Leido(struct CONTENIDO_FI
 Función que se encarga de comprobar si una
 dirección IP pertenece a la red local o no
 
-Recibe: char* que contiene la dirección IP
+Recibe: String que contiene la dirección IP
 que se quiere comprobar
 Devuelve: Un booleano indicando si pertenece o no
 	-- true: Pertenece a la red local
@@ -269,7 +277,7 @@ Caracteristicas:
 	Tras esto comprueba si los tres primeros
 	fragmentos coinciden con la red local
 		10.10.10.0/24 en este caso
-	Devuelve el si es cierto o no
+	Devuelve si es cierto o no
 -------------------------------------*/
 bool comprueba_IP(char *direccion_IP){
 
@@ -278,8 +286,8 @@ bool comprueba_IP(char *direccion_IP){
 	int caracter_dir_IP;
 	//Variable auxiliar para almacenar los dígitos en la posición correcta de la tabla
 	int pos_digito;
-	//Variable auxiliar para almacenar la posicion donde se debe guardar el digito correspondiente
-	//a un fragmento de una direccion IP
+	/*Variable auxiliar para almacenar la posicion donde se debe guardar el digito correspondiente
+		a un fragmento de una direccion IP*/
 	int pos_aux;
 	//Bandera que nos indica si la red es local o no
 	bool red_local;
@@ -300,7 +308,7 @@ bool comprueba_IP(char *direccion_IP){
 	//Recorremos caracter a caracter el string que le hemos pasado como parámetro
 	for(caracter_dir_IP = 0; caracter_dir_IP <= (int) strlen(direccion_IP); caracter_dir_IP++){
 			
-		//Comprobamos si el caracter que estamos leyendo es . o estramos en el último caracter del string	
+		//Comprobamos si el caracter que estamos leyendo es '.' o estramos en el último caracter del string	
 		if (direccion_IP[caracter_dir_IP] == PUNTO || direccion_IP[caracter_dir_IP] == TERMINADOR){
 			//Almacenamos el fragmento en la tabla
 			fragmento_dir_IP[pos_aux++] = TERMINADOR;
@@ -328,6 +336,7 @@ bool comprueba_IP(char *direccion_IP){
 	-----------------------------------------------------------------*/
 	if ((strcmp(dir_IP_div[FRAG_1],VALOR_FRAG_1)==IGUAL)  && (strcmp(dir_IP_div[FRAG_2],VALOR_FRAG_2)==IGUAL) 
 		&& (strcmp(dir_IP_div[FRAG_3],VALOR_FRAG_3)==IGUAL))
+
 		red_local=true;
 	
 	else
@@ -335,6 +344,8 @@ bool comprueba_IP(char *direccion_IP){
 
 	//Liberamos memoria
 	free(fragmento_dir_IP);
+
+	//Devolvemos el booleano
 	return red_local;
 }
 

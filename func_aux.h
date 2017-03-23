@@ -10,10 +10,10 @@ necesarias para que estas funcionen
 #ifndef func_aux
 #define func_aux
 
+//Estructura para almacenar el contenido leído de un fichero
 typedef struct CONTENIDO_FICHERO{
 
 	//Variable auxiliar para almacenar cuantas palabras tiene cada frase
-		//NUM_FRASES igual que en el caso anterior
 	int palabras_por_frase[NUM_FRASES];
 	
 	//Variable para contabilizar el número de frases del fichero
@@ -26,6 +26,7 @@ typedef struct CONTENIDO_FICHERO{
 } contenido_fichero;
 
 
+//Estructura para almacenar la información relativa a una regla
 typedef struct ESTRUCTURA_REGLA {
 	
 	//Array para almacenar la dirección IP
@@ -61,6 +62,7 @@ typedef struct ESTRUCTURA_REGLA {
 
 /* -------------------------------------------------------
 	Función que se encarga de la lectura de los ficheros 
+	
 	Recibe: El nombre del fichero que queremos leer
 	Devuelve: Una estructura del tipo CONTENIDO_FICHERO
 ----------------------------------------------------------*/
@@ -93,10 +95,10 @@ bool crea_y_escribe_regla(char *nombre_fichero_escritura, struct ESTRUCTURA_REGL
 	Recibe: Estructura del tipo CONTENIDO_FICHERO,
 	estructura del tipo ESTRUCTURA_REGLA, y la posición 
 	dentro de la estructura ESTRUCTURA_REGLA donde se 
-	encuentra leyendo la info relativa a la nueva regla
+	encuentra la info relativa a la nueva regla
 
 	Devuelve: Un entero
-		-->0: Ya hay una regla igual. Es la línea que
+		-- >0: Ya hay una regla igual. Es la línea que
 		ocupa en el fichero donde están las reglas
 		-- -1: No la hay
 
@@ -122,7 +124,8 @@ void recarga_Snort ();
 
 	Devuelve: string con el nombre del fichero creado
 
-	Recibe: El nombre del fichero
+	Recibe: El nombre del fichero que se desea 
+		vaciar
 ---------------------------------------------------*/
 char *vacia_fichero(char *nombre_fichero);
 
@@ -167,7 +170,7 @@ void elimina_semaforo(char *nombre_semaforo);
 	el fichero de logs del WIPS las incidencias
 	que aparecen
 	
-	Recibe: La causa del log
+	Recibe: Un string indicando la causa del log
 	Devuelve: Nada
 ---------------------------------------------*/
 void registra_log(char *log);
