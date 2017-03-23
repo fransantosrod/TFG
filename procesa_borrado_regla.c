@@ -55,6 +55,7 @@ int main () {
 			
 			//Buscamos el caracter '=' ya que tras él vendrá el valor
 			datos = strchr(datos, '=');
+			
 			//Comprobamos que hemos recibido datos
 			if (datos != NULL){
 				
@@ -64,8 +65,10 @@ int main () {
 					//Eliminamos el caracter '='
 					regla[caracter-1] = datos[caracter];
 				}
+				
 				//Añadimos el terminador
 				regla[caracter] = SALTO_DE_LINEA;				
+				
 				//Indicamos que la estructura estará vacía
 				/*---------------------------------------
 					De esta forma indicamos a la función
@@ -88,11 +91,16 @@ int main () {
 				printf("<p class=\"info_regla\">Regla %d eliminada correctamente\n</p>", atoi(regla)+1);
 			}	
 			
+			//En caso de que no se reciban datos
 			else {
+
+				//Indicamos que no se ha borrado ninguna regla
 				printf("<p class=\"info_regla\">No se ha podido eliminar la regla</p>\n");
 			}
 			
+
 			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/borraRegla.out\">\n");
+				
 				//Botón para volver a la página de  reglas
 				printf("<button type=\"submit\">\n");
 					printf("Volver\n");

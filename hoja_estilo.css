@@ -48,9 +48,8 @@ button {
 
 button:hover {
 	/*------------------------------------
-		Definimos el color de fondo del
-		botón y de las letras que tomará
-		cuando el ratón pase por encima
+		Definimos el cambio de color de fondo del
+		botón y de las letras 
 	------------------------------------*/
 	background-color: #bfbfbf;
 	color: white;
@@ -83,7 +82,7 @@ button:hover {
 }
 
 /*------------------------------------
-	Definimos el tamañoy la posición
+	Definimos el tamaño y la posición
 	que ocuparán en la interfaz el
 	iframe
 ------------------------------------*/
@@ -123,7 +122,11 @@ iframe {
 	font-size: 14px;
 
 }
-
+/*------------------------------------
+	Definimos el estilo con el que 
+	se mostrarán las reglas en la
+	interfaz web
+------------------------------------*/
 .info_regla {
 
 	position: relative;
@@ -180,8 +183,8 @@ th, td {
 }
 /*------------------------------------
 	Definimos el efecto que tendrán
-	las filas de cambiar de color
-	cuando se pasa el ratón por encima
+	las filas (cambiar de color
+	cuando se pasa el ratón por encima)
 ------------------------------------*/
 th, th:hover {
 	background: #dad9d8;

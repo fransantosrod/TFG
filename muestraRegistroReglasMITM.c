@@ -50,7 +50,7 @@ int main () {
 					Indicamos la dirección a la que nos dirigimos si se pulsa 
 					ese botón, el método con el que se realizará la petición y
 					el estilo del botón, que será en línea para que todos aparezcan
-					en la parte superior
+					en una única fila en la parte superior
 				-----------------------------------------------------*/
 				printf("<form method=\"get\" action=\"../cgi/wips.html\" style=\"display:inline\">\n");
 
@@ -136,7 +136,7 @@ int main () {
 								printf("<th>Dir. con Puerto</th>\n");
 							printf("</tr>\n");
 							
-							//Recorremos la estructura tras haber leido el fichero
+							//Recorremos la estructura tras haber leído el fichero
 							for (cont_aux_lineas=0;
 								cont_aux_lineas< contenido_del_fichero.num_frases_fichero;
 								cont_aux_lineas++){

@@ -49,7 +49,7 @@ int main () {
 					Indicamos la dirección a la que nos dirigimos si se pulsa 
 					ese botón, el método con el que se realizará la petición y
 					el estilo del botón, que será en línea para que todos aparezcan
-					en la parte superior
+					en una única fila en la parte superior
 				-----------------------------------------------------*/
 				printf("<form method=\"get\" action=\"../cgi/wips.html\" style=\"display:inline\">\n");
 

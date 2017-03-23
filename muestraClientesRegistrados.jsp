@@ -55,7 +55,7 @@
 				Indicamos la dirección a la que nos dirigimos si se pulsa 
 				ese botón, el método con el que se realizará la petición y
 				el estilo del botón, que será en línea para que todos aparezcan
-				en la parte superior
+				en una única fila  en la parte superior
 			-->
 			<form method="get" action="../cgi/wips.html" style="display:inline">
 
@@ -151,7 +151,7 @@
 					
 					if (mac != null && ip != null ) {
 						
-						//Comprobamos si hemos introducido algín valor	
+						//Comprobamos si hemos introducido algún valor	
 						if (ip.length() > 0 || mac.length()>0) {
 							
 							//Añadimos la condición
@@ -160,10 +160,10 @@
 						
 						//Si queremos filtrar por la MAC
 						if (mac.length() > 0) {
-							/*--------------------------------------
-							Añadimos la condición para mostrar solo
-							los que contienen esa dirección MAC
-							---------------------------------------*/
+							/*------------------------------------------
+								Añadimos la condición para mostrar solo
+								los que contienen esa dirección MAC
+							-------------------------------------------*/
 							sentencia+= "dir_mac='" + mac + "'";
 						}
 
@@ -194,6 +194,7 @@
 					
 					//Recorremos el resultado obtenido
 					while (rs.next()){
+						
 						//Incluimos en una fila nueva cada resultado
 						out.println("<tr>");
 
@@ -232,7 +233,7 @@
 
 
 		<!--
-			CREAMOS EL FORMULARIO QUE NOS PERMITIRÁ FILTRAR LA INFORMACIÓN DE LA BBDD EN FUNCIÓN A LOS DATOS DE LOS CLIENTES
+			CREAMOS EL FORMULARIO QUE NOS PERMITIRÁ FILTRAR LA INFORMACIÓN DE LA BBDD EN FUNCIÓN DE LOS DATOS DE LOS CLIENTES
 		-->
 		<form method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp">
 			
