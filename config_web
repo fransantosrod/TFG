@@ -1,0 +1,164 @@
+/* Lo primero que vamos a hacer es instalar el servidor Apache */
+	
+	sudo apt-get install apache2
+
+/* Una vez instalado, apache nos crea por defecto la carpeta en
+el directorio /var/www/html/ para realizar una comprobación
+de  que se ha instaldo correctamete, para ello debemos acceder
+a la direccion local a través de un navegador */
+	
+	http://localhost/ o http://dir_IP
+
+	//http://dir_IP lo usamos para acceder desde un dispositivo externo
+
+/* Tras esto, debemos instalar tomcat para los ficheros Java */
+	
+	sudo apt-get install tomcat7
+
+/* Para realizar la mismca comprobación que en el caso anterior,
+debemos acceder a la dirección IP de la raspi pero añadiendoa al 
+final el puerto 8080 */
+
+	http://dir_IP:8080
+
+/* Una vez que tenemos los servicores instalados pasamos a cambiar
+su configuración*/
+
+	/* Buscamos en /etc/apache2/apache2.conf las líneas que
+		están incluidas entre <Directory..>  </Directoy> (incluidas
+		estas) y las comentamos añadiendo al principio # */
+
+	/* Añadimos dentro del directorio /etc/apache2/conf-enabled/ un 
+		ichero bajo el nombre config_wips.conf con el siguiente contenido */
+
+
+		ScriptAlias /wips/cgi-bin/ /home/pi/web/cgi-bin/
+
+		<Directory "/home/pi/web/cgi-bin/">
+		        AllowOverride All
+		        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		        Order allow,deny
+		        Allow from all
+		</Directory>
+
+		Alias /wips "/home/pi/web/"
+
+		<Directory "/home/pi/web/">
+		        AllowOverride All
+		        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch +Includes
+		        DirectoryIndex wips.html
+		        Order allow,deny
+		        Allow from all
+		</Directory>
+			
+
+	/* En el fichero /etc/apache2/sites-enabled/000-default.conf 
+		debemos cambiar lo que aparece tras DocumentRoot (/var/www/html)
+		y poner*/
+
+		 DocumentRoot /home/pi/web/cgi/wips.html
+
+	/* Copiamos el módulo que habilita el uso de CGI*/
+		 
+		 sudo cp /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/cgi.load
+	
+
+	/* Tras esto, recargamos el servicio*/
+		sudo service apache2 restart
+
+	/* Creamos los directorios donde almacenaremos la web*/
+
+		mkdir /home/pi/web
+	 	mkdir /home/pi/web/cgi
+	 	mkdir /home/pi/web/cgi-bin
+	 	mkdir /home/pi/web/jsp
+	 	mkdir /home/pi/web/WEB-INF
+	 	mkdir /home/pi/web/WEB-INF/classes
+	 	mkdir /home/pi/web/WEB-INF/lib
+	 	mkdir /home/pi/web/WEB-INF/src
+
+	/* Hasta este punto, todos los ficheros .html
+		y .out que esten dentro de /home/pi/web/ o 
+		/home/pi/web/cgi-bin/ funcionarán correctamente,
+		ya solo queda que tomcat coopere con apache
+		para los ficheros *.jsp, para ello*/
+
+	/* Instalamos el módulo */
+		sudo apt-get install libapache2-mod-jk 
+
+	/* Indicamos en /etc/apache2/sites-enabled/000-default.conf al final*/
+
+	 	JkMount         /*.jsp              ajp13_worker
+
+	/* En /etc/apache2/apache2.conf  antes de "User ${APACHE_RUN_USER}"*/
+
+
+		# prefork MPM
+		# StartServers: number of server processes to start
+		# MinSpareServers: minimum number of server processes which are kept spare
+		# MaxSpareServers: maximum number of server processes which are kept spare
+		# MaxClients: maximum number of server processes allowed to start
+		# MaxRequestsPerChild: maximum number of requests a server process serves
+		<IfModule mpm_prefork_module>
+		    StartServers          5
+		    MinSpareServers       5
+		    MaxSpareServers      10
+		    MaxClients          150
+		    MaxRequestsPerChild   0
+		</IfModule>
+
+		# worker MPM
+		# StartServers: initial number of server processes to start
+		# MinSpareThreads: minimum number of worker threads which are kept spare
+		# MaxSpareThreads: maximum number of worker threads which are kept spare
+		# ThreadLimit: ThreadsPerChild can be changed to this maximum value during a
+		#              graceful restart. ThreadLimit can only be changed by stopping
+		#              and starting Apache.
+		# ThreadsPerChild: constant number of worker threads in each server process
+		# MaxClients: maximum number of simultaneous client connections
+		# MaxRequestsPerChild: maximum number of requests a server process serves
+		<IfModule mpm_worker_module>
+		    StartServers          2
+		    MinSpareThreads      25
+		    MaxSpareThreads      75 
+		    ThreadLimit          64
+		    ThreadsPerChild      25
+		    MaxClients          150
+		    MaxRequestsPerChild   0
+		</IfModule>
+
+		# event MPM
+		# StartServers: initial number of server processes to start
+		# MinSpareThreads: minimum number of worker threads which are kept spare
+		# MaxSpareThreads: maximum number of worker threads which are kept spare
+		# ThreadsPerChild: constant number of worker threads in each server process
+		# MaxClients: maximum number of simultaneous client connections
+		# MaxRequestsPerChild: maximum number of requests a server process serves
+		<IfModule mpm_event_module>
+		    StartServers          2
+		    MinSpareThreads      25
+		    MaxSpareThreads      75 
+		    ThreadLimit          64
+		    ThreadsPerChild      25
+		    MaxClients          150
+		    MaxRequestsPerChild   0
+		</IfModule>
+
+	/* En el fichero /etc/tomcat7/server.xml descomentamos la línea*/
+
+
+    <Connector port="8009" protocol="AJP/1.3" />
+
+   /* Creamos el fichero /etc/tomcat7/Catalina/localhost/wips.xml con el 
+   		siguiente contenido*/
+
+   		<Context path="/wips" docBase="/home/pi/web" debug="0" reloadable="true" />
+
+
+  	/*Tras esto sólo queda reiniciar los servicios*/
+
+  		sudo service tomcat7 restart
+  		sudo service apache2 restart
+
+  	/* Tras esto, ya estarían cooperando ambos servidores y la interfaz funcionará
+  		correctamente*/
