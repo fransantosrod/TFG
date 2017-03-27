@@ -16,7 +16,7 @@ int main () {
 	//Variables para la creación de hilos
 	pthread_attr_t attr;
 	pthread_t thid[NUM_MODULOS];
-	
+		
 	//Creamos los semáforos
 	crea_semaforo(SEM_LECTURA);
 	crea_semaforo(SEM_SNORT);
@@ -32,6 +32,7 @@ int main () {
 		de esta forma cada función es un
 		proceso independiente
 	--------------------------------------*/
+	registra_log("Iniciando WIPS\n");
 	pthread_create(&thid[0], &attr, mod1, NULL);
 	pthread_create(&thid[1], &attr, mod2, NULL);
 	pthread_create(&thid[2], &attr, mod3, NULL);

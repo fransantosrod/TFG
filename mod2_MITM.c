@@ -61,7 +61,9 @@ void *mod2 () {
 					
 				//Buscamos si hemos detectado un cambio en la MAC
 				informacion_regla=busca_CAMBIO_EN_MAC(contenido_del_fichero, num_lineas_anterior);
-					
+				
+				//Registramos la regla que vamos a crear
+				registra_Regla(informacion_regla);					
 				
 				//Comprobamos si tenemos que crear alguna regla
 				if (informacion_regla.numero_lineas > INICIO){
@@ -69,8 +71,7 @@ void *mod2 () {
 					//Creamos la regla
 					crear_regla = crea_y_escribe_regla(FICHERO_REGLAS_SNORT, informacion_regla, "MITM");
 					
-					//Registramos la regla que vamos a crear
-					registra_Regla(informacion_regla);
+
 
 					//Comprobamos si la hemos creado correctamente
 					if (crear_regla == true) {

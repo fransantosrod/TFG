@@ -24,18 +24,18 @@ la ejecución del programa
 	Constantes para definir las rutas y nombres de los ficheros que se
 	va a usar en las funciones
 -----------------------------------------------------------------------*/
-#define FICHERO_ALERT_SNORT "alert"
-#define FICHERO_REGLAS_SNORT "local.rules_prueba"
-#define FICHERO_SID "sid"
-#define FICHERO_PID_SNORT "pid.txt"
-#define FICHERO_ARPWATCH "arpwatch_prueba.log"
-#define FICHERO_REGISTRO_REGLAS_MITM "registro_reglas_MITM"
-#define FICHERO_CAPTURA_WIFI "primera_captura_prueba.csv"
-#define FICHERO_CAPTURA_WIFI_SIN_EXTENSION "primera_captura_prueba"
+#define FICHERO_ALERT_SNORT "/var/log/snort/alert"
+#define FICHERO_REGLAS_SNORT "/etc/snort/rules/local.rules"
+#define FICHERO_SID "/home/pi/TFG/sid"
+#define FICHERO_PID_SNORT "/home/pi/TFG/pid.txt"
+#define FICHERO_ARPWATCH "/var/log/arpwatch.log"
+#define FICHERO_REGISTRO_REGLAS_MITM "/home/pi/TFG/registro_reglas_MITM"
+#define FICHERO_CAPTURA_WIFI "/home/pi/TFG/captura-01.csv"
+#define FICHERO_CAPTURA_WIFI_SIN_EXTENSION "/home/pi/TFG/captura"
 #define EXTENSION_FICHERO_CAPTURA_WIFI "-01.csv"
-#define FICHERO_PID_AIRODUMP "pid_airodump.txt"
-#define FICHERO_REGISTRO_CLIENTES "registro_clientes.txt"
-#define FICHERO_LOG "wips.log"
+#define FICHERO_PID_AIRODUMP "/home/pi/TFG/pid_airodump.txt"
+#define FICHERO_REGISTRO_CLIENTES "/home/pi/TFG/registro_clientes.txt"
+#define FICHERO_LOG "/var/log/wips.log"
 
 //Constante para definir la contraseña de la base de datos
 #define CONTRASENIA_BBDD "clientes"

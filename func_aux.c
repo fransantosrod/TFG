@@ -788,7 +788,7 @@ void recarga_Snort () {
 		cont_aux_palara = INICIO;
 
 		//Creamos el comando para obtener el PID y redireccionarlo al fichero
-		strcpy(comando, "pidof snort > ");
+		strcpy(comando, "sudo pidof snort > ");
 		strcat(comando, nombre_fichero_pid);
 		//Ejecutamos dicho comando
 		system(comando);

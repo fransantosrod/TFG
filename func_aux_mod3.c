@@ -423,6 +423,12 @@ void bloquea_SSID (struct INFO_SSID ssid_coincidentes){
 			strcat(comando, ssid_coincidentes.bssid[cont_aux_ssid]);
 			strcat(comando, " -j DROP");
 			system(comando);
+
+			/*--------------------------------------------------------------
+				Almacenamos el contenido en el fichero para que se pueda
+				visualizar desde la interfaz web
+			--------------------------------------------------------------*/
+			system("sudo iptables -L -n > /home/pi/web/cgi/reglas_iptables");
 		}
 
 		//En caso contrario la coincidencia será en el BSSID
