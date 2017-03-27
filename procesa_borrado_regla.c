@@ -81,7 +81,7 @@ int main () {
 				informacion_regla.numero_lineas = INICIO;
 				
 				//Eliminamos la regla
-				elimina_Regla("../cgi/local.rules",informacion_regla, atoi(regla));
+				elimina_Regla(FICHERO_REGLAS_SNORT,informacion_regla, atoi(regla));
 
 				//Recargamos Snort para que los cambios tengan efecto
 				recarga_Snort();

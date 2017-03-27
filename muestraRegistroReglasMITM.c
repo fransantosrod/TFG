@@ -114,7 +114,7 @@ int main () {
 			printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraRegistroReglasMITM.out\" class=\"reglas\">\n");
 					
 					//Leemos el fichero de las reglas creadas para los ataques MITM
-					contenido_del_fichero = lee_fichero("FICHERO_REGISTRO_REGLAS_MITM ");
+					contenido_del_fichero = lee_fichero(FICHERO_REGISTRO_REGLAS_MITM);
 					
 					//Si no hemos leido ninguna línea, indicamos que no hay reglas
 					if (contenido_del_fichero.num_frases_fichero == INICIO)
