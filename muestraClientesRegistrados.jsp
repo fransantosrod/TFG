@@ -57,7 +57,7 @@
 				el estilo del botón, que será en línea para que todos aparezcan
 				en una única fila  en la parte superior
 			-->
-			<form method="get" action="../cgi/wips.html" style="display:inline">
+			<form method="get" action="../wips.html" style="display:inline">
 
 				<button type="submit">
 					Inicio
@@ -65,7 +65,7 @@
 				</button>
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/muestraReglasSnort.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi-bin/muestraReglasSnort.out" style="display:inline">
 
 				<button type="submit">
 					Reglas Snort
@@ -73,7 +73,7 @@
 
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/muestraReglasIptables.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi/muestraReglasIptables.html" style="display:inline">
 
 				<button type="submit">
 					Reglas Iptables
@@ -81,7 +81,7 @@
 
 			</form>
 
-			<form method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/jsp/muestraClientesRegistrados.jsp" style="display:inline">
 
 				<button type="submit">
 					Clientes Registrados
@@ -89,7 +89,7 @@
 
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi-bin/muestraRegistroReglasMITM.out" style="display:inline">
 
 				<button type="submit">
 					Registro Reglas MITM
@@ -97,7 +97,7 @@
 
 			</form>
 
-			<form method="get" action="http://localhost/dit/jsp/muestraLogsWIPS.jsp" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/jsp/muestraLogsWIPS.jsp" style="display:inline">
 			
 				<button type="submit">
 					Logs WIPS
@@ -105,7 +105,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/borraRegla.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi-bin/borraRegla.out" style="display:inline">
 			
 				<button type="submit">
 					Borrar Reglas
@@ -116,7 +116,7 @@
 		</p>
 
 
-		<form  method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp" style="display:inline">
+		<form  method="get" action="http://10.10.10.2/wips/jsp/muestraClientesRegistrados.jsp" style="display:inline">
 
 				
 		<!--
@@ -235,7 +235,7 @@
 		<!--
 			CREAMOS EL FORMULARIO QUE NOS PERMITIRÁ FILTRAR LA INFORMACIÓN DE LA BBDD EN FUNCIÓN DE LOS DATOS DE LOS CLIENTES
 		-->
-		<form method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp">
+		<form method="get" action="http://10.10.10.2/wips/jsp/muestraClientesRegistrados.jsp">
 			
 			<!--
 				Creamos los campos a rellenar del formulario para filtrar la información

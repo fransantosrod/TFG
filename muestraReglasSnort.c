@@ -6,7 +6,7 @@
 ----------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
-#include "/home/dit/Desktop/TFG/func_aux.h"
+#include "/home/pi/TFG/func_aux.h"
 
 int main () {
 	
@@ -51,7 +51,7 @@ int main () {
 					el estilo del botón, que será en línea para que todos aparezcan
 					en una única fila en la parte superior
 				-----------------------------------------------------*/
-				printf("<form method=\"get\" action=\"../cgi/wips.html\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"../wips.html\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Inicio\n");
@@ -59,7 +59,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasSnort.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraReglasSnort.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Reglas Snort\n");
@@ -67,7 +67,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi/muestraReglasIptables.html\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Reglas Iptables\n");
@@ -75,7 +75,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraClientesRegistrados.jsp\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/jsp/muestraClientesRegistrados.jsp\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Clientes Registrados\n");
@@ -83,7 +83,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraRegistroReglasMITM.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Registro Reglas MITM\n");
@@ -91,7 +91,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraLogsWIPS.jsp\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/jsp/muestraLogsWIPS.jsp\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Logs WIPS\n");
@@ -99,7 +99,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/borraRegla.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/borraRegla.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Borrar Reglas\n");
@@ -110,10 +110,10 @@ int main () {
 			printf("</p>\n");
 
 			
-			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasSnort.out\" class=\"reglas\">\n");
+			printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraReglasSnort.out\" class=\"reglas\">\n");
 					
 					//Leemos el contenido del fichero		
-					contenido_del_fichero = lee_fichero("../cgi/local.rules");
+					contenido_del_fichero = lee_fichero(FICHERO_REGLAS_SNORT);
 					
 					//Creamos una lista no ordenada
 					printf("<ul>\n");

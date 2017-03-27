@@ -1,8 +1,8 @@
 <!--
 	Fecha: 16-03-2017
 	Autor: Francisco Javier Santos Rodríguez
-	Descripción: Página principal de la 
-	interfaz web
+	Descripción: Página que se encarga de 
+	mostrar las reglas definidas en IPTABLES
 -->
 
 <!DOCTYPE html>
@@ -12,12 +12,12 @@
 		<!--
 			Añadimos el logo en la cabecera
 		-->
-		<link rel="icon" type="image/png" href="cgi/logo.png"/>
+		<link rel="icon" type="image/png" href="../cgi/logo.png"/>
 		<!--
 			Definimos en la cabecera el título de la página 
 			y la hoja de estilos que se aplicará
 		-->
-		<link rel="stylesheet" type="text/css" href="cgi/hoja_estilo.css">
+		<link rel="stylesheet" type="text/css" href="../cgi/hoja_estilo.css">
 		<title> Gesti&oacuten WIPS </title>
 	</head>
 	
@@ -32,7 +32,7 @@
 			el estilo del botón, que será en línea para que todos aparezcan
 			en una única fila en la parte superior
 		-->
-			<form method="get" action="wips.html" style="display:inline">
+			<form method="get" action="../wips.html" style="display:inline">
 				
 				<button type="submit">
 					Inicio
@@ -90,12 +90,31 @@
 
 		</p>
 
-		<!--
-			Insertamos la imagen principal
-		-->
+		<p>
+
+			<form method="get" action="http://10.10.10.2/wips/cgi/muestraReglasIptables.html" style="display:inline">
+
+					<!-- Botón para actualizar el registro de reglas de iptables -->
+					
+					<button type="submit" class="button1">
+						Actualizar reglas
+					</button>	
+
+			</form>
+
+		</p>	
+	
 		<div>
-			<img src="cgi/logo.png" />
+
+			<p>
+
+				<iframe src="reglas_iptables">
+				</iframe>
+				
+			</p>
+			
 		</div>
+	
 	</body>
 
 </html>

@@ -35,7 +35,7 @@
 			el estilo del botón, que será en línea para que todos aparezcan
 			en una única fila  en la parte superior
 		-->
-			<form method="get" action="../cgi/wips.html" style="display:inline">
+			<form method="get" action="../wips.html" style="display:inline">
 				
 				<button type="submit">
 					Inicio
@@ -43,7 +43,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/muestraReglasSnort.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi-bin/muestraReglasSnort.out" style="display:inline">
 			
 				<button type="submit">
 					Reglas Snort
@@ -51,7 +51,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/muestraReglasIptables.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi/muestraReglasIptables.html" style="display:inline">
 			
 				<button type="submit">
 					Reglas Iptables
@@ -59,7 +59,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/jsp/muestraClientesRegistrados.jsp" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/jsp/muestraClientesRegistrados.jsp" style="display:inline">
 			
 				<button type="submit">
 					Clientes Registrados
@@ -67,7 +67,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi-bin/muestraRegistroReglasMITM.out" style="display:inline">
 			
 				<button type="submit">
 					Registro Reglas MITM
@@ -75,7 +75,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/jsp/muestraLogsWIPS.jsp" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/jsp/muestraLogsWIPS.jsp" style="display:inline">
 			
 				<button type="submit">
 					Logs WIPS
@@ -83,7 +83,7 @@
 			
 			</form>
 
-			<form method="get" action="http://localhost/dit/cgi-bin/borraRegla.out" style="display:inline">
+			<form method="get" action="http://10.10.10.2/wips/cgi-bin/borraRegla.out" style="display:inline">
 			
 				<button type="submit">
 					Borrar Reglas
@@ -94,7 +94,7 @@
 		</p>
 		
 		<p>
-			<form method="get" action="http://localhost/dit/jsp/muestraLogsWIPS.jsp">
+			<form method="get" action="http://10.10.10.2/wips/jsp/muestraLogsWIPS.jsp">
 
 				<button type="submit" class="button1">
 					Actualizar logs
@@ -103,7 +103,7 @@
 					
 					<%
 						//Ruta relativa del fichero de loqs del WIPS	
-						String fichero = "/home/dit/web/cgi/wips.log";
+						String fichero = "/var/log/wips.log";
 
 						//Creamos el objeto para leer el fichero
 						BufferedReader lectura = new BufferedReader(new FileReader(fichero));

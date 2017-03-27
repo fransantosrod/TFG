@@ -9,8 +9,8 @@
 
 int main () {
 	
-	//CAMBIAR POR LA ORDEN PARA IPTABLES
-	system("sudo iptables -L -n > /home/dit/web/cgi/reglas_iptables");
+	
+	
 
 	printf("Content-Type:text/html\n\n");
 	printf("<!DOCTYPE html>\n");
@@ -44,7 +44,7 @@ int main () {
 					el estilo del botón, que será en línea para que todos aparezcan
 					en una única fila en la parte superior
 				-----------------------------------------------------*/
-				printf("<form method=\"get\" action=\"../cgi/wips.html\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"../wips.html\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Inicio\n");
@@ -52,7 +52,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasSnort.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraReglasSnort.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Reglas Snort\n");
@@ -60,7 +60,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Reglas Iptables\n");
@@ -68,7 +68,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraClientesRegistrados.jsp\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/jsp/muestraClientesRegistrados.jsp\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Clientes Registrados\n");
@@ -76,7 +76,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraRegistroReglasMITM.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraRegistroReglasMITM.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Registro Reglas MITM\n");
@@ -84,7 +84,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/jsp/muestraLogsWIPS.jsp\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/jsp/muestraLogsWIPS.jsp\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Logs WIPS\n");
@@ -92,7 +92,7 @@ int main () {
 
 				printf("</form>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/borraRegla.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/borraRegla.out\" style=\"display:inline\">\n");
 
 					printf("<button type=\"submit\">\n");
 						printf("Borrar Reglas\n");
@@ -104,12 +104,14 @@ int main () {
 
 			printf("<p>\n");
 
-				printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
+				printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/muestraReglasIptables.out\" style=\"display:inline\">\n");
 
 					//Botón para actualizar el registro de reglas de iptables
 					printf("<button type=\"submit\" class=\"button1\">\n");
 						printf("Actualizar reglas\n");
 					printf("</button>\n");	
+
+					
 
 				printf("</form>\n");
 
@@ -119,12 +121,15 @@ int main () {
 
 				printf("<p>\n");
 
+
+					system("sudo /sbin/iptables -L -n > /home/pi/web/reglas_iptables");
 					/*----------------------------------------------------------
 						Mediante iframe mostramos el contenido del fichero
 						donde hemos alamcenado la salida del comando 
 						"iptables -L -n"
 					----------------------------------------------------------*/
-					printf("<iframe src=\"../cgi/reglas_iptables\" \"  >\n");
+					
+					printf("<iframe src=\"../reglas_iptables\" \"  >\n");
 					printf("</iframe>\n");
 				
 				printf("</p>\n");
@@ -135,5 +140,7 @@ int main () {
 	
 	printf("</html>\n");
 
+	
+	
 return 0;
 }

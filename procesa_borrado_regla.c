@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "/home/dit/Desktop/TFG/func_aux.h"
+#include "/home/pi/TFG/func_aux.h"
 
 //Dado que el máximo número de reglas es 500
 #define NUM_DIGITOS 3
@@ -99,7 +99,7 @@ int main () {
 			}
 			
 
-			printf("<form method=\"get\" action=\"http://localhost/dit/cgi-bin/borraRegla.out\">\n");
+			printf("<form method=\"get\" action=\"http://10.10.10.2/wips/cgi-bin/borraRegla.out\">\n");
 				
 				//Botón para volver a la página de  reglas
 				printf("<button type=\"submit\">\n");
