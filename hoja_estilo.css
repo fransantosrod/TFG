@@ -1,0 +1,298 @@
+/*-------------------------------------------
+	Fecha: 16-03-2017
+	Autor: Francisco Javier Santos Rodríguez
+	Descripción: Hoja de estilos que se
+	aplicará a la interfaz web
+-------------------------------------------*/
+
+
+/*------------------------------------
+	Indicamos el color principal del
+	fondo de la página
+------------------------------------*/
+body {
+
+	background-color: #3366ff
+}
+
+/*------------------------------------
+	Definimos el estilo para los
+	distintos botones que vamos
+	a crear
+------------------------------------*/
+button {
+	/*------------------------------------
+		En general, todos tendrán el
+		mismo color de fondo, mismo
+		borde(2px y con las esquinas 
+		redondeadas)
+		Y tendrán un cambio de color 
+		cuando el ratón se pase por 
+		encima del botón
+	------------------------------------*/
+	border: 2px solid #bfbfbf;
+	border-radius:5px;
+
+	position:relative;
+	top: 20px ;
+	left: 15%;
+	float: left;
+	
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.4s;
+	background-color: #8099b3; 
+
+	text-transform: capitalize;
+
+}
+
+button:hover {
+	/*------------------------------------
+		Definimos el cambio de color de fondo del
+		botón y de las letras 
+	------------------------------------*/
+	background-color: #bfbfbf;
+	color: white;
+}
+
+.button1 {
+
+	/*------------------------------------
+		Definimos una nueva posición para 
+		los botones pertenecientes a 
+		esta clase
+	------------------------------------*/	
+	position:absolute;
+	top: 70px;
+	left: 15%;
+	float: left;
+
+}
+
+#button2 {
+	/*------------------------------------
+		Definimos una nueva posición para
+		el botón con este ID
+	------------------------------------*/	
+	position:relative;
+	top: 20px;
+	left: 2%;
+	float: left;
+
+}
+
+/*------------------------------------
+	Definimos el tamaño y la posición
+	que ocuparán en la interfaz el
+	iframe
+------------------------------------*/
+iframe {
+
+	border-style: none;
+	height:500px; 
+	width:85%;
+
+	position: relative;
+	top: 80px;
+	left: 15%;
+	float: left;
+
+	background-color: #3366ff; 
+}
+
+
+/*------------------------------------
+	Definimos el estilo para las 
+	diferentes clases que se han
+	creado para las reglas
+------------------------------------*/
+.reglas {
+
+	position: absolute;
+	top: 60px;
+	left: 15%;
+	float: left;
+	/*------------------------------------
+		Indicamos el tipo de letra que
+		queremos 
+	------------------------------------*/
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 14px;
+
+}
+/*------------------------------------
+	Definimos el estilo con el que 
+	se mostrarán las reglas en la
+	interfaz web
+------------------------------------*/
+.info_regla {
+
+	position: relative;
+	top: 10px;
+	left: 15%;
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 16px;
+	color: white;
+}
+
+.borrar_regla {
+
+	position: relative;
+	left: 2%;
+	background-color: #3399ff;	
+}
+
+
+/*------------------------------------
+	Indicamos el estilo de las tablas
+------------------------------------*/
+table {
+
+	position: absolute;
+	top: 60px;
+	left: 15%;
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 13px;
+	/*------------------------------------
+		Indicamos que queremos los bordes
+		juntos para que no contenga bordes
+		dobles
+	------------------------------------*/
+	border-collapse: collapse;
+	border: 4px solid #dad9d8;	
+}
+/*------------------------------------
+	Indicamos la separación entre 
+	celdas y la colocación del texto
+	en ellas
+------------------------------------*/
+th, td {
+	
+	padding: 4px;
+	text-align: center;
+	border: 1px solid #dad9d8;
+
+}
+/*------------------------------------
+	Definimos el efecto que tendrán
+	las filas (cambiar de color
+	cuando se pasa el ratón por encima)
+------------------------------------*/
+th, th:hover {
+	background: #dad9d8;
+	color: black;
+}
+
+tr:hover {
+
+	background-color: #3399ff;
+	color: white;	
+}
+
+/*------------------------------------
+	Definimos la posición que queremos
+	que ocupa la tabla con el registro
+	de clientes
+------------------------------------*/
+.tabla_clientes {
+	position: absolute;
+	top: 180px;
+	left: 15%;
+}
+
+/*------------------------------------
+	Estilo de la lista de reglas
+------------------------------------*/
+li {
+	
+	position: relative;
+	top: 20px;
+	margin: 4px;
+	background-color: #3399ff; 
+}
+/*------------------------------------
+	Estilo de los campos del 
+	formulario para filtrar los
+	clientes registrados
+------------------------------------*/
+.filtro {
+
+	position: absolute;
+	left: 15%;
+	top: 100px;
+}
+/*------------------------------------
+	EStilo con el que se presentará
+	el mensaje de error cuando queremos
+	filtrar los clientes registrados
+------------------------------------*/
+.error_sql {
+
+	position: absolute;
+	left: 15%;
+	top:220px;
+	color: white;
+}
+/*------------------------------------
+	Definimos la posición que 
+	ocupaŕa la imagen
+------------------------------------*/
+img {
+	position: absolute;
+	left: 20%;
+	top: 100px;
+}
+
+/*------------------------------------
+	Definimos la posición en la
+	que aparecerán los mensajes de
+	logs
+------------------------------------*/
+.muestraLogs {
+
+	position: absolute;
+	left: 17%;
+	top: 100px;
+}
+
+/*------------------------------------
+	Definimos el estilo que tendrán
+	los mensajes de logs
+------------------------------------*/
+.logs {
+
+	border-left: 4px solid blue;
+	border-bottom: 4px solid blue;
+	background-color: #3399ff;
+
+	width: 105%;
+	height: 15px;
+
+
+	text-align: left;
+	text-transform: lowercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 13px;
+}
+/*------------------------------------
+	Definimos el estilo con el que 
+	aparecerá el mensaje de fichero
+	de log vacío
+------------------------------------*/
+.log_vacio{
+
+	text-align: left;
+	text-transform: uppercase;
+	font-family: "Arial", Sans-serif;
+	font-size: 16px;
+
+	color: white;
+}

@@ -1,40 +1,15 @@
-#Makefile WIPS
+#Maefile interfaz Web
 
-WIPS: main.o mod1_DoS.o func_aux_mod1.o mod2_MITM.o func_aux_mod2.o mod3_SSID.o mod3_SSID.o func_aux_mod3.o mod4_database.o func_aux_mod4.o func_aux.o
-	gcc -o WIPS main.o mod1_DoS.o func_aux_mod1.o mod2_MITM.o func_aux_mod2.o mod3_SSID.o func_aux_mod3.o mod4_database.o func_aux_mod4.o func_aux.o -pthread
+all: borraRegla.o procesa_borrado_regla.o muestraRegistroReglasMITM.o muestraReglasSnort.o
 
-main.o: main.c constantes_y_librerias.h 
-	gcc -W -Wall -c main.c
+borraRegla.o: borraRegla.c /home/pi/TFG/func_aux.c /home/pi/TFG/constantes_y_librerias.h
+	gcc -g -W -Wall -o borraRegla.out borraRegla.c /home/pi/TFG/func_aux.c -pthread
 
-mod4_database.o: mod4_database.c func_aux_mod4.h
-	gcc -W -Wall -c mod4_database.c 
+procesa_borrado_regla.o: procesa_borrado_regla.c /home/pi/TFG/func_aux.c /home/pi/TFG/func_aux_mod2.c /home/pi/TFG/func_aux_mod2.h /home/pi/TFG/constantes_y_librerias.h
+	gcc -g -W -Wall -o procesa_borrado_regla.out procesa_borrado_regla.c /home/pi/TFG/func_aux.c /home/pi/TFG/func_aux_mod2.c -pthread
 
-func_aux_mod4.o: func_aux_mod4.c func_aux_mod4.h
-	gcc -W -Wall -c func_aux_mod4.c
+muestraRegistroReglasMITM.o: muestraRegistroReglasMITM.c /home/pi/TFG/func_aux.c /home/pi/TFG/constantes_y_librerias.h
+	gcc -g -W -Wall -o muestraRegistroReglasMITM.out muestraRegistroReglasMITM.c /home/pi/TFG/func_aux.c -pthread
 
-mod3_SSID.o: mod3_SSID.c func_aux_mod3.h
-	gcc -W -Wall -c mod3_SSID.c
-
-func_aux_mod3.o: func_aux_mod3.c func_aux_mod3.h
-	gcc -W -Wall -c func_aux_mod3.c
-
-mod2_MITM.o: mod2_MITM.c func_aux_mod2.h
-	gcc -W -Wall -c mod2_MITM.c
-
-func_aux_mod2.o: func_aux_mod2.c func_aux_mod2.h
-	gcc -W -Wall -c func_aux_mod2.c
-
-mod1_DoS.o: mod1_DoS.c func_aux_mod1.h
-	gcc -W -Wall -c mod1_DoS.c
-
-func_aux_mod1.o: func_aux_mod1.c func_aux_mod1.h
-	gcc -W -Wall -c func_aux_mod1.c
-
-func_aux.o: func_aux.c func_aux.h
-	gcc -W -Wall -c func_aux.c
-
-eliminaSem: elmina_semaforos.c constantes_y_librerias.h func_aux.c func_aux.h
-	gcc -W -Wall -o eliminaSem elmina_semaforos.c func_aux.c -pthread
-
-clean:
-	rm *.o
+muestraReglasSnort.o: muestraReglasSnort.c /home/pi/TFG/func_aux.c /home/pi/TFG/constantes_y_librerias.h
+	gcc -g -W -Wall -o muestraReglasSnort.out muestraReglasSnort.c /home/pi/TFG/func_aux.c -pthread
