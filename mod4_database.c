@@ -11,7 +11,7 @@ de los clientes asociados
 
 /*-------------------------------------------
 	Función que se encarga de implementar
-	las funcionalidades del módulos 4
+	las funcionalidades del módulo 4
 
 	Recibe: Nada
 

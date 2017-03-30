@@ -9,7 +9,7 @@ en los ataques MITM
 
 /*-------------------------------------------
 	Función que se encarga de implementar
-	las funcionalidades del módulos 2
+	las funcionalidades del módulo 2
 
 	Recibe: Nada
 
@@ -41,14 +41,14 @@ void *mod2 () {
 		//Leemos el fichero
 		contenido_del_fichero = lee_fichero(nombre_fichero);
 
-		//Miramos a ver si algún registro ha pasado el tiempo
+		//Miramos a ver si para algún registro ha pasado el tiempo
 		/*---------------------------------------------------
 			Esto se hace ya que para los ataques MITM, las
 			direcciones que vamos a bloquear son IPs 
 			pertenecientes a la red interna, luego,este 
 			bloqueo sólo será efectivo durante un periodo
 			"largo" de tiempo para impedir el ataque y 
-			permitir que esa dirección estará disponible 
+			permitir que esa dirección esté disponible 
 			en un futuro
 		---------------------------------------------------*/
 		detecta_Registro_caducado(FICHERO_REGISTRO_REGLAS_MITM);

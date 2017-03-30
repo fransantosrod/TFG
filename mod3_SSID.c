@@ -13,7 +13,7 @@ de detectar la suplantación de SSID
 
 /*-------------------------------------------
 	Función que se encarga de implementar
-	las funcionalidades del módulos 3
+	las funcionalidades del módulo 3
 
 	Recibe: Nada
 
@@ -43,7 +43,7 @@ void *mod3 () {
 		//Leemos el fichero
 		contenido_del_fichero = lee_fichero_csv(nombre_fichero);
 
-		//Obtenemos los SSID leidos
+		//Obtenemos los SSID leídos
 		info_ssid = procesa_fichero_CSV(contenido_del_fichero);
 		
 		//Buscamos posibles SSID duplicados

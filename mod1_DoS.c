@@ -52,10 +52,10 @@ void *mod1 (){
 			//Comprobamos que hemos leído una línea nueva
 			if (contenido_del_fichero.num_frases_fichero > num_lineas_anterior){
 				
-				//Si no lo está, comprobamos si hemos encontrado alguna alerta de DoS
+				//Buscamos alguna alerta de DoS
 				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
 					
-				//Si hemos detectado alguna alerta
+				//Si hemos detectado alguna alerta nueva
 				if (contenido_fichero_alerta.numero_lineas > INICIO){	
 						
 					//Creamos las reglas con las coincidencias que hayamos encontrado
@@ -98,7 +98,7 @@ void *mod1 (){
 			//Comprobamos que ese fichero no ha superado el límite
 			if (contenido_del_fichero.num_frases_fichero < NUM_FRASES){
 					
-				//Comprobamos si hemos encontrado alguna alerta de DoS
+				//Buscamos alguna alerta de DoS
 				contenido_fichero_alerta = comprueba_Coincidencia_Fichero_Leido(contenido_del_fichero, "DoS", num_lineas_anterior);
 				
 				//Si hemos detectano alguna alerta nueva
